@@ -1,6 +1,5 @@
 from keras import backend as K
 from collections import OrderedDict
-from scipy.optimize import fmin_l_bfgs_b
 from utils import get_img_shape, deprocess_image, normalize, generate_rand_img
 import numpy as np
 import pprint
@@ -65,16 +64,12 @@ class Optimizer(object):
             estimate weight factor(s).
         :return: The optimized image.
         """
-        # Run scipy-based optimization (L-BFGS) over the pixels of the input image
         samples, c, w, h = get_img_shape(self.img)
         if seed_img is None:
             seed_img = generate_rand_img(c, w, h)
 
-        # evaluator = Evaluator(self)
+        cache = None
         for i in range(max_iter):
-            # x, min_val, info = fmin_l_bfgs_b(evaluator.loss, x.flatten(),
-            #                                  fprime=evaluator.grads, maxfun=self.max_iter)
-
             loss, grads = self._eval_loss_and_grads(seed_img)
 
             if verbose:
@@ -82,35 +77,25 @@ class Optimizer(object):
                 print('losses: {}, overall loss: {}'.format(pprint.pformat(losses), loss))
 
             # Noob gradient descent update.
-            # TODO: Add more sophisticated ones.
-            seed_img -= grads * 0.9
+            step, cache = self.rmsprop(grads, cache)
+            seed_img += step
 
         return deprocess_image(seed_img[0])
 
-
-class Evaluator(object):
-    """
-    This Evaluator class makes it possible to compute loss and gradients in one pass
-    while retrieving them via two separate functions, "loss" and "grads".
-    This is done because scipy.optimize requires separate functions for loss and gradients,
-    but computing them separately would be inefficient.
-    """
-    def __init__(self, optimizer):
-        self.optimizer = optimizer
-        self.losses = None
-        self.loss = None
-        self.grads = None
-
-    def loss(self, x):
-        assert self.loss is None
-        self.losses, self.grads = self.optimizer.eval_loss_and_grads(x)
-        self.loss = np.mean(self.losses)
-        return self.loss
-
-    def grads(self, x):
-        assert self.loss is not None
-        grads = np.copy(self.grads)
-        self.losses = None
-        self.loss = None
-        self.grads = None
-        return grads
+    def rmsprop(self, grads, cache=None, decay_rate=0.95):
+        """
+        Use RMSProp to compute a step from gradients.
+        Inputs:
+        - grads: numpy array of gradients.
+        - cache: numpy array of same shape as dx giving RMSProp cache
+        - decay_rate: How fast to decay cache
+        Returns a tuple of:
+        - step: numpy array of the same shape as dx giving the step. Note that this
+          does not yet take the learning rate into account.
+        - cache: Updated RMSProp cache.
+        """
+        if cache is None:
+            cache = np.zeros_like(grads)
+        cache = decay_rate * cache + (1 - decay_rate) * grads ** 2
+        step = -grads / np.sqrt(cache + 1e-8)
+        return step, cache
