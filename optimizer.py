@@ -55,6 +55,24 @@ class Optimizer(object):
         """
         return self.overall_loss_grad_function([img])
 
+    def _rmsprop(self, grads, cache=None, decay_rate=0.95):
+        """
+        Use RMSProp to compute a step from gradients.
+        Inputs:
+        - grads: numpy array of gradients.
+        - cache: numpy array of same shape as dx giving RMSProp cache
+        - decay_rate: How fast to decay cache
+        Returns a tuple of:
+        - step: numpy array of the same shape as dx giving the step. Note that this
+          does not yet take the learning rate into account.
+        - cache: Updated RMSProp cache.
+        """
+        if cache is None:
+            cache = np.zeros_like(grads)
+        cache = decay_rate * cache + (1 - decay_rate) * grads ** 2
+        step = -grads / np.sqrt(cache + 1e-8)
+        return step, cache
+
     def minimize(self, seed_img=None, max_iter=100, verbose=True):
         """
         Performs gradient descent on the input image with respect to defined losses and regularizations.
@@ -77,25 +95,9 @@ class Optimizer(object):
                 print('losses: {}, overall loss: {}'.format(pprint.pformat(losses), loss))
 
             # Noob gradient descent update.
-            step, cache = self.rmsprop(grads, cache)
+            step, cache = self._rmsprop(grads, cache)
             seed_img += step
 
         return deprocess_image(seed_img[0])
 
-    def rmsprop(self, grads, cache=None, decay_rate=0.95):
-        """
-        Use RMSProp to compute a step from gradients.
-        Inputs:
-        - grads: numpy array of gradients.
-        - cache: numpy array of same shape as dx giving RMSProp cache
-        - decay_rate: How fast to decay cache
-        Returns a tuple of:
-        - step: numpy array of the same shape as dx giving the step. Note that this
-          does not yet take the learning rate into account.
-        - cache: Updated RMSProp cache.
-        """
-        if cache is None:
-            cache = np.zeros_like(grads)
-        cache = decay_rate * cache + (1 - decay_rate) * grads ** 2
-        step = -grads / np.sqrt(cache + 1e-8)
-        return step, cache
+
