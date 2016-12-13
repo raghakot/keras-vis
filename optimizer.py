@@ -1,6 +1,6 @@
 from keras import backend as K
 from collections import OrderedDict
-from utils import get_img_shape, deprocess_image, normalize, generate_rand_img
+import utils
 import numpy as np
 import pprint
 
@@ -32,7 +32,7 @@ class Optimizer(object):
 
         grads = K.gradients(overall_loss, self.img)[0]
         # Normalization makes it less sensitive to learning rate during gradient descent.
-        grads = normalize(grads)
+        grads = utils.normalize(grads)
 
         self.overall_loss_grad_function = K.function([self.img], [overall_loss, grads])
 
@@ -73,7 +73,7 @@ class Optimizer(object):
         step = -grads / np.sqrt(cache + 1e-8)
         return step, cache
 
-    def minimize(self, seed_img=None, max_iter=100, verbose=True):
+    def minimize(self, seed_img=None, max_iter=200, verbose=True):
         """
         Performs gradient descent on the input image with respect to defined losses and regularizations.
         :param seed_img: The seed image to start with, for optimization. Seeded with a random noise if None.
@@ -82,22 +82,26 @@ class Optimizer(object):
             estimate weight factor(s).
         :return: The optimized image.
         """
-        samples, c, w, h = get_img_shape(self.img)
+        samples, c, w, h = utils.get_img_shape(self.img)
         if seed_img is None:
-            seed_img = generate_rand_img(c, w, h)
+            seed_img = utils.generate_rand_img(c, w, h)
 
         cache = None
+        best_loss = float('inf')
+        best_img = None
         for i in range(max_iter):
             loss, grads = self._eval_loss_and_grads(seed_img)
 
             if verbose:
                 losses = self._eval_losses(seed_img)
-                print('losses: {}, overall loss: {}'.format(pprint.pformat(losses), loss))
+                print('Iteration: {}, losses: {}, overall loss: {}'.format(i+1, pprint.pformat(losses), loss))
 
-            # Noob gradient descent update.
+            # Gradient descent update.
             step, cache = self._rmsprop(grads, cache)
             seed_img += step
 
-        return deprocess_image(seed_img[0])
+            if loss < best_loss:
+                best_loss = loss
+                best_img = seed_img
 
-
+        return utils.deprocess_image(best_img[0])
