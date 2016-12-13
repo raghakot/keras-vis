@@ -17,13 +17,14 @@ def main():
 
     # the name of the layer we want to visualize
     # (see model definition at keras/applications/vgg16.py)
-    layer_name = 'block5_conv2'
+    layer_name = 'block5_conv1'
 
-    for filter_idx in range(10):
-        regularizers = [(TotalVariation(), 0.01)]
+    for filter_idx in range(100):
+        regularizers = [(TotalVariation(), 1)]
         losses = [(ActivationMaximization(), 1)]
         opt = Optimizer(model, regularizers, losses, max_iter=200,
                         layer_name=layer_name, filter_idx=filter_idx)
+        print('Working on filter {}'.format(filter_idx))
         img = opt.minimize()
         cv2.imshow('filter_{}'.format(filter_idx), img)
         cv2.waitKey(0)

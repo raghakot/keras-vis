@@ -57,3 +57,19 @@ class BoundedRange(Regularizer):
         # 80 comes from section 3.3 in https://arxiv.org/pdf/1512.02017v3.pdf
         normed = value / (w * h * 80)
         return normed
+
+
+class PNorm(Regularizer):
+    """
+    This regularizer prevents individual pixels from getting too big.
+    We don't actually want to drive pixels toward zero; we are more interested in
+    making sure they stay within a reasonable range.
+    See: https://www.robots.ox.ac.uk/~vedaldi/assets/pubs/mahendran15understanding.pdf
+    """
+    def __init__(self, p=6.):
+        super(PNorm, self).__init__()
+        self.name = "P-Norm Loss"
+        self.p = p
+
+    def build_loss(self, img):
+        return K.sum(K.abs(K.pow(img, self.p)))

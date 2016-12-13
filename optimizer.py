@@ -19,41 +19,48 @@ class Optimizer(object):
         layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
 
         self.loss_functions = []
-        self.grads_function = []
+        overall_loss = K.variable(0.)
 
         for regularizer, weight in regularizers:
             loss_fn = weight * regularizer.build_loss(self.img)
-            grads = K.gradients(loss_fn, self.img)[0]
-            grads = normalize(grads)
-            self.loss_functions.append((regularizer.name, K.function([self.img], [loss_fn, grads])))
+            overall_loss += loss_fn
+            self.loss_functions.append((regularizer.name, K.function([self.img], [loss_fn])))
 
         for loss, weight in losses:
             loss_fn = loss.build_loss(self.img, layer_dict, **kwargs)
-            grads = K.gradients(loss_fn, self.img)[0]
-            grads = normalize(grads)
-            self.loss_functions.append((loss.name, K.function([self.img], [loss_fn, grads])))
+            overall_loss += loss_fn
+            self.loss_functions.append((loss.name, K.function([self.img], [loss_fn])))
 
-    def eval_loss_and_grads(self, img):
+        grads = K.gradients(overall_loss, self.img)[0]
+        # Normalization makes it less sensitive to learning rate during gradient descent.
+        grads = normalize(grads)
+
+        self.overall_loss_grad_function = K.function([self.img], [overall_loss, grads])
+
+    def _eval_losses(self, img):
         """
-        Evaluates loss and gradients with respect to input image.
-        :return: A tuple of
-        - losses: (name, loss_value) dictionary of various regularization losses and loss function losses.
-        - grads: The aggregate loss gradients with respect to image input
+        Evaluates losses with respect to input image.
+        :param img: The image to compute loss against.
+        :return: A tuple of (name, loss_value) dictionary of various regularization losses and loss function losses.
         """
         losses = OrderedDict()
-        grads_list = []
         for name, fn in self.loss_functions:
-            loss_value, grads = fn([img])
-            losses[name] = loss_value
-            grads_list.append(grads)
+            losses[name] = fn([img])
+        return losses
 
-        grads = np.sum(np.array(grads_list), 0)
-        return losses, grads
+    def _eval_loss_and_grads(self, img):
+        """
+        Evaluates overall loss and its gradients with respect to input image.
+        :param img: The image to compute loss, grads against.
+        :return: Tuple of (loss, grads)
+        """
+        return self.overall_loss_grad_function([img])
 
     def minimize(self, seed_img=None, max_iter=100, verbose=True):
         """
         Performs gradient descent on the input image with respect to defined losses and regularizations.
         :param seed_img: The seed image to start with, for optimization. Seeded with a random noise if None.
+        :param max_iter: The maximum number of gradient descent iterations.
         :param verbose: Prints losses/regularization losses at every gradient descent iteration. Very useful to
             estimate weight factor(s).
         :return: The optimized image.
@@ -67,14 +74,16 @@ class Optimizer(object):
         for i in range(max_iter):
             # x, min_val, info = fmin_l_bfgs_b(evaluator.loss, x.flatten(),
             #                                  fprime=evaluator.grads, maxfun=self.max_iter)
-            losses, grads = self.eval_loss_and_grads(seed_img)
 
-            # l2 norm, makes it easier to perform updates
-            # grads = grads / (np.sqrt(np.mean(grads ** 2, -1, keepdims=True)) + K.epsilon())
-            seed_img -= grads * 0.1
+            loss, grads = self._eval_loss_and_grads(seed_img)
 
             if verbose:
-                print('losses: {}, overall loss: {}'.format(pprint.pformat(losses), np.mean(losses.values())))
+                losses = self._eval_losses(seed_img)
+                print('losses: {}, overall loss: {}'.format(pprint.pformat(losses), loss))
+
+            # Noob gradient descent update.
+            # TODO: Add more sophisticated ones.
+            seed_img -= grads * 0.9
 
         return deprocess_image(seed_img[0])
 
