@@ -36,7 +36,7 @@ class TotalVariation(Regularizer):
         tv = K.sum(K.pow(a + b, self.beta/2.))
 
         samples, c, w, h = get_img_shape(img)
-        norm_tv = tv / (w * h)
+        norm_tv = tv / (c * w * h)
         return norm_tv
 
 
@@ -55,5 +55,5 @@ class BoundedRange(Regularizer):
         samples, c, w, h = get_img_shape(img)
 
         value = K.sum(K.pow(K.square(K.sum(img, axis=channel_idx)), self.alpha / 2.))
-        normed = value / (w * h)
+        normed = value / (c * w * h)
         return normed
