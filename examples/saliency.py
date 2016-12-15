@@ -1,6 +1,5 @@
 import cv2
 import utils
-import numpy as np
 
 from visualization import Saliency
 from vggnet import VGG16
@@ -21,9 +20,8 @@ def main():
 
     seed_img = utils.load_img('../resources/ouzel_1.jpg', target_size=(224, 224))
     saliency = Saliency()
-    grads_image = saliency.visualize(model, layer_dict[layer_name], [20],
-                                     np.array([seed_img], dtype=np.float32))
-    cv2.imshow('Importance map', utils.stitch_images([seed_img, grads_image], cols=1))
+    heatmap = saliency.visualize(model.input, layer_dict[layer_name], [20], seed_img)
+    cv2.imshow('Importance map', heatmap)
     cv2.waitKey(0)
 
 if __name__ == '__main__':

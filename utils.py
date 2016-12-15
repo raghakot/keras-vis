@@ -22,7 +22,7 @@ def deprocess_image(x):
     # convert to RGB array
     x *= 255
 
-    # TF image format if channels = (1, 3) towards the last rank.
+    # TF image format if channels = (1 or 3) towards the last rank.
     if x.shape[2] != 3 and x.shape[2] != 1:
         x = x.transpose((1, 2, 0))
 

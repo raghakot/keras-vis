@@ -9,14 +9,13 @@ from keras import backend as K
 
 class Optimizer(object):
 
-    def __init__(self, model, losses):
+    def __init__(self, input_layer, losses):
         """
         Creates an optimizer that minimizes weighted regularized losses + weighted loss function losses.
-        :param model: Keras neural network `Model` object
+        :param input_layer: 4D Keras image input layer (including #samples)
         :param losses: List of (`Redularizer`/`Loss` instances, weight) tuples
         """
-        self.img = model.input
-
+        self.img = input_layer
         self.loss_functions = []
         overall_loss = K.variable(0.)
 
@@ -80,19 +79,24 @@ class Optimizer(object):
                  jitter=32, verbose=True, progress_gif_path=None):
         """
         Performs gradient descent on the input image with respect to defined losses and regularizations.
-        :param seed_img: The seed image to start with, for optimization. Seeded with a random noise if None.
+        :param seed_img: 3D numpy array in tf or th image ordering to be used as the initial
+            seed image for optimization. Seeded with a random noise if None.
         :param max_iter: The maximum number of gradient descent iterations.
         :param jitter: The amount of pixels to jitter in each iteration. Jitter is known to generate crisper images.
         :param verbose: Prints losses/regularization losses at every gradient descent iteration. Very useful to
             estimate weight factor(s).
         :param progress_gif_path: Saves a gif of input image being optimized.
             This slows down perf quite a bit, use with care.
-
         :return: The tuple of optimized image, gradients of image with respect to losses.
         """
         samples, c, w, h = utils.get_img_shape(self.img)
         if seed_img is None:
             seed_img = utils.generate_rand_img(c, w, h)
+        else:
+            if K.image_dim_ordering() == 'th':
+                seed_img = seed_img.transpose(2, 0, 1)
+            # Convert to image tensor containing samples.
+            seed_img = np.array([seed_img], dtype=np.float32)
 
         cache = None
         best_loss = float('inf')
@@ -108,6 +112,9 @@ class Optimizer(object):
                 writer = imageio.get_writer(progress_gif_path, mode='I', loop=1)
 
             for i in range(max_iter):
+                if jitter > 0:
+                    seed_img = self._jitter(seed_img, jitter)
+
                 loss, grads = self._eval_loss_and_grads(seed_img)
 
                 if verbose:
@@ -117,7 +124,6 @@ class Optimizer(object):
                 # Gradient descent update.
                 step, cache = self._rmsprop(grads, cache)
                 seed_img += step
-                seed_img = self._jitter(seed_img, jitter)
 
                 if writer:
                     writer.append_data(utils.deprocess_image(seed_img.copy()[0]))

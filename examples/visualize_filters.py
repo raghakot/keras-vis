@@ -30,7 +30,7 @@ def main():
                 (LPNorm(p=6.), 100),
                 (TotalVariation(), 10)
             ]
-            opt = Optimizer(model, losses)
+            opt = Optimizer(model.input, losses)
             print('Working on filter {}_{}'.format(filter_idx, i))
             img, g = opt.minimize(max_iter=500, verbose=True)
             imgs.append(img)
