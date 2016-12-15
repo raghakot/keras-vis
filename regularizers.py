@@ -1,6 +1,8 @@
-from keras import backend as K
+from __future__ import division
 
-from utils import slicer, get_img_shape, get_image_indices
+import numpy as np
+from keras import backend as K
+from utils import slicer, get_img_shape
 
 
 class Regularizer(object):
@@ -40,20 +42,30 @@ class TotalVariation(Regularizer):
         return norm_tv
 
 
-class BoundedRange(Regularizer):
+class LPNorm(Regularizer):
     """
     This regularizer encourages the intensity of pixels to stay bounded.
-    See section 3.2.1 in https://arxiv.org/pdf/1512.02017v3.pdf for details.
+    i.e., prevents pixels from taking on very large values.
     """
-    def __init__(self, alpha=6):
-        super(BoundedRange, self).__init__()
-        self.name = "Bounded Range Loss"
-        self.alpha = alpha
+    def __init__(self, p=2.):
+        """
+        Builds an L-p Norm function.
+        :param p: The pth norm to use. if p = float('inf'), infinity-norm will be used.
+        """
+        super(LPNorm, self).__init__()
+        if p < 1:
+            raise ValueError('p value should range between [1, inf)')
+        self.name = "L-{} Norm Loss".format(p)
+        self.p = p
 
     def build_loss(self, img):
-        samples_idx, channel_idx, width_idx, height_idx = get_image_indices()
         samples, c, w, h = get_img_shape(img)
 
-        value = K.sum(K.pow(K.square(K.sum(img, axis=channel_idx)), self.alpha / 2.))
+        # Infinity norm
+        if np.isinf(self.p):
+            value = K.max(img)
+        else:
+            value = K.pow(K.sum(K.pow(K.abs(img), self.p)), 1. / self.p)
+
         normed = value / (c * w * h)
         return normed
