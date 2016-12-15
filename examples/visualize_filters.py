@@ -32,7 +32,7 @@ def main():
             ]
             opt = Optimizer(model, losses)
             print('Working on filter {}_{}'.format(filter_idx, i))
-            img = opt.minimize(max_iter=500, verbose=True)
+            img, g = opt.minimize(max_iter=500, verbose=True)
             imgs.append(img)
 
     labels = ', '.join([utils.get_imagenet_label(idx) for idx in filter_indices])

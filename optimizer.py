@@ -87,7 +87,8 @@ class Optimizer(object):
             estimate weight factor(s).
         :param progress_gif_path: Saves a gif of input image being optimized.
             This slows down perf quite a bit, use with care.
-        :return: The optimized image.
+
+        :return: The tuple of optimized image, gradients of image with respect to losses.
         """
         samples, c, w, h = utils.get_img_shape(self.img)
         if seed_img is None:
@@ -96,7 +97,9 @@ class Optimizer(object):
         cache = None
         best_loss = float('inf')
         best_img = None
+
         writer = None
+        grads = None
 
         try:
             if progress_gif_path:
@@ -127,4 +130,4 @@ class Optimizer(object):
                 print('Saving gif to {}'.format(progress_gif_path))
                 writer.close()
 
-        return utils.deprocess_image(best_img[0])
+        return utils.deprocess_image(best_img[0]), grads
