@@ -4,6 +4,7 @@ import numpy as np
 import os
 import math
 import json
+import cv2
 from keras import backend as K
 
 
@@ -38,7 +39,7 @@ def stitch_images(images, margin=5, cols=5):
     Util to stitch images together. Will fold over images to the next row when max_width is exceeded.
     :param images: The images to stitch
     :param margin: The black border margin size between images
-    :param cols: Max number of cols to show. New rows are created when max col limit is exceeded.
+    :param cols: max nu
     """
     if len(images) == 0:
         return None
@@ -94,6 +95,16 @@ def get_image_indices():
         return 0, 1, 2, 3
     else:
         return 0, 3, 1, 2
+
+
+def load_img(path, grayscale=False, target_size=None):
+    if grayscale:
+        img = cv2.imread(path, cv2.CV_LOAD_IMAGE_GRAYSCALE)
+    else:
+        img = cv2.imread(path)
+    if target_size:
+        img = cv2.resize(img, (target_size[1], target_size[0]))
+    return img
 
 
 CLASS_INDEX = None

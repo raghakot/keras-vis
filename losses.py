@@ -1,5 +1,5 @@
-from utils import slicer
 from keras import backend as K
+from utils import slicer
 
 
 class Loss(object):
@@ -9,7 +9,7 @@ class Loss(object):
     def __init__(self):
         self.name = "Unnamed Loss"
 
-    def build_loss(self, img, layer_dict, **kwargs):
+    def build_loss(self, img):
         """
         Define the loss that needs to be minimized.
         :param img: The image of shape (1, C, W, H)
@@ -23,11 +23,22 @@ class ActivationMaximization(Loss):
     """
     Finds an input image such that activation at a particular layer/filter is maximized.
     """
-    def __init__(self):
+    def __init__(self, layer, filter_indices):
+        """
+        :param layer: The keras layer to optimize.
+        :param filter_indices: filter indices within the layer to be maximized.
+            For `Dense` layers, `filter_idx` is interpreted as output index.
+
+            If you are optimizing final Dense layer to maximize class output, you tend to get
+            better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
+            output can be maximized by minimizing scores for other classes.
+        """
         super(ActivationMaximization, self).__init__()
         self.name = "Activation Maximization Loss"
+        self.layer = layer
+        self.filter_indices = filter_indices
 
-    def build_loss(self, img, layer_dict, **kwargs):
+    def build_loss(self, img):
         """
         Builds a loss function that maximizes activation map of
         :param img: The image of shape (1, C, W, H)
@@ -36,21 +47,17 @@ class ActivationMaximization(Loss):
             for Dense layers, `filter_idx` is interpreted as output index.
         :return: The loss function.
         """
-        layer_name = kwargs.get('layer_name')
-        filter_idx = kwargs.get('filter_idx')
-        if layer_name is None:
-            raise ValueError("layer_name must be provided")
-        if filter_idx is None:
-            raise ValueError("filter_idx must be provided")
 
-        layer_output = layer_dict[layer_name].output
+        layer_output = self.layer.output
 
         # For all other layers it is 4
         isDense = K.ndim(layer_output) == 2
 
-        if isDense:
-            loss = -K.mean(layer_output[:, filter_idx])
-        else:
-            loss = -K.mean(layer_output[slicer[:, filter_idx, :, :]])
+        loss = 0.
+        for idx in self.filter_indices:
+            if isDense:
+                loss += -K.mean(layer_output[:, idx])
+            else:
+                loss += -K.mean(layer_output[slicer[:, idx, :, :]])
 
         return loss
