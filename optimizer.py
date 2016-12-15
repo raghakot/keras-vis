@@ -21,7 +21,7 @@ class Optimizer(object):
         overall_loss = K.variable(0.)
 
         for loss, weight in losses:
-            loss_fn = loss.build_loss(self.img)
+            loss_fn = weight * loss.build_loss(self.img)
             overall_loss += loss_fn
             # Learning phase is added so that 'test' phase can be used to disable dropout.
             self.loss_functions.append((loss.name, K.function([self.img, K.learning_phase()], [loss_fn])))
