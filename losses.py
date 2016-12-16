@@ -1,5 +1,5 @@
 from keras import backend as K
-from utils import slicer
+from utils import utils
 
 
 class Loss(object):
@@ -58,6 +58,6 @@ class ActivationMaximization(Loss):
             if isDense:
                 loss += -K.mean(layer_output[:, idx])
             else:
-                loss += -K.mean(layer_output[slicer[:, idx, :, :]])
+                loss += -K.mean(layer_output[utils.slicer[:, idx, :, :]])
 
         return loss

@@ -1,10 +1,10 @@
 import cv2
-import utils
 
+from utils import utils
 from losses import ActivationMaximization
 from optimizer import Optimizer
 from regularizers import TotalVariation, LPNorm
-from vggnet import VGG16
+from utils.vggnet import VGG16
 
 
 def main():

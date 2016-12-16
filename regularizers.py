@@ -2,7 +2,7 @@ from __future__ import division
 
 import numpy as np
 from keras import backend as K
-from utils import slicer, get_img_shape
+from utils import utils
 
 
 class Regularizer(object):
@@ -33,11 +33,11 @@ class TotalVariation(Regularizer):
 
     def build_loss(self, img):
         assert 4 == K.ndim(img)
-        a = K.square(img[slicer[:, :, 1:, :-1]] - img[slicer[:, :, :-1, :-1]])
-        b = K.square(img[slicer[:, :, :-1, 1:]] - img[slicer[:, :, :-1, :-1]])
+        a = K.square(img[utils.slicer[:, :, 1:, :-1]] - img[utils.slicer[:, :, :-1, :-1]])
+        b = K.square(img[utils.slicer[:, :, :-1, 1:]] - img[utils.slicer[:, :, :-1, :-1]])
         tv = K.sum(K.pow(a + b, self.beta/2.))
 
-        samples, c, w, h = get_img_shape(img)
+        samples, c, w, h = utils.get_img_shape(img)
         norm_tv = tv / (c * w * h)
         return norm_tv
 
@@ -59,7 +59,7 @@ class LPNorm(Regularizer):
         self.p = p
 
     def build_loss(self, img):
-        samples, c, w, h = get_img_shape(img)
+        samples, c, w, h = utils.get_img_shape(img)
 
         # Infinity norm
         if np.isinf(self.p):

@@ -1,6 +1,6 @@
 import pprint
 import imageio
-import utils
+from utils import utils
 import numpy as np
 
 from collections import OrderedDict
@@ -75,6 +75,20 @@ class Optimizer(object):
         ox, oy = np.random.randint(-jitter, jitter+1, 2)
         return np.roll(np.roll(img, ox, w), oy, h)
 
+    def _get_seed_img(self, seed_img):
+        """
+        Creates the seed_img, along with other sanity checks.
+        """
+        samples, c, w, h = utils.get_img_shape(self.img)
+        if seed_img is None:
+            seed_img = utils.generate_rand_img(c, w, h)
+        else:
+            if K.image_dim_ordering() == 'th':
+                seed_img = seed_img.transpose(2, 0, 1)
+            # Convert to image tensor containing samples.
+            seed_img = np.array([seed_img], dtype=np.float32)
+        return seed_img
+
     def minimize(self, seed_img=None, max_iter=200,
                  jitter=32, verbose=True, progress_gif_path=None):
         """
@@ -89,14 +103,7 @@ class Optimizer(object):
             This slows down perf quite a bit, use with care.
         :return: The tuple of optimized image, gradients of image with respect to losses.
         """
-        samples, c, w, h = utils.get_img_shape(self.img)
-        if seed_img is None:
-            seed_img = utils.generate_rand_img(c, w, h)
-        else:
-            if K.image_dim_ordering() == 'th':
-                seed_img = seed_img.transpose(2, 0, 1)
-            # Convert to image tensor containing samples.
-            seed_img = np.array([seed_img], dtype=np.float32)
+        seed_img = self._get_seed_img(seed_img)
 
         cache = None
         best_loss = float('inf')

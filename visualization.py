@@ -3,7 +3,7 @@ from losses import ActivationMaximization
 from regularizers import TotalVariation, LPNorm
 from keras import backend as K
 
-import utils
+from utils import utils
 import numpy as np
 import cv2
 

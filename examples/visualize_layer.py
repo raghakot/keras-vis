@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
-import utils
 
+from utils import utils
+from utils.vggnet import VGG16
 from visualization import LayerActivation
-from vggnet import VGG16
 
 
 def main():
