@@ -112,7 +112,7 @@ CLASS_INDEX = None
 def get_imagenet_label(index):
     global CLASS_INDEX
     if CLASS_INDEX is None:
-        with open(os.path.join(os.path.dirname(__file__), 'resources/imagenet_class_index.json')) as f:
+        with open(os.path.join(os.path.dirname(__file__), '../resources/imagenet_class_index.json')) as f:
             CLASS_INDEX = json.load(f)
     return CLASS_INDEX[str(index)][1]
 
