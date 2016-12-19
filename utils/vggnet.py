@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Same as VGG16 in  keras.applications.VGG16, but the final layers activation is modified to 'linear'
+Same as VGG16 in  keras.applications.VGG16, but the final layer activation is modified to 'linear'
 instead of softmax.
 """
 from __future__ import print_function
@@ -22,9 +22,8 @@ TH_WEIGHTS_PATH_NO_TOP = 'https://github.com/fchollet/deep-learning-models/relea
 TF_WEIGHTS_PATH_NO_TOP = 'https://github.com/fchollet/deep-learning-models/releases/download/v0.1/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5'
 
 
-def VGG16(include_top=True, weights='imagenet',
-          input_tensor=None):
-    '''Instantiate the VGG16 architecture,
+def VGG16(include_top=True, weights='imagenet', input_tensor=None):
+    """Instantiate the VGG16 architecture,
     optionally loading weights pre-trained
     on ImageNet. Note that when using TensorFlow,
     for best performance you should set
@@ -36,7 +35,7 @@ def VGG16(include_top=True, weights='imagenet',
     convention used by the model is the one
     specified in your Keras config file.
 
-    # Arguments
+    Args:
         include_top: whether to include the 3 fully-connected
             layers at the top of the network.
         weights: one of `None` (random initialization)
@@ -44,9 +43,9 @@ def VGG16(include_top=True, weights='imagenet',
         input_tensor: optional Keras tensor (i.e. output of `layers.Input()`)
             to use as image input for the model.
 
-    # Returns
+    Returns:
         A Keras model instance.
-    '''
+    """
     if weights not in {'imagenet', None}:
         raise ValueError('The `weights` argument should be either '
                          '`None` (random initialization) or `imagenet` '

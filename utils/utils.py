@@ -5,42 +5,55 @@ import os
 import math
 import json
 import cv2
+
 from keras import backend as K
 
 
-# util function to convert a tensor into a valid image
-def deprocess_image(x):
+# Globals
+CLASS_INDEX = None
+
+
+def deprocess_image(img):
+    """Utility function to convert optimized image output into a valid image.
+
+    Args:
+        img: 3D numpy array with shape: `(channels, rows, cols)` if dim_ordering='th' or
+            `(rows, cols, channels)` if dim_ordering='tf'.
+
+    Returns:
+        A valid image output.
+    """
     # normalize tensor: center on 0., ensure std is 0.1
-    x -= x.mean()
-    x /= (x.std() + 1e-5)
-    x *= 0.1
+    img -= img.mean()
+    img /= (img.std() + 1e-5)
+    img *= 0.1
 
     # clip to [0, 1]
-    x += 0.5
-    x = np.clip(x, 0, 1)
+    img += 0.5
+    img = np.clip(img, 0, 1)
 
     # convert to RGB array
-    x *= 255
+    img *= 255
 
     # TF image format if channels = (1 or 3) towards the last rank.
-    if x.shape[2] != 3 and x.shape[2] != 1:
-        x = x.transpose((1, 2, 0))
+    if img.shape[-1] != 3 and img.shape[-1] != 1:
+        img = img.transpose((1, 2, 0))
 
-    x = np.clip(x, 0, 255).astype('uint8')
-    return x
-
-
-def normalize(x):
-    # utility function to normalize a tensor by its L2 norm
-    return x / (K.sqrt(K.mean(K.square(x))) + 1e-5)
+    img = np.clip(img, 0, 255).astype('uint8')
+    return img
 
 
 def stitch_images(images, margin=5, cols=5):
-    """
-    Util to stitch images together. Will fold over images to the next row when max_width is exceeded.
-    :param images: The images to stitch
-    :param margin: The black border margin size between images
-    :param cols: max nu
+    """Utility function to stitch images together with a `margin`.
+
+    Args:
+        images: The array of images to stitch.
+        margin: The black border margin size between images (Default value = 5)
+        cols: Max number of image cols. New row is created when number of images exceed the column size.
+            (Default value = 5)
+
+    Returns:
+        A single numpy image array comprising of input images.
     """
     if len(images) == 0:
         return None
@@ -66,6 +79,17 @@ def stitch_images(images, margin=5, cols=5):
 
 
 def generate_rand_img(c, w, h):
+    """Generates a random image.
+
+    Args:
+      c: image channels
+      w: image width
+      h: image height
+
+    Returns:
+        A numpy array of shape (c, w, h) if image dim ordering == 'th'.
+            (w, h, c) for 'tf'.
+    """
     if K.image_dim_ordering() == 'th':
         x = np.random.random((1, c, w, h))
     else:
@@ -75,10 +99,13 @@ def generate_rand_img(c, w, h):
 
 
 def get_img_shape(img):
-    """
-    Returns shape in a backend agnostic manner.
-    :param img: The image tensor
-    :return: The image shape in form (samples, channels, width, height)
+    """Returns image shape in a backend agnostic manner.
+
+    Args:
+        img: The image tensor in 'th' or 'tf' dim ordering.
+
+    Returns:
+        Tuple containing image shape information (samples, channels, width, height).
     """
     if K.image_dim_ordering() == 'th':
         return K.int_shape(img)
@@ -88,9 +115,10 @@ def get_img_shape(img):
 
 
 def get_image_indices():
-    """
-    Returns image indices in a backend agnostic manner.
-    :return: A tuple representing indices for (samples, channels, width, height)
+    """Returns image indices in a backend agnostic manner.
+
+    Returns:
+        A tuple representing indices for (samples, channels, width, height)
     """
     if K.image_dim_ordering() == 'th':
         return 0, 1, 2, 3
@@ -99,6 +127,16 @@ def get_image_indices():
 
 
 def load_img(path, grayscale=False, target_size=None):
+    """Utility function to load an image from disk.
+
+    Args:
+      path: The image file path.
+      grayscale: True to convert to grayscale image (Default value = False)
+      target_size: (w, h) to resize. (Default value = None)
+
+    Returns:
+        The loaded numpy image.
+    """
     if grayscale:
         img = cv2.imread(path, cv2.CV_LOAD_IMAGE_GRAYSCALE)
     else:
@@ -108,8 +146,15 @@ def load_img(path, grayscale=False, target_size=None):
     return img
 
 
-CLASS_INDEX = None
 def get_imagenet_label(index):
+    """Utility function to return the image net label for the final dense later output index.
+
+    Args:
+        index: The image net output category value,
+
+    Returns:
+        Image net label corresponding to the image category.
+    """
     global CLASS_INDEX
     if CLASS_INDEX is None:
         with open(os.path.join(os.path.dirname(__file__), '../resources/imagenet_class_index.json')) as f:
@@ -118,10 +163,12 @@ def get_imagenet_label(index):
 
 
 class BackendAgnosticImageSlice(object):
+    """Utility class to make image slicing across 'th'/'tf' backends easier.
     """
-    Assuming a slice for shape (samples, channels, width, height)
-    """
+
     def __getitem__(self, item_slice):
+        """Assuming a slice for shape (samples, channels, width, height)
+        """
         assert len(item_slice) == 4
         if K.image_dim_ordering() == 'th':
             return item_slice
@@ -129,4 +176,5 @@ class BackendAgnosticImageSlice(object):
             return tuple([item_slice[0], item_slice[2], item_slice[3], item_slice[1]])
 
 
+# Globals
 slicer = BackendAgnosticImageSlice()
