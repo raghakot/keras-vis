@@ -15,18 +15,18 @@ Compatible with both theano and tensorflow backends.
 ## Getting Started
 In image backprop problems, the goal is to generate an input image that minimizes some loss function.
 
-Various useful loss functions are defined in [https://github.com/raghakot/keras-vis/blob/master/losses.py](losses.py).
-A custom loss function can be defined by implementing [https://github.com/raghakot/keras-vis/blob/master/losses.py#L5](Loss)
+Various useful loss functions are defined in [losses.py](https://github.com/raghakot/keras-vis/blob/master/losses.py).
+A custom loss function can be defined by implementing [Loss](https://github.com/raghakot/keras-vis/blob/master/losses.py#L5)
 class.
 
-In order to generate natural looking images, we typically constrain image search space by specifying regularization losses.
-Various common regularizers defined in [https://github.com/raghakot/keras-vis/blob/master/regularizers.py](regularizers.py).
-A custom regularizer can be defined by implementing [https://github.com/raghakot/keras-vis/blob/master/losses.py#L5](Loss)
-class.
+In order to generate natural looking images, we typically constrain image search space by specifying regularization losses. 
+Various common regularizers defined in [regularizers.py](https://github.com/raghakot/keras-vis/blob/master/regularizers.py).
+Like loss functions, custom regularizer can be defined by implementing 
+[Loss](https://github.com/raghakot/keras-vis/blob/master/losses.py#L5) class.
 
 Setting up an image backprop problem is easy.
 
-- Define weighted loss function
+1. Define weighted loss function
 ```python
 from losses import ActivationMaximization
 from regularizers import TotalVariation, LPNorm
@@ -34,6 +34,7 @@ from regularizers import TotalVariation, LPNorm
 filter_indices = [1, 2, 3]
 
 # Tuple consists of (loss_function, weight)
+# Add regularizers as needed.
 losses = [
     (ActivationMaximization(keras_layer, filter_indices), 1),
     (LPNorm(), 10),
@@ -41,7 +42,7 @@ losses = [
 ]
 ```
 
-- Configure optimizer to minimize weighted loss
+2. Configure optimizer to minimize weighted loss
 ```python
 from optimizer import Optimizer
 
@@ -50,7 +51,7 @@ opt_img, grads = optimizer.minimize()
 ```
 
 ## Quick start
-See examples for various visualizations in [https://github.com/raghakot/keras-vis/tree/master/examples](examples) folder.
+See examples for various visualizations in [examples/](https://github.com/raghakot/keras-vis/tree/master/examples) folder.
 
 ## Visualizations
 Neural nets are black boxes. How can we be sure that they are learning the right thing? If the neural net generates a
@@ -195,7 +196,7 @@ behavior. Instead of hand crafting the regularizer, we can use the negative of '
 See this article for details about GANs in general: [Unsupervised Representation Learning with Deep Convolutional 
 Generative Adversarial Networks](https://arxiv.org/abs/1511.06434)
 
-GAN regularizer is currently a work in progress. Check back in a days.
+*GAN regularizer is currently a work in progress. Check back in a few days.*
 
 At this point, it might be fun to see the effect of total variation regularizer. The following images are generated with
 `tv_weight=0`
@@ -207,9 +208,39 @@ a GAN discriminator could do.
 
 ### Saliency Maps
 
-
 ### More will be added soon (WIP...)
 
+## Generating animated gif of optimization progress
 
+It is possible to generate an animated gif of optimization progress. Below is an example for activation maximization
+of 'ouzel' class (output_index: 20).
 
+```python
+from utils.vggnet import VGG16
+from optimizer import Optimizer
+from losses import ActivationMaximization
+from regularizers import TotalVariation, LPNorm
 
+# Build the VGG16 network with ImageNet weights
+model = VGG16(weights='imagenet', include_top=True)
+print('Model loaded.')
+
+# The name of the layer we want to visualize
+# (see model definition in vggnet.py)
+layer_name = 'predictions'
+layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
+output_class = [20]
+
+losses = [
+    (ActivationMaximization(layer_dict[layer_name], output_class), 1),
+    (LPNorm(), 10),
+    (TotalVariation(), 1)
+]
+opt = Optimizer(model.input, losses)
+
+# Jitter is used as a regularizer to create crisper images, but it makes gif animation ugly.
+opt.minimize(max_iter=500, verbose=True, jitter=0,
+             progress_gif_path='opt_progress')
+```
+
+![opt_progress](images/opt_progress.gif?raw=true "Optimization progress")

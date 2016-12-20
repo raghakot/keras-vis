@@ -1,3 +1,4 @@
+import cv2
 import pprint
 import imageio
 import numpy as np
@@ -115,7 +116,7 @@ class Optimizer(object):
         return seed_img
 
     def minimize(self, seed_img=None, max_iter=200,
-                 jitter=32, verbose=True, progress_gif_path=None):
+                 jitter=8, verbose=True, progress_gif_path=None):
         """Performs gradient descent on the input image with respect to defined losses.
 
         Args:
@@ -124,7 +125,7 @@ class Optimizer(object):
                 Seeded with random noise if set to None. (Default value = None)
             max_iter: The maximum number of gradient descent iterations. (Default value = 200)
             jitter: The number of pixels to jitter between subsequent gradient descent iterations.
-                Jitter is known to generate crisper images. (Default value = 32)
+                Jitter is known to generate crisper images. (Default value = 8)
             verbose: Logs individual losses at the end of every gradient descent iteration.
                 Very useful to estimate loss weight factor. (Default value = True)
             progress_gif_path: Saves a gif of input image being optimized.
@@ -163,7 +164,10 @@ class Optimizer(object):
                 seed_img += step
 
                 if writer:
-                    writer.append_data(utils.deprocess_image(seed_img.copy()[0]))
+                    seed_img_copy = utils.deprocess_image(seed_img.copy()[0])
+                    cv2.putText(seed_img_copy, "{}".format(i + 1), (10, 25),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 0), 2)
+                    writer.append_data(seed_img_copy)
 
                 if loss < best_loss:
                     best_loss = loss
