@@ -56,7 +56,7 @@ install:
     fi
 
   # Install keras-vis deps.
-  - pip install -r https://github.com/raghakot/keras-vis/requirements.txt
+  - pip install -r https://github.com/raghakot/keras-vis/blob/master/requirements.txt
 script:
   # Sphinx build task
   - travis-sphinx --source=docs build
