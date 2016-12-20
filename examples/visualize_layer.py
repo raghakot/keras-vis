@@ -73,11 +73,11 @@ def visualize_multiple_categories():
 
 
 if __name__ == '__main__':
-    # print('Visualizing random imagenet output categories')
-    # visualize_random()
-    #
-    # print('Visualizing same filter over multiple runs')
-    # visualize_multiple_same_filter()
+    print('Visualizing random imagenet output categories')
+    visualize_random()
+
+    print('Visualizing same filter over multiple runs')
+    visualize_multiple_same_filter()
 
     print('Visualizing multiple categories')
     visualize_multiple_categories()
