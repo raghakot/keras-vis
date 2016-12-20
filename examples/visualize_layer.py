@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
 
-from utils import utils
-from utils.vggnet import VGG16
-from visualization import visualize_activation
+from vis.utils import utils
+from vis.utils.vggnet import VGG16
+from vis.visualization import visualize_activation
 
 
 def visualize_random():

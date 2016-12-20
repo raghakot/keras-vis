@@ -1,11 +1,11 @@
-import cv2
 import pprint
+import cv2
 import imageio
 import numpy as np
 
-from utils import utils
 from collections import OrderedDict
 from keras import backend as K
+from utils import utils
 
 
 class Optimizer(object):

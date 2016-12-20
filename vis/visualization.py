@@ -1,11 +1,11 @@
-from optimizer import Optimizer
-from losses import ActivationMaximization
-from regularizers import TotalVariation, LPNorm
+import cv2
+import numpy as np
 from keras import backend as K
 
+from losses import ActivationMaximization
+from optimizer import Optimizer
+from regularizers import TotalVariation, LPNorm
 from utils import utils
-import numpy as np
-import cv2
 
 
 def _get_num_filters(layer):

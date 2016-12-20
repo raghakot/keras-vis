@@ -1,8 +1,8 @@
 import cv2
 
-from utils import utils
-from utils.vggnet import VGG16
-from visualization import visualize_saliency
+from vis.utils import utils
+from vis.utils.vggnet import VGG16
+from vis.visualization import visualize_saliency
 
 
 def main():

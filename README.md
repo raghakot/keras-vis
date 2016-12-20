@@ -16,21 +16,21 @@ Compatible with both theano and tensorflow backends.
 ## Getting Started
 In image backprop problems, the goal is to generate an input image that minimizes some loss function.
 
-Various useful loss functions are defined in [losses.py](https://github.com/raghakot/keras-vis/blob/master/losses.py).
-A custom loss function can be defined by implementing [Loss](https://github.com/raghakot/keras-vis/blob/master/losses.py#L5)
+Various useful loss functions are defined in [losses.py](vis/losses.py).
+A custom loss function can be defined by implementing [Loss](vis/losses.py#L5)
 class.
 
 In order to generate natural looking images, image search space is constrained using regularization penalties. 
-Some common regularizers are defined in [regularizers.py](https://github.com/raghakot/keras-vis/blob/master/regularizers.py).
+Some common regularizers are defined in [regularizers.py](vis/regularizers.py).
 Like loss functions, custom regularizer can be defined by implementing 
-[Loss](https://github.com/raghakot/keras-vis/blob/master/losses.py#L5) class.
+[Loss](vis/losses.py#L5) class.
 
 Setting up an image backprop problem is easy.
 
 **Define weighted loss function**
 ```python
-from losses import ActivationMaximization
-from regularizers import TotalVariation, LPNorm
+from vis.losses import ActivationMaximization
+from vis.regularizers import TotalVariation, LPNorm
 
 filter_indices = [1, 2, 3]
 
@@ -45,7 +45,7 @@ losses = [
 
 **Configure optimizer to minimize weighted loss**
 ```python
-from optimizer import Optimizer
+from vis.optimizer import Optimizer
 
 optimizer = Optimizer(img_input_layer, losses)
 opt_img, grads = optimizer.minimize()
@@ -72,8 +72,8 @@ this up is easy. Lets visualize the second conv layer of vggnet (named as 'block
 
 ```python
 import cv2
-from utils.vggnet import VGG16
-from visualization import visualize_activation
+from vis.utils.vggnet import VGG16
+from vis.visualization import visualize_activation
 
 # Build the VGG16 network with ImageNet weights
 model = VGG16(weights='imagenet', include_top=True)
@@ -153,8 +153,8 @@ One way to peer into the black box is to ask the reverse question - Generate an 
 
 ```python
 import cv2
-from utils.vggnet import VGG16
-from visualization import visualize_activation
+from vis.utils.vggnet import VGG16
+from vis.visualization import visualize_activation
 
 # Build the VGG16 network with ImageNet weights
 model = VGG16(weights='imagenet', include_top=True)
@@ -217,10 +217,10 @@ It is possible to generate an animated gif of optimization progress. Below is an
 of 'ouzel' class (output_index: 20).
 
 ```python
-from utils.vggnet import VGG16
-from optimizer import Optimizer
-from losses import ActivationMaximization
-from regularizers import TotalVariation, LPNorm
+from vis.utils.vggnet import VGG16
+from vis.optimizer import Optimizer
+from vis.losses import ActivationMaximization
+from vis.regularizers import TotalVariation, LPNorm
 
 # Build the VGG16 network with ImageNet weights
 model = VGG16(weights='imagenet', include_top=True)

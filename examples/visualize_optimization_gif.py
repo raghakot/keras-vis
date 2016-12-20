@@ -1,7 +1,7 @@
-from utils.vggnet import VGG16
-from optimizer import Optimizer
-from losses import ActivationMaximization
-from regularizers import TotalVariation, LPNorm
+from vis.losses import ActivationMaximization
+from vis.optimizer import Optimizer
+from vis.regularizers import TotalVariation, LPNorm
+from vis.utils.vggnet import VGG16
 
 
 def generate_opt_gif():
