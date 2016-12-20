@@ -22,13 +22,14 @@ class Optimizer(object):
         overall_loss = K.variable(0.)
 
         for loss, weight in losses:
-            loss_fn = weight * loss.build_loss(self.img)
-            overall_loss += loss_fn
-            # Learning phase is added so that 'test' phase can be used to disable dropout.
-            self.loss_functions.append((loss.name, K.function([self.img, K.learning_phase()], [loss_fn])))
+            if weight != 0:
+                loss_fn = weight * loss.build_loss(self.img)
+                overall_loss += loss_fn
+                # Learning phase is added so that 'test' phase can be used to disable dropout.
+                self.loss_functions.append((loss.name, K.function([self.img, K.learning_phase()], [loss_fn])))
 
         grads = K.gradients(overall_loss, self.img)[0]
-        # Normalization makes it less sensitive to learning rate during gradient descent.
+        # Normalization avoids very small or large gradients and ensures a smooth gradient gradient descent process.
         grads = grads / (K.sqrt(K.mean(K.square(grads))) + K.epsilon())
 
         self.overall_loss_grad_function = K.function([self.img, K.learning_phase()], [overall_loss, grads])
