@@ -1,4 +1,5 @@
 # Keras Visualization Toolkit
+[![Build Status](https://travis-ci.org/raghakot/keras-vis.svg?branch=master)](https://travis-ci.org/raghakot/keras-vis)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/raghakot/keras-vis/blob/master/LICENSE)
 
 keras-vis is a high-level toolkit for visualizing input images via guided backprop. 
