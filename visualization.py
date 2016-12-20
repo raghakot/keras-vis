@@ -19,9 +19,9 @@ def _get_num_filters(layer):
         return layer.output.shape[1]
     else:
         if K.image_dim_ordering() == 'th':
-            return layer.output.shape[1]
+            return layer.output._keras_shape[1]
         else:
-            return layer.output.shape[3]
+            return layer.output._keras_shape[3]
 
 
 def visualize_saliency(img, layer, filter_indices,
