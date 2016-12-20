@@ -27,7 +27,7 @@ Like loss functions, custom regularizer can be defined by implementing
 
 Setting up an image backprop problem is easy.
 
-1. Define weighted loss function
+**Define weighted loss function**
 ```python
 from losses import ActivationMaximization
 from regularizers import TotalVariation, LPNorm
@@ -43,7 +43,7 @@ losses = [
 ]
 ```
 
-2. Configure optimizer to minimize weighted loss
+**Configure optimizer to minimize weighted loss**
 ```python
 from optimizer import Optimizer
 
