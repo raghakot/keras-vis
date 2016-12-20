@@ -22,6 +22,7 @@ class Optimizer(object):
         overall_loss = K.variable(0.)
 
         for loss, weight in losses:
+            # Perf optimization. Don't build loss function with 0 weight.
             if weight != 0:
                 loss_fn = weight * loss.build_loss(self.img)
                 overall_loss += loss_fn

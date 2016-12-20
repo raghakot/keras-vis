@@ -76,9 +76,10 @@ def visualize_saliency(img, layer, filter_indices,
         return heatmap
 
 
-def visualize_activation(img, layer, filter_indices=None, max_iter=200,
+def visualize_activation(img, layer, filter_indices=None,
+                         seed_img=None, max_iter=200,
                          act_max_weight=1, lp_norm_weight=10, tv_weight=10, verbose=False,
-                         show_filter_idx_text=True, idx_label_map=None, cols=10):
+                         show_filter_idx_text=True, idx_label_map=None, cols=5):
     """Generates stitched input image(s) over all `filter_indices` in the given `layer` that maximize
     the filter output activation.
 
@@ -105,6 +106,8 @@ def visualize_activation(img, layer, filter_indices=None, max_iter=200,
             If you are visualizing final :class:`~keras.layers.Dense` layer, you tend to get
             better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
             output can be maximized by minimizing scores for other classes.
+        seed_img: Seeds the optimization with a starting image. Initialized with a random value when set to None.
+            (Default value = None)
         max_iter: The maximum number of gradient descent iterations. (Default value = 200)
         act_max_weight: The weight param for `ActivationMaximization` loss. Not used if 0 or None. (Default value = 1)
         lp_norm_weight: The weight param for `LPNorm` regularization loss. Not used if 0 or None. (Default value = 10)
@@ -116,7 +119,7 @@ def visualize_activation(img, layer, filter_indices=None, max_iter=200,
         idx_label_map: Map of filter_idx to text label. If not None, this map is used to translate filter_idx
             to text value when show_filter_idx_text = True. (Default value = None)
         cols: Max number of image cols. New row is created when number of images exceed the column size.
-            (Default value = 10)
+            (Default value = 5)
 
     Returns:
         Stitched image output visualizing input images that maximize the filter output(s). (Default value = 10)
@@ -136,7 +139,7 @@ def visualize_activation(img, layer, filter_indices=None, max_iter=200,
 
         opt = Optimizer(img, losses)
         print('Working on filter {}/{}'.format(i + 1, len(filter_indices)))
-        opt_img, g = opt.minimize(max_iter=max_iter, verbose=verbose)
+        opt_img, g = opt.minimize(seed_img=seed_img, max_iter=max_iter, verbose=verbose)
 
         # Add filter text to image if applicable.
         if show_filter_idx_text:

@@ -22,7 +22,7 @@ def visualize_random():
     indices = np.random.permutation(1000)[:15]
     idx_label_map = dict((idx, utils.get_imagenet_label(idx)) for idx in indices)
 
-    vis_img = visualize_activation(model.input, layer_dict[layer_name], cols=5,
+    vis_img = visualize_activation(model.input, layer_dict[layer_name], max_iter=500,
                                    filter_indices=indices, idx_label_map=idx_label_map)
     cv2.imshow('Random imagenet output categories', vis_img)
     cv2.waitKey(0)
@@ -44,7 +44,7 @@ def visualize_multiple_same_filter():
     indices = [20, 20, 20]
     idx_label_map = dict((idx, utils.get_imagenet_label(idx)) for idx in indices)
 
-    vis_img = visualize_activation(model.input, layer_dict[layer_name],
+    vis_img = visualize_activation(model.input, layer_dict[layer_name], max_iter=500,
                                    filter_indices=indices, idx_label_map=idx_label_map)
     cv2.imshow('Multiple runs of ouzel', vis_img)
     cv2.waitKey(0)
