@@ -19,8 +19,8 @@ Various useful loss functions are defined in [losses.py](https://github.com/ragh
 A custom loss function can be defined by implementing [Loss](https://github.com/raghakot/keras-vis/blob/master/losses.py#L5)
 class.
 
-In order to generate natural looking images, we typically constrain image search space by specifying regularization losses. 
-Various common regularizers defined in [regularizers.py](https://github.com/raghakot/keras-vis/blob/master/regularizers.py).
+In order to generate natural looking images, image search space is constrained using regularization penalties. 
+Some common regularizers are defined in [regularizers.py](https://github.com/raghakot/keras-vis/blob/master/regularizers.py).
 Like loss functions, custom regularizer can be defined by implementing 
 [Loss](https://github.com/raghakot/keras-vis/blob/master/losses.py#L5) class.
 
