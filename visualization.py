@@ -144,7 +144,7 @@ def visualize_activation(img, layer, filter_indices=None, max_iter=200,
             if idx_label_map:
                 label = ', '.join([idx_label_map.get(i) for i in indices])
             if label is None:
-                label = "Filter {}".format(', '.join(indices))
+                label = "Filter {}".format(', '.join([str(i) for i in indices]))
             cv2.putText(opt_img, label, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 0), 2)
 
         imgs.append(opt_img)
