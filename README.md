@@ -1,4 +1,5 @@
 # Keras Visualization Toolkit
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/raghakot/keras-vis/blob/master/LICENSE)
 
 keras-vis is a high-level toolkit for visualizing input images via guided backprop. 
 There are several repositories out there to visualize: 
