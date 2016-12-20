@@ -1,0 +1,24 @@
+sudo: required
+dist: trusty
+language: python
+
+# before_install will simply setup a conda enviroment for installing python packages, if you
+# have project dependencies it's usually recommended to go this route
+before_install:
+    - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+    - chmod +x miniconda.sh
+    - "./miniconda.sh -b"
+    - export PATH=/home/travis/miniconda2/bin:$PATH
+    - conda update --yes conda
+    - sudo rm -rf /dev/shm
+    - sudo ln -s /run/shm /dev/shm
+
+install:
+    - conda install --yes python="2.7" sphinx
+    - pip install --user travis-sphinx
+
+script:
+    - travis-sphinx build
+
+after_success:
+    - travis-sphinx deploy
