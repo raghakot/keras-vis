@@ -91,9 +91,9 @@ def generate_rand_img(c, w, h):
             (w, h, c) for 'tf'.
     """
     if K.image_dim_ordering() == 'th':
-        x = np.random.random((1, c, w, h))
+        x = np.random.random((c, w, h))
     else:
-        x = np.random.random((1, w, h, c))
+        x = np.random.random((w, h, c))
     x = (x - 0.5) * 20 + 128
     return x
 

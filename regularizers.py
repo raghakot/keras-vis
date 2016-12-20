@@ -48,7 +48,7 @@ class TotalVariation(Loss):
 
 class LPNorm(Loss):
 
-    def __init__(self, p=2.):
+    def __init__(self, p=6.):
         """
         Builds a L-p norm function. This regularizer encourages the intensity of pixels to stay bounded.
             i.e., prevents pixels from taking on very large values.
