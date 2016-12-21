@@ -1,8 +1,6 @@
 site_name: Keras-vis Documentation
 theme: readthedocs
 docs_dir: templates
-repo_url: http://github.com/raghakot/keras-vis
-site_url: http://keras-vis.io/
 site_description: 'Documentation for keras-vis, neural network visualization toolkit.'
 
 pages:
