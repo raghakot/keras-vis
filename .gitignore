@@ -1,2 +1,12 @@
+# dev-env
 .idea/
 *.iml
+
+# docs
+docs/site/*
+
+# test-related
+.coverage
+.cache
+
+*.pyc
