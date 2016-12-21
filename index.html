@@ -104,8 +104,7 @@
             <div class="section">
               
                 <h1 id="keras-visualization-toolkit">Keras Visualization Toolkit</h1>
-<p><a href="https://travis-ci.org/raghakot/keras-vis"><img alt="Build Status" src="https://travis-ci.org/raghakot/keras-vis.svg?branch=master" /></a>
-<a href="https://github.com/raghakot/keras-vis/blob/master/LICENSE"><img alt="license" src="https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000" /></a></p>
+<p><a href="https://github.com/raghakot/keras-vis/blob/master/LICENSE"><img alt="license" src="https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000" /></a></p>
 <p>keras-vis is a high-level toolkit for visualizing input images via guided backprop. 
 There are several repositories out there to visualize: </p>
 <ul>
@@ -117,6 +116,7 @@ There are several repositories out there to visualize: </p>
 </ul>
 <p>This toolkit generalizes all of the above and image backprop problems in general as energy minimization problem.
 Compatible with both theano and tensorflow backends. </p>
+<p>Read the documentation at <a href="https://raghakot.github.io/keras-vis">https://raghakot.github.io/keras-vis</a></p>
 <h2 id="getting-started">Getting Started</h2>
 <p>In image backprop problems, the goal is to generate an input image that minimizes some loss function.</p>
 <p>Various useful loss functions are defined in <a href="./vis/losses.py">losses.py</a>.
@@ -183,23 +183,23 @@ cv2.waitKey(0)
 
 <p>This generates the following stitched image representing input image(s) that maximize the filter_idx output.
 They mostly seem to match for specific color and directional patterns.</p>
-<p><img alt="block1_conv2 filters" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/block1_conv2_filters.jpg" /></p>
+<p><img alt="block1_conv2 filters" src="./images/block1_conv2_filters.jpg?raw=true" title="conv_1 filters" /></p>
 <p>Lets visualize the remaining conv filters (first few) by iterating over different <code>layer_name</code> values.</p>
 <h4 id="block2_conv2-random-sample-of-the-128-filters">block2_conv2: random sample of the 128 filters</h4>
-<p><img alt="block2_conv2 filters" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images//block2_conv2_filters.jpg?raw=true" title="conv_2 filters" /></p>
+<p><img alt="block2_conv2 filters" src="./images/block2_conv2_filters.jpg?raw=true" title="conv_2 filters" /></p>
 <h4 id="block3_conv3-random-sample-of-the-256-filters">block3_conv3: random sample of the 256 filters</h4>
-<p><img alt="block3_conv3 filters" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images//block3_conv3_filters.jpg?raw=true" title="conv_3 filters" /></p>
+<p><img alt="block3_conv3 filters" src="./images/block3_conv3_filters.jpg?raw=true" title="conv_3 filters" /></p>
 <h4 id="block3_conv4-random-sample-of-the-512-filters">block3_conv4: random sample of the 512 filters</h4>
-<p><img alt="block4_conv3 filters" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images//block4_conv3_filters.jpg?raw=true" title="conv_4 filters" /></p>
+<p><img alt="block4_conv3 filters" src="./images/block4_conv3_filters.jpg?raw=true" title="conv_4 filters" /></p>
 <h4 id="block3_conv5-random-sample-of-the-512-filters">block3_conv5: random sample of the 512 filters</h4>
-<p><img alt="block5_conv3 filters" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images//block5_conv3_filters.jpg?raw=true" title="conv_5 filters" /></p>
+<p><img alt="block5_conv3 filters" src="./images/block5_conv3_filters.jpg?raw=true" title="conv_5 filters" /></p>
 <p>Some of the 'block5_conv3' filters failed to converge. This is because regularization losses (total variation and 
 LP norm) are overtaking activation maximization loss (set <code>verbose=True</code> to observe). </p>
 <p>Whenever activation maximization fails to converge, total variation regularization is the typical culprit. 
 It is easier to minimize total variation from a random image (just have to create blobbier color structures), 
 and this sets the input image in a bad local minima that makes it difficult to optimize for activation maximization. 
 We can turn off total variation by setting <code>tv_weight=0</code>. This generates most of the previously unconverged filters.</p>
-<p><img alt="block5_conv3 filters_no_tv" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images//block5_conv3_filters_no_tv.jpg?raw=true" title="conv_5 filters_no_tv" /></p>
+<p><img alt="block5_conv3 filters_no_tv" src="./images/block5_conv3_filters_no_tv.jpg?raw=true" title="conv_5 filters_no_tv" /></p>
 <p>By this layer, we can clearly notice templates for complex patterns such as flower buds / corals 
 (filters 67, 84 respectively). Notice that images are not as coherent due to lack of total variation loss.</p>
 <p>A good strategy in these situations might be to seed the optimization with image output generated via tv_weight=0
@@ -215,7 +215,7 @@ cv2.waitKey(0)
 </code></pre>
 
 <p>As expected, this generates a blobbier and smoother image:</p>
-<p><img alt="filter_67" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images//filter_67.png?raw=true" title="filter_75" /></p>
+<p><img alt="filter_67" src="./images/filter_67.png?raw=true" title="filter_75" /></p>
 <h3 id="dense-layer-visualization">Dense layer visualization</h3>
 <p>Given an input image, conv net can classify whether it is a cat, bird etc. How can we be sure that it is capturing 
 the correct notion of what it means to be a bird? Suppose that all the training images of 'bird' class contains a tree
@@ -244,11 +244,11 @@ cv2.waitKey(0)
 </code></pre>
 
 <p>and out comes this..</p>
-<p><img alt="ouzel_vis" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images//ouzel_vis.png?raw=true" title="ouzel_vis" /></p>
+<p><img alt="ouzel_vis" src="./images/ouzel_vis.png?raw=true" title="ouzel_vis" /></p>
 <p>Not only has the conv net captured what it means to be an ouzel, but it also seems to encode for different orientations 
 and scales, a further proof of rotational and scale invariance. </p>
 <p>Lets do this for a few more random imagenet categories.</p>
-<p><img alt="random_imagenet" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images//random_imagenet.png?raw=true" title="random_imagenet" /></p>
+<p><img alt="random_imagenet" src="./images/random_imagenet.png?raw=true" title="random_imagenet" /></p>
 <p>If you squint really hard, we can sort of see that most images are more or less accurate representations of the 
 corresponding class.</p>
 <p>You might notice that in most of these visualizations, the same pattern tends to repeat all over the image 
@@ -262,7 +262,7 @@ Generative Adversarial Networks</a></p>
 <p><em>GAN regularizer is currently a work in progress. Check back in a few days.</em></p>
 <p>At this point, it might be fun to see the effect of total variation regularizer. The following images are generated with
 <code>tv_weight=0</code></p>
-<p><img alt="random_imagenet_no_tv" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images//random_imagenet_no_tv.png?raw=true" title="random_imagenet_no_tv" /></p>
+<p><img alt="random_imagenet_no_tv" src="./images/random_imagenet_no_tv.png?raw=true" title="random_imagenet_no_tv" /></p>
 <p>Total variation regularizer definitely helps in creating more natural looking images. I am excited to see what
 a GAN discriminator could do.</p>
 <h3 id="saliency-maps">Saliency Maps</h3>
@@ -297,7 +297,7 @@ opt.minimize(max_iter=500, verbose=True, jitter=0,
              progress_gif_path='opt_progress')
 </code></pre>
 
-<p><img alt="opt_progress" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images//opt_progress.gif?raw=true" title="Optimization progress" /></p>
+<p><img alt="opt_progress" src="./images/opt_progress.gif?raw=true" title="Optimization progress" /></p>
               
             </div>
           </div>
@@ -337,5 +337,5 @@ opt.minimize(max_iter=500, verbose=True, jitter=0,
 
 <!--
 MkDocs version : 0.16.0
-Build Date UTC : 2016-12-21 02:15:45
+Build Date UTC : 2016-12-21 02:23:09
 -->
