@@ -1,5 +1,4 @@
 # Keras Visualization Toolkit
-[![Documentation Status](https://readthedocs.org/projects/keras-vis/badge/?version=latest)](http://keras-vis.readthedocs.io/en/latest/?badge=latest)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/raghakot/keras-vis/blob/master/LICENSE)
 
 keras-vis is a high-level toolkit for visualizing input images via guided backprop. 
@@ -14,7 +13,7 @@ There are several repositories out there to visualize:
 This toolkit generalizes all of the above and image backprop problems in general as energy minimization problem.
 Compatible with both theano and tensorflow backends. 
 
-Read the documentation at [http://keras-vis.readthedocs.io](http://keras-vis.readthedocs.io)
+Read the documentation at [https://raghakot.github.io/keras-vis](https://raghakot.github.io/keras-vis)
 
 ## Getting Started
 In image backprop problems, the goal is to generate an input image that minimizes some loss function.
