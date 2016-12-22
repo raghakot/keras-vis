@@ -25,13 +25,18 @@ def generate_api_docs():
     mkgen = MarkdownAPIGenerator("vis", "https://github.com/raghakot/keras-vis/tree/master")
     for module in modules:
         md_string = mkgen.module2md(module)
-        to_md_file(md_string, module.__name__, "templates")
+        to_md_file(md_string, module.__name__, "sources")
 
 
 def update_index_md():
-    shutil.copyfile('../README.md', 'templates/index.md')
+    shutil.copyfile('../README.md', 'sources/index.md')
+
+
+def copy_templates():
+    shutil.copytree('templates', 'sources')
 
 
 if __name__ == "__main__":
+    copy_templates()
     update_index_md()
     generate_api_docs()

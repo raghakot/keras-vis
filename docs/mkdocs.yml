@@ -1,6 +1,6 @@
 site_name: Keras-vis Documentation
 theme: readthedocs
-docs_dir: templates
+docs_dir: sources
 site_description: 'Documentation for keras-vis, neural network visualization toolkit.'
 
 extra_javascript:
@@ -11,6 +11,9 @@ markdown_extensions:
 
 pages:
   - Home: index.md
+  - Visualizations:
+    - Convolutional Filters: visualizations/conv_filters.md
+    - Dense Layers: visualizations/dense.md
   - Core API:
     - losses: vis.losses.md
     - regularizers: vis.regularizers.md

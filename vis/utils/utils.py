@@ -147,7 +147,7 @@ def load_img(path, grayscale=False, target_size=None):
 
 
 def get_imagenet_label(index):
-    """Utility function to return the image net label for the final dense later output index.
+    """Utility function to return the image net label for the final `dense` layer output index.
 
     Args:
         index: The image net output category value,
