@@ -18,14 +18,14 @@ Read the documentation at [https://raghakot.github.io/keras-vis](https://raghako
 ## Getting Started
 In image backprop problems, the goal is to generate an input image that minimizes some loss function.
 
-Various useful loss functions are defined in [losses.py](vis/losses.py).
-A custom loss function can be defined by implementing [Loss](vis/losses.py#L5)
+Various useful loss functions are defined in [losses.py](https://github.com/raghakot/keras-vis/tree/master/vis/losses.py).
+A custom loss function can be defined by implementing [Loss](https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L5)
 class.
 
 In order to generate natural looking images, image search space is constrained using regularization penalties. 
-Some common regularizers are defined in [regularizers.py](vis/regularizers.py).
+Some common regularizers are defined in [regularizers.py](https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py).
 Like loss functions, custom regularizer can be defined by implementing 
-[Loss](vis/losses.py#L5) class.
+[Loss](https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L5) class.
 
 Setting up an image backprop problem is easy.
 
@@ -54,7 +54,7 @@ opt_img, grads = optimizer.minimize()
 ```
 
 ## Quick start
-See examples for various visualizations in [examples/](https://github.com/raghakot/keras-vis/tree/master/examples) folder.
+See examples for various visualizations in [examples folder](https://github.com/raghakot/keras-vis/tree/master/examples).
 
 ## Visualizations
 Neural nets are black boxes. How can we be sure that they are learning the right thing? If the neural net generates a

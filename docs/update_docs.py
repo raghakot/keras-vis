@@ -1,7 +1,7 @@
 import shutil
 
-from mk_autodoc import MarkdownAPIGenerator
-from mk_autodoc import to_md_file
+from md_autogen import MarkdownAPIGenerator
+from md_autogen import to_md_file
 
 from vis import losses
 from vis import regularizers
