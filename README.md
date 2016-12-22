@@ -1,5 +1,6 @@
 # Keras Visualization Toolkit
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/raghakot/keras-vis/blob/master/LICENSE)
+[![Slack](https://img.shields.io/badge/slack-discussion-E01563.svg)](https://keras-vis.herokuapp.com/)
 
 keras-vis is a high-level toolkit for visualizing input images via guided backprop. 
 There are several repositories out there to visualize: 
@@ -7,29 +8,23 @@ There are several repositories out there to visualize:
 - Activation maximization
 - Saliency maps
 - Caricaturization (deep dream)
-- Texture style transfer
-- Neural style transfer
+- Texture/Artistic style transfer
+- Any other guided image backprop
 
-This toolkit generalizes all of the above and image backprop problems in general as energy minimization problem.
+This toolkit generalizes all of the above as energy minimization problem. 
 Compatible with both theano and tensorflow backends. 
 
-Read the documentation at [https://raghakot.github.io/keras-vis](https://raghakot.github.io/keras-vis)
+Read the documentation at [https://raghakot.github.io/keras-vis](https://raghakot.github.io/keras-vis). 
+Join the slack channel for questions/discussions.
 
 ## Getting Started
 In image backprop problems, the goal is to generate an input image that minimizes some loss function.
-
-Various useful loss functions are defined in [losses.py](https://github.com/raghakot/keras-vis/tree/master/vis/losses.py).
-A custom loss function can be defined by implementing [Loss](https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L5)
-class.
-
-In order to generate natural looking images, image search space is constrained using regularization penalties. 
-Some common regularizers are defined in [regularizers.py](https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py).
-Like loss functions, custom regularizer can be defined by implementing 
-[Loss](https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L5) class.
-
 Setting up an image backprop problem is easy.
 
 **Define weighted loss function**
+Various useful loss functions are defined in [losses](https://raghakot.github.io/keras-vis/vis.losses).
+A custom loss function can be defined by implementing [Loss.build_loss](https://raghakot.github.io/keras-vis/vis.losses/#lossbuild_loss).
+
 ```python
 from vis.losses import ActivationMaximization
 from vis.regularizers import TotalVariation, LPNorm
@@ -46,6 +41,12 @@ losses = [
 ```
 
 **Configure optimizer to minimize weighted loss**
+In order to generate natural looking images, image search space is constrained using regularization penalties. 
+Some common regularizers are defined in [regularizers](https://raghakot.github.io/keras-vis/vis.regularizers).
+Like loss functions, custom regularizer can be defined by implementing 
+[Loss.build_loss](https://raghakot.github.io/keras-vis/vis.losses/#lossbuild_loss).
+
+
 ```python
 from vis.optimizer import Optimizer
 
@@ -53,8 +54,27 @@ optimizer = Optimizer(img_input_layer, losses)
 opt_img, grads = optimizer.minimize()
 ```
 
-## Quick start
-See examples for various visualizations in [examples folder](https://github.com/raghakot/keras-vis/tree/master/examples).
+Concrete examples of various visualizations can be found in 
+[examples folder](https://github.com/raghakot/keras-vis/tree/master/examples).
+
+## Installation
+1) Install [keras](https://github.com/fchollet/keras/blob/master/README.md#installation) 
+with theano or tensorflow backend
+2) Install OpenCV 
+```bash
+sudo apt-get install python-opencv
+```
+
+3) Install keras-vis
+> From sources
+```bash
+sudo python setup.py install
+```
+
+> PyPI package
+```bash
+sudo pip install keras-vis
+```
 
 ## Visualizations
 Neural nets are black boxes. How can we be sure that they are learning the right thing? If the neural net generates a

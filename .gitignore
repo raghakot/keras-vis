@@ -10,4 +10,5 @@ docs/templates/*
 .coverage
 .cache
 
+keras_vis.egg-info
 *.pyc
