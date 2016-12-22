@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>visualization - Keras-vis Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "visualization";
+    var mkdocs_page_input_path = "vis.visualization.md";
+    var mkdocs_page_url = "/vis.visualization/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Keras-vis Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Home</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Core API</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../vis.losses/">losses</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../vis.regularizers/">regularizers</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../vis.optimizer/">optimizer</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">visualization</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#visualize_saliency">visualize_saliency</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#visualize_activation">visualize_activation</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Utils</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../vis.utils.utils/">utils</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../vis.utils.vggnet/">vggnet</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Keras-vis Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Core API &raquo;</li>
+        
+      
+    
+    <li>visualization</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L0">vis/visualization.py#L0</a></p>
+<hr />
+<h3 id="visualize_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L27">visualize_saliency</a></h3>
+<pre><code class="python">visualize_saliency(img, layer, filter_indices, seed_img, overlay=True)
+</code></pre>
+
+<p>Generates a heatmap indicating the pixels that contributed the most towards
+maximizing <code>filter_indices</code> output in the given <code>layer</code>.</p>
+<p>For example, if you wanted to visualize the which pixels contributed to classifying an image as 'bird', say output
+index 22 on final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</code>, <code>layer = dense_layer</code>.</p>
+<p>Alternatively one could use <code>filter_indices = [22, 23]</code> and hope to see image regions that are common to output
+categories 22, 23 to show up in the heatmap.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>img</strong>:  4D input image tensor with shape: <code>(samples, channels, rows, cols)</code> if dim_ordering='th'
+  or <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
+<li><strong>layer</strong>:  The <code>keras.Layer</code> layer whose filters needs to be visualized.</li>
+<li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
+  For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</li>
+</ul>
+<p>If you are visualizing final <code>keras.layers.Dense</code> layer, you tend to get
+  better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
+  output can be maximized by minimizing scores for other classes.</p>
+<ul>
+<li><strong>seed_img</strong>:  The input image for which activation map needs to be visualized.</li>
+<li><strong>overlay</strong>:  If true, overlays the heatmap over the original image (Default value = True)</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The heatmap image indicating image regions that, when changed, would contribute the most towards maximizing
+a the filter output.</p>
+<hr />
+<h3 id="visualize_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L80">visualize_activation</a></h3>
+<pre><code class="python">visualize_activation(img, layer, filter_indices=None, seed_img=None, max_iter=200, act_max_weight=1, \
+    lp_norm_weight=10, tv_weight=10, verbose=False, show_filter_idx_text=True, \
+    idx_label_map=None, cols=5)
+</code></pre>
+
+<p>Generates stitched input image(s) over all <code>filter_indices</code> in the given <code>layer</code> that maximize
+the filter output activation.</p>
+<p>For example, if you wanted to visualize the input image that would maximize the output index 22, say on
+final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</code>, <code>layer = dense_layer</code>.</p>
+<p>If <code>filter_indices = [22, 23]</code>, then a stitched image comprising of two images are generated, each
+corresponding to the entry in <code>filter_indices</code>.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>img</strong>:  4D input image tensor with shape: <code>(samples, channels, rows, cols)</code> if dim_ordering='th'
+  or <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
+<li><strong>layer</strong>:  The <code>keras.Layer</code> layer whose filters needs to be visualized.</li>
+<li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
+  If None, all filters are visualized. (Default value = None)</li>
+</ul>
+<p>An input image is generated for each entry in <code>filter_indices</code>. The entry can also be an array.
+  For example, <code>filter_indices = [[1, 2], 3, [4, 5, 6]]</code> would generate three input images. The first one
+  would maximize output of filters 1, 2, 3 jointly. A fun use of this might be to generate a dog-fish
+  image by maximizing 'dog' and 'fish' output in final <code>Dense</code> layer.</p>
+<p>For <code>keras.layers.Dense</code> layers, <code>filter_idx</code> is interpreted as the output index.</p>
+<p>If you are visualizing final <code>keras.layers.Dense</code> layer, you tend to get
+  better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
+  output can be maximized by minimizing scores for other classes.</p>
+<ul>
+<li><strong>seed_img</strong>:  Seeds the optimization with a starting image. Initialized with a random value when set to None.
+  (Default value = None)</li>
+<li><strong>max_iter</strong>:  The maximum number of gradient descent iterations. (Default value = 200)</li>
+<li><strong>act_max_weight</strong>:  The weight param for <code>ActivationMaximization</code> loss. Not used if 0 or None. (Default value = 1)</li>
+<li><strong>lp_norm_weight</strong>:  The weight param for <code>LPNorm</code> regularization loss. Not used if 0 or None. (Default value = 10)</li>
+<li><strong>tv_weight</strong>:  The weight param for <code>TotalVariation</code> regularization loss. Not used if 0 or None. (Default value = 10)</li>
+<li><strong>verbose</strong>:  Shows verbose loss output for each filter. (Default value = False)
+  Very useful to estimate loss weight factor. (Default value = True)</li>
+<li><strong>show_filter_idx_text</strong>:  Adds filter_idx text to the image if set to True. (Default value = True)
+  If the entry in <code>filter_indices</code> is an array, then comma separated labels are generated.</li>
+<li><strong>idx_label_map</strong>:  Map of filter_idx to text label. If not None, this map is used to translate filter_idx
+  to text value when show_filter_idx_text = True. (Default value = None)</li>
+<li><strong>cols</strong>:  Max number of image cols. New row is created when number of images exceed the column size.
+  (Default value = 5)</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>Stitched image output visualizing input images that maximize the filter output(s). (Default value = 10)</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../vis.utils.utils/" class="btn btn-neutral float-right" title="utils">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../vis.optimizer/" class="btn btn-neutral" title="optimizer"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../vis.optimizer/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../vis.utils.utils/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+      <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>

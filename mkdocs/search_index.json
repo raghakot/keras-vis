@@ -69,6 +69,176 @@
             "location": "/#generating-animated-gif-of-optimization-progress", 
             "text": "It is possible to generate an animated gif of optimization progress. Below is an example for activation maximization\nof 'ouzel' class (output_index: 20).  from vis.utils.vggnet import VGG16\nfrom vis.optimizer import Optimizer\nfrom vis.losses import ActivationMaximization\nfrom vis.regularizers import TotalVariation, LPNorm\n\n# Build the VGG16 network with ImageNet weights\nmodel = VGG16(weights='imagenet', include_top=True)\nprint('Model loaded.')\n\n# The name of the layer we want to visualize\n# (see model definition in vggnet.py)\nlayer_name = 'predictions'\nlayer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])\noutput_class = [20]\n\nlosses = [\n    (ActivationMaximization(layer_dict[layer_name], output_class), 1),\n    (LPNorm(), 10),\n    (TotalVariation(), 1)\n]\nopt = Optimizer(model.input, losses)\n\n# Jitter is used as a regularizer to create crisper images, but it makes gif animation ugly.\nopt.minimize(max_iter=500, verbose=True, jitter=0,\n             progress_gif_path='opt_progress')", 
             "title": "Generating animated gif of optimization progress"
+        }, 
+        {
+            "location": "/vis.losses/", 
+            "text": "Source:\n \nvis/losses.py#L0\n\n\n\n\nLoss\n\n\nAbstract class for defining the loss function to be minimized.\nThe loss function should be built by defining \nbuild_loss\n function.\n\n\nThe attribute \nname\n should be defined to identify loss function with verbose outputs.\nDefaults to 'Unnamed Loss' if not overridden.\n\n\n\n\nLoss.\n__init__\n\n\n__init__(self)\n\n\n\n\n\n\nLoss.build_loss\n\n\nbuild_loss(self, img)\n\n\n\n\nImplement this function to build the loss function expression.\nAny additional arguments required to build this loss function may be passed in via \n__init__\n.\n\n\nIdeally, the function expression must be compatible with both theano/tensorflow backends with\n'th' or 'tf' image dim ordering. \nutils.slicer\n can be used to define backend agnostic slices\n(just define it for theano, it will automatically shuffle indices for tensorflow).\n\n\n# theano slice\nconv_layer[:, filter_idx, :, :]\n\n# TF slice\nconv_layer[:, :, :, filter_idx]\n\n# Backend agnostic slice\nconv_layer[utils.slicer[:, filter_idx, :, :]]\n\n\n\n\nutils.get_img_shape\n and\n\nutils.get_img_indices\n are other optional utilities that make this easier.\n\n\nArgs:\n\n\n\n\nimg\n:  4D tensor with shape: \n(samples, channels, rows, cols)\n if dim_ordering='th' or\n  \n(samples, rows, cols, channels)\n if dim_ordering='tf'.\n\n\n\n\nReturns:\n\n\nThe loss expression.\n\n\n\n\nActivationMaximization\n\n\nA loss function that maximizes the activation of a set of filters within a particular layer.\n\n\nTypically this loss is used to ask the reverse question - What kind of input image would increase the networks\nconfidence, for say, dog class. This helps determine what the network might be internalizing as being the 'dog'\nimage space.\n\n\nOne might also use this to generate an input image that maximizes both 'dog' and 'human' outputs on the final\n\nkeras.layers.Dense\n layer.\n\n\n\n\nActivationMaximization.\n__init__\n\n\n__init__(self, layer, filter_indices)\n\n\n\n\nArgs:\n\n\n\n\nlayer\n:  The keras layer whose filters need to be maximized. This can either be a convolutional layer\n  or a dense layer.\n\n\nfilter_indices\n:  filter indices within the layer to be maximized.\n  For \nkeras.layers.Dense\n layer, \nfilter_idx\n is interpreted as the output index.\n\n\n\n\nIf you are optimizing final \nkeras.layers.Dense\n layer to maximize class output, you tend to get\n  better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'\n  output can be maximized by minimizing scores for other classes.\n\n\n\n\nActivationMaximization.build_loss\n\n\nbuild_loss(self, img)", 
+            "title": "losses"
+        }, 
+        {
+            "location": "/vis.losses/#loss", 
+            "text": "Abstract class for defining the loss function to be minimized.\nThe loss function should be built by defining  build_loss  function.  The attribute  name  should be defined to identify loss function with verbose outputs.\nDefaults to 'Unnamed Loss' if not overridden.", 
+            "title": "Loss"
+        }, 
+        {
+            "location": "/vis.losses/#loss__init__", 
+            "text": "__init__(self)", 
+            "title": "Loss.__init__"
+        }, 
+        {
+            "location": "/vis.losses/#lossbuild_loss", 
+            "text": "build_loss(self, img)  Implement this function to build the loss function expression.\nAny additional arguments required to build this loss function may be passed in via  __init__ .  Ideally, the function expression must be compatible with both theano/tensorflow backends with\n'th' or 'tf' image dim ordering.  utils.slicer  can be used to define backend agnostic slices\n(just define it for theano, it will automatically shuffle indices for tensorflow).  # theano slice\nconv_layer[:, filter_idx, :, :]\n\n# TF slice\nconv_layer[:, :, :, filter_idx]\n\n# Backend agnostic slice\nconv_layer[utils.slicer[:, filter_idx, :, :]]  utils.get_img_shape  and utils.get_img_indices  are other optional utilities that make this easier.  Args:   img :  4D tensor with shape:  (samples, channels, rows, cols)  if dim_ordering='th' or\n   (samples, rows, cols, channels)  if dim_ordering='tf'.   Returns:  The loss expression.", 
+            "title": "Loss.build_loss"
+        }, 
+        {
+            "location": "/vis.losses/#activationmaximization", 
+            "text": "A loss function that maximizes the activation of a set of filters within a particular layer.  Typically this loss is used to ask the reverse question - What kind of input image would increase the networks\nconfidence, for say, dog class. This helps determine what the network might be internalizing as being the 'dog'\nimage space.  One might also use this to generate an input image that maximizes both 'dog' and 'human' outputs on the final keras.layers.Dense  layer.", 
+            "title": "ActivationMaximization"
+        }, 
+        {
+            "location": "/vis.losses/#activationmaximization__init__", 
+            "text": "__init__(self, layer, filter_indices)  Args:   layer :  The keras layer whose filters need to be maximized. This can either be a convolutional layer\n  or a dense layer.  filter_indices :  filter indices within the layer to be maximized.\n  For  keras.layers.Dense  layer,  filter_idx  is interpreted as the output index.   If you are optimizing final  keras.layers.Dense  layer to maximize class output, you tend to get\n  better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'\n  output can be maximized by minimizing scores for other classes.", 
+            "title": "ActivationMaximization.__init__"
+        }, 
+        {
+            "location": "/vis.losses/#activationmaximizationbuild_loss", 
+            "text": "build_loss(self, img)", 
+            "title": "ActivationMaximization.build_loss"
+        }, 
+        {
+            "location": "/vis.regularizers/", 
+            "text": "Source:\n \nvis/regularizers.py#L0\n\n\n\n\nnormalize\n\n\nnormalize(img, value)\n\n\n\n\nNormalizes the value with respect to image dimensions. This makes regularizer weight factor more or less\nuniform across various input image dimensions.\n\n\nArgs:\n\n\n\n\nimg\n:  4D tensor with shape: \n(samples, channels, rows, cols)\n if dim_ordering='th' or\n  \n(samples, rows, cols, channels)\n if dim_ordering='tf'.\n\n\nvalue\n:  The function to normalize\n\n\n\n\nReturns:\n\n\nThe normalized expression.\n\n\n\n\nTotalVariation\n\n\n\n\nTotalVariation.\n__init__\n\n\n__init__(self, beta=2.0)\n\n\n\n\nTotal variation regularizer encourages blobbier and coherent image structures, akin to natural images.\nSee \nsection 3.2.2\n in\n\nVisualizing deep convolutional neural networks using natural pre-images\n\nfor details.\n\n\nArgs:\n\n\n\n\nbeta\n:  Smaller values of beta give sharper but 'spikier' images.\nValues \n\\in [1.5, 2.0]\n are recommended as a reasonable compromise.\n\n\n\n\n\n\nTotalVariation.build_loss\n\n\nbuild_loss(self, img)\n\n\n\n\nImplements the function\n\nTV^{\\beta}(x) = \\sum_{whc} \\left ( \\left ( x(h, w+1, c) - x(h, w, c) \\right )^{2} +\n\\left ( x(h+1, w, c) - x(h, w, c) \\right )^{2} \\right )^{\\frac{\\beta}{2}}\n\n\n\n\n\n\nLPNorm\n\n\n\n\nLPNorm.\n__init__\n\n\n__init__(self, p=6.0)\n\n\n\n\nBuilds a L-p norm function. This regularizer encourages the intensity of pixels to stay bounded.\n  i.e., prevents pixels from taking on very large values.\n\n\nArgs:\n\n\n\n\np\n:  The pth norm to use. If p = float('inf'), infinity-norm will be used.\n\n\n\n\n\n\nLPNorm.build_loss\n\n\nbuild_loss(self, img)", 
+            "title": "regularizers"
+        }, 
+        {
+            "location": "/vis.regularizers/#normalize", 
+            "text": "normalize(img, value)  Normalizes the value with respect to image dimensions. This makes regularizer weight factor more or less\nuniform across various input image dimensions.  Args:   img :  4D tensor with shape:  (samples, channels, rows, cols)  if dim_ordering='th' or\n   (samples, rows, cols, channels)  if dim_ordering='tf'.  value :  The function to normalize   Returns:  The normalized expression.", 
+            "title": "normalize"
+        }, 
+        {
+            "location": "/vis.regularizers/#totalvariation", 
+            "text": "", 
+            "title": "TotalVariation"
+        }, 
+        {
+            "location": "/vis.regularizers/#totalvariation__init__", 
+            "text": "__init__(self, beta=2.0)  Total variation regularizer encourages blobbier and coherent image structures, akin to natural images.\nSee  section 3.2.2  in Visualizing deep convolutional neural networks using natural pre-images \nfor details.  Args:   beta :  Smaller values of beta give sharper but 'spikier' images.\nValues  \\in [1.5, 2.0]  are recommended as a reasonable compromise.", 
+            "title": "TotalVariation.__init__"
+        }, 
+        {
+            "location": "/vis.regularizers/#totalvariationbuild_loss", 
+            "text": "build_loss(self, img)  Implements the function TV^{\\beta}(x) = \\sum_{whc} \\left ( \\left ( x(h, w+1, c) - x(h, w, c) \\right )^{2} +\n\\left ( x(h+1, w, c) - x(h, w, c) \\right )^{2} \\right )^{\\frac{\\beta}{2}}", 
+            "title": "TotalVariation.build_loss"
+        }, 
+        {
+            "location": "/vis.regularizers/#lpnorm", 
+            "text": "", 
+            "title": "LPNorm"
+        }, 
+        {
+            "location": "/vis.regularizers/#lpnorm__init__", 
+            "text": "__init__(self, p=6.0)  Builds a L-p norm function. This regularizer encourages the intensity of pixels to stay bounded.\n  i.e., prevents pixels from taking on very large values.  Args:   p :  The pth norm to use. If p = float('inf'), infinity-norm will be used.", 
+            "title": "LPNorm.__init__"
+        }, 
+        {
+            "location": "/vis.regularizers/#lpnormbuild_loss", 
+            "text": "build_loss(self, img)", 
+            "title": "LPNorm.build_loss"
+        }, 
+        {
+            "location": "/vis.optimizer/", 
+            "text": "Source:\n \nvis/optimizer.py#L0\n\n\n\n\nOptimizer\n\n\n\n\nOptimizer.\n__init__\n\n\n__init__(self, img, losses)\n\n\n\n\nCreates an optimizer that minimizes weighted loss function.\n\n\nArgs:\n\n\n\n\nimg\n:  4D tensor with shape: \n(samples, channels, rows, cols)\n if dim_ordering='th' or\n  \n(samples, rows, cols, channels)\n if dim_ordering='tf'.\n\n\nlosses\n:  List of (\nLoss\n, weight) tuples.\n\n\n\n\n\n\nOptimizer.minimize\n\n\nminimize(self, seed_img=None, max_iter=200, jitter=8, verbose=True, progress_gif_path=None)\n\n\n\n\nPerforms gradient descent on the input image with respect to defined losses.\n\n\nArgs:\n\n\n\n\nseed_img\n:  3D numpy array with shape: \n(channels, rows, cols)\n if dim_ordering='th' or\n  \n(rows, cols, channels)\n if dim_ordering='tf'.\n  Seeded with random noise if set to None. (Default value = None)\n\n\nmax_iter\n:  The maximum number of gradient descent iterations. (Default value = 200)\n\n\njitter\n:  The number of pixels to jitter between subsequent gradient descent iterations.\n  Jitter is known to generate crisper images. (Default value = 8)\n\n\nverbose\n:  Logs individual losses at the end of every gradient descent iteration.\n  Very useful to estimate loss weight factor. (Default value = True)\n\n\nprogress_gif_path\n:  Saves a gif of input image being optimized.\n  This slows down perf quite a bit, use with care.\n\n\n\n\nReturns:\n\n\nThe tuple of \n(optimized image, gradients)\n of image with respect to losses.", 
+            "title": "optimizer"
+        }, 
+        {
+            "location": "/vis.optimizer/#optimizer", 
+            "text": "", 
+            "title": "Optimizer"
+        }, 
+        {
+            "location": "/vis.optimizer/#optimizer__init__", 
+            "text": "__init__(self, img, losses)  Creates an optimizer that minimizes weighted loss function.  Args:   img :  4D tensor with shape:  (samples, channels, rows, cols)  if dim_ordering='th' or\n   (samples, rows, cols, channels)  if dim_ordering='tf'.  losses :  List of ( Loss , weight) tuples.", 
+            "title": "Optimizer.__init__"
+        }, 
+        {
+            "location": "/vis.optimizer/#optimizerminimize", 
+            "text": "minimize(self, seed_img=None, max_iter=200, jitter=8, verbose=True, progress_gif_path=None)  Performs gradient descent on the input image with respect to defined losses.  Args:   seed_img :  3D numpy array with shape:  (channels, rows, cols)  if dim_ordering='th' or\n   (rows, cols, channels)  if dim_ordering='tf'.\n  Seeded with random noise if set to None. (Default value = None)  max_iter :  The maximum number of gradient descent iterations. (Default value = 200)  jitter :  The number of pixels to jitter between subsequent gradient descent iterations.\n  Jitter is known to generate crisper images. (Default value = 8)  verbose :  Logs individual losses at the end of every gradient descent iteration.\n  Very useful to estimate loss weight factor. (Default value = True)  progress_gif_path :  Saves a gif of input image being optimized.\n  This slows down perf quite a bit, use with care.   Returns:  The tuple of  (optimized image, gradients)  of image with respect to losses.", 
+            "title": "Optimizer.minimize"
+        }, 
+        {
+            "location": "/vis.visualization/", 
+            "text": "Source:\n \nvis/visualization.py#L0\n\n\n\n\nvisualize_saliency\n\n\nvisualize_saliency(img, layer, filter_indices, seed_img, overlay=True)\n\n\n\n\nGenerates a heatmap indicating the pixels that contributed the most towards\nmaximizing \nfilter_indices\n output in the given \nlayer\n.\n\n\nFor example, if you wanted to visualize the which pixels contributed to classifying an image as 'bird', say output\nindex 22 on final \nkeras.layers.Dense\n layer, then, \nfilter_indices = [22]\n, \nlayer = dense_layer\n.\n\n\nAlternatively one could use \nfilter_indices = [22, 23]\n and hope to see image regions that are common to output\ncategories 22, 23 to show up in the heatmap.\n\n\nArgs:\n\n\n\n\nimg\n:  4D input image tensor with shape: \n(samples, channels, rows, cols)\n if dim_ordering='th'\n  or \n(samples, rows, cols, channels)\n if dim_ordering='tf'.\n\n\nlayer\n:  The \nkeras.Layer\n layer whose filters needs to be visualized.\n\n\nfilter_indices\n:  filter indices within the layer to be maximized.\n  For \nkeras.layers.Dense\n layer, \nfilter_idx\n is interpreted as the output index.\n\n\n\n\nIf you are visualizing final \nkeras.layers.Dense\n layer, you tend to get\n  better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'\n  output can be maximized by minimizing scores for other classes.\n\n\n\n\nseed_img\n:  The input image for which activation map needs to be visualized.\n\n\noverlay\n:  If true, overlays the heatmap over the original image (Default value = True)\n\n\n\n\nReturns:\n\n\nThe heatmap image indicating image regions that, when changed, would contribute the most towards maximizing\na the filter output.\n\n\n\n\nvisualize_activation\n\n\nvisualize_activation(img, layer, filter_indices=None, seed_img=None, max_iter=200, act_max_weight=1, \\\n    lp_norm_weight=10, tv_weight=10, verbose=False, show_filter_idx_text=True, \\\n    idx_label_map=None, cols=5)\n\n\n\n\nGenerates stitched input image(s) over all \nfilter_indices\n in the given \nlayer\n that maximize\nthe filter output activation.\n\n\nFor example, if you wanted to visualize the input image that would maximize the output index 22, say on\nfinal \nkeras.layers.Dense\n layer, then, \nfilter_indices = [22]\n, \nlayer = dense_layer\n.\n\n\nIf \nfilter_indices = [22, 23]\n, then a stitched image comprising of two images are generated, each\ncorresponding to the entry in \nfilter_indices\n.\n\n\nArgs:\n\n\n\n\nimg\n:  4D input image tensor with shape: \n(samples, channels, rows, cols)\n if dim_ordering='th'\n  or \n(samples, rows, cols, channels)\n if dim_ordering='tf'.\n\n\nlayer\n:  The \nkeras.Layer\n layer whose filters needs to be visualized.\n\n\nfilter_indices\n:  filter indices within the layer to be maximized.\n  If None, all filters are visualized. (Default value = None)\n\n\n\n\nAn input image is generated for each entry in \nfilter_indices\n. The entry can also be an array.\n  For example, \nfilter_indices = [[1, 2], 3, [4, 5, 6]]\n would generate three input images. The first one\n  would maximize output of filters 1, 2, 3 jointly. A fun use of this might be to generate a dog-fish\n  image by maximizing 'dog' and 'fish' output in final \nDense\n layer.\n\n\nFor \nkeras.layers.Dense\n layers, \nfilter_idx\n is interpreted as the output index.\n\n\nIf you are visualizing final \nkeras.layers.Dense\n layer, you tend to get\n  better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'\n  output can be maximized by minimizing scores for other classes.\n\n\n\n\nseed_img\n:  Seeds the optimization with a starting image. Initialized with a random value when set to None.\n  (Default value = None)\n\n\nmax_iter\n:  The maximum number of gradient descent iterations. (Default value = 200)\n\n\nact_max_weight\n:  The weight param for \nActivationMaximization\n loss. Not used if 0 or None. (Default value = 1)\n\n\nlp_norm_weight\n:  The weight param for \nLPNorm\n regularization loss. Not used if 0 or None. (Default value = 10)\n\n\ntv_weight\n:  The weight param for \nTotalVariation\n regularization loss. Not used if 0 or None. (Default value = 10)\n\n\nverbose\n:  Shows verbose loss output for each filter. (Default value = False)\n  Very useful to estimate loss weight factor. (Default value = True)\n\n\nshow_filter_idx_text\n:  Adds filter_idx text to the image if set to True. (Default value = True)\n  If the entry in \nfilter_indices\n is an array, then comma separated labels are generated.\n\n\nidx_label_map\n:  Map of filter_idx to text label. If not None, this map is used to translate filter_idx\n  to text value when show_filter_idx_text = True. (Default value = None)\n\n\ncols\n:  Max number of image cols. New row is created when number of images exceed the column size.\n  (Default value = 5)\n\n\n\n\nReturns:\n\n\nStitched image output visualizing input images that maximize the filter output(s). (Default value = 10)", 
+            "title": "visualization"
+        }, 
+        {
+            "location": "/vis.visualization/#visualize_saliency", 
+            "text": "visualize_saliency(img, layer, filter_indices, seed_img, overlay=True)  Generates a heatmap indicating the pixels that contributed the most towards\nmaximizing  filter_indices  output in the given  layer .  For example, if you wanted to visualize the which pixels contributed to classifying an image as 'bird', say output\nindex 22 on final  keras.layers.Dense  layer, then,  filter_indices = [22] ,  layer = dense_layer .  Alternatively one could use  filter_indices = [22, 23]  and hope to see image regions that are common to output\ncategories 22, 23 to show up in the heatmap.  Args:   img :  4D input image tensor with shape:  (samples, channels, rows, cols)  if dim_ordering='th'\n  or  (samples, rows, cols, channels)  if dim_ordering='tf'.  layer :  The  keras.Layer  layer whose filters needs to be visualized.  filter_indices :  filter indices within the layer to be maximized.\n  For  keras.layers.Dense  layer,  filter_idx  is interpreted as the output index.   If you are visualizing final  keras.layers.Dense  layer, you tend to get\n  better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'\n  output can be maximized by minimizing scores for other classes.   seed_img :  The input image for which activation map needs to be visualized.  overlay :  If true, overlays the heatmap over the original image (Default value = True)   Returns:  The heatmap image indicating image regions that, when changed, would contribute the most towards maximizing\na the filter output.", 
+            "title": "visualize_saliency"
+        }, 
+        {
+            "location": "/vis.visualization/#visualize_activation", 
+            "text": "visualize_activation(img, layer, filter_indices=None, seed_img=None, max_iter=200, act_max_weight=1, \\\n    lp_norm_weight=10, tv_weight=10, verbose=False, show_filter_idx_text=True, \\\n    idx_label_map=None, cols=5)  Generates stitched input image(s) over all  filter_indices  in the given  layer  that maximize\nthe filter output activation.  For example, if you wanted to visualize the input image that would maximize the output index 22, say on\nfinal  keras.layers.Dense  layer, then,  filter_indices = [22] ,  layer = dense_layer .  If  filter_indices = [22, 23] , then a stitched image comprising of two images are generated, each\ncorresponding to the entry in  filter_indices .  Args:   img :  4D input image tensor with shape:  (samples, channels, rows, cols)  if dim_ordering='th'\n  or  (samples, rows, cols, channels)  if dim_ordering='tf'.  layer :  The  keras.Layer  layer whose filters needs to be visualized.  filter_indices :  filter indices within the layer to be maximized.\n  If None, all filters are visualized. (Default value = None)   An input image is generated for each entry in  filter_indices . The entry can also be an array.\n  For example,  filter_indices = [[1, 2], 3, [4, 5, 6]]  would generate three input images. The first one\n  would maximize output of filters 1, 2, 3 jointly. A fun use of this might be to generate a dog-fish\n  image by maximizing 'dog' and 'fish' output in final  Dense  layer.  For  keras.layers.Dense  layers,  filter_idx  is interpreted as the output index.  If you are visualizing final  keras.layers.Dense  layer, you tend to get\n  better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'\n  output can be maximized by minimizing scores for other classes.   seed_img :  Seeds the optimization with a starting image. Initialized with a random value when set to None.\n  (Default value = None)  max_iter :  The maximum number of gradient descent iterations. (Default value = 200)  act_max_weight :  The weight param for  ActivationMaximization  loss. Not used if 0 or None. (Default value = 1)  lp_norm_weight :  The weight param for  LPNorm  regularization loss. Not used if 0 or None. (Default value = 10)  tv_weight :  The weight param for  TotalVariation  regularization loss. Not used if 0 or None. (Default value = 10)  verbose :  Shows verbose loss output for each filter. (Default value = False)\n  Very useful to estimate loss weight factor. (Default value = True)  show_filter_idx_text :  Adds filter_idx text to the image if set to True. (Default value = True)\n  If the entry in  filter_indices  is an array, then comma separated labels are generated.  idx_label_map :  Map of filter_idx to text label. If not None, this map is used to translate filter_idx\n  to text value when show_filter_idx_text = True. (Default value = None)  cols :  Max number of image cols. New row is created when number of images exceed the column size.\n  (Default value = 5)   Returns:  Stitched image output visualizing input images that maximize the filter output(s). (Default value = 10)", 
+            "title": "visualize_activation"
+        }, 
+        {
+            "location": "/vis.utils.utils/", 
+            "text": "Source:\n \nvis/utils/utils.py#L0\n\n\nGlobal Variables\n\n\n\n\nslicer\n\n\n\n\n\n\ndeprocess_image\n\n\ndeprocess_image(img)\n\n\n\n\nUtility function to convert optimized image output into a valid image.\n\n\nArgs:\n\n\n\n\nimg\n:  3D numpy array with shape: \n(channels, rows, cols)\n if dim_ordering='th' or\n  \n(rows, cols, channels)\n if dim_ordering='tf'.\n\n\n\n\nReturns:\n\n\nA valid image output.\n\n\n\n\nstitch_images\n\n\nstitch_images(images, margin=5, cols=5)\n\n\n\n\nUtility function to stitch images together with a \nmargin\n.\n\n\nArgs:\n\n\n\n\nimages\n:  The array of images to stitch.\n\n\nmargin\n:  The black border margin size between images (Default value = 5)\n\n\ncols\n:  Max number of image cols. New row is created when number of images exceed the column size.\n  (Default value = 5)\n\n\n\n\nReturns:\n\n\nA single numpy image array comprising of input images.\n\n\n\n\ngenerate_rand_img\n\n\ngenerate_rand_img(c, w, h)\n\n\n\n\nGenerates a random image.\n\n\nArgs:\n\n\n\n\nc\n:  image channels\n\n\nw\n:  image width\n\n\nh\n:  image height\n\n\n\n\nReturns:\n\n\nA numpy array of shape: \n(channels, rows, cols)\n if dim_ordering='th' or\n  \n(rows, cols, channels)\n if dim_ordering='tf'.\n\n\n\n\nget_img_shape\n\n\nget_img_shape(img)\n\n\n\n\nReturns image shape in a backend agnostic manner.\n\n\nArgs:\n\n\n\n\nimg\n:  The image tensor in 'th' or 'tf' dim ordering.\n\n\n\n\nReturns:\n\n\nTuple containing image shape information in \n(samples, channels, width, height)\n order.\n\n\n\n\nget_img_indices\n\n\nget_img_indices()\n\n\n\n\nReturns image indices in a backend agnostic manner.\n\n\nReturns:\n\n\nA tuple representing indices for image in \n(samples, channels, width, height)\n order.\n\n\n\n\nload_img\n\n\nload_img(path, grayscale=False, target_size=None)\n\n\n\n\nUtility function to load an image from disk.\n\n\nArgs:\n\n\n\n\npath\n:  The image file path.\n\n\ngrayscale\n:  True to convert to grayscale image (Default value = False)\n\n\ntarget_size\n:  (w, h) to resize. (Default value = None)\n\n\n\n\nReturns:\n\n\nThe loaded numpy image.\n\n\n\n\nget_imagenet_label\n\n\nget_imagenet_label(index)\n\n\n\n\nUtility function to return the image net label for the final dense later output index.\n\n\nArgs:\n\n\n\n\nindex\n:  The image net output category value,\n\n\n\n\nReturns:\n\n\nImage net label corresponding to the image category.", 
+            "title": "utils"
+        }, 
+        {
+            "location": "/vis.utils.utils/#global-variables", 
+            "text": "slicer", 
+            "title": "Global Variables"
+        }, 
+        {
+            "location": "/vis.utils.utils/#deprocess_image", 
+            "text": "deprocess_image(img)  Utility function to convert optimized image output into a valid image.  Args:   img :  3D numpy array with shape:  (channels, rows, cols)  if dim_ordering='th' or\n   (rows, cols, channels)  if dim_ordering='tf'.   Returns:  A valid image output.", 
+            "title": "deprocess_image"
+        }, 
+        {
+            "location": "/vis.utils.utils/#stitch_images", 
+            "text": "stitch_images(images, margin=5, cols=5)  Utility function to stitch images together with a  margin .  Args:   images :  The array of images to stitch.  margin :  The black border margin size between images (Default value = 5)  cols :  Max number of image cols. New row is created when number of images exceed the column size.\n  (Default value = 5)   Returns:  A single numpy image array comprising of input images.", 
+            "title": "stitch_images"
+        }, 
+        {
+            "location": "/vis.utils.utils/#generate_rand_img", 
+            "text": "generate_rand_img(c, w, h)  Generates a random image.  Args:   c :  image channels  w :  image width  h :  image height   Returns:  A numpy array of shape:  (channels, rows, cols)  if dim_ordering='th' or\n   (rows, cols, channels)  if dim_ordering='tf'.", 
+            "title": "generate_rand_img"
+        }, 
+        {
+            "location": "/vis.utils.utils/#get_img_shape", 
+            "text": "get_img_shape(img)  Returns image shape in a backend agnostic manner.  Args:   img :  The image tensor in 'th' or 'tf' dim ordering.   Returns:  Tuple containing image shape information in  (samples, channels, width, height)  order.", 
+            "title": "get_img_shape"
+        }, 
+        {
+            "location": "/vis.utils.utils/#get_img_indices", 
+            "text": "get_img_indices()  Returns image indices in a backend agnostic manner.  Returns:  A tuple representing indices for image in  (samples, channels, width, height)  order.", 
+            "title": "get_img_indices"
+        }, 
+        {
+            "location": "/vis.utils.utils/#load_img", 
+            "text": "load_img(path, grayscale=False, target_size=None)  Utility function to load an image from disk.  Args:   path :  The image file path.  grayscale :  True to convert to grayscale image (Default value = False)  target_size :  (w, h) to resize. (Default value = None)   Returns:  The loaded numpy image.", 
+            "title": "load_img"
+        }, 
+        {
+            "location": "/vis.utils.utils/#get_imagenet_label", 
+            "text": "get_imagenet_label(index)  Utility function to return the image net label for the final dense later output index.  Args:   index :  The image net output category value,   Returns:  Image net label corresponding to the image category.", 
+            "title": "get_imagenet_label"
+        }, 
+        {
+            "location": "/vis.utils.vggnet/", 
+            "text": "Source:\n \nvis/utils/vggnet.py#L0\n\n\nGlobal Variables\n\n\n\n\nTH_WEIGHTS_PATH\n\n\nTF_WEIGHTS_PATH\n\n\nTH_WEIGHTS_PATH_NO_TOP\n\n\nTF_WEIGHTS_PATH_NO_TOP\n\n\n\n\n\n\nVGG16\n\n\nVGG16(include_top=True, weights=\nimagenet\n, input_tensor=None)\n\n\n\n\nInstantiate the VGG16 architecture,\noptionally loading weights pre-trained\non ImageNet. Note that when using TensorFlow,\nfor best performance you should set\n\nimage_dim_ordering=\"tf\"\n in your Keras config\nat ~/.keras/keras.json.\n\n\nThe model and the weights are compatible with both\nTensorFlow and Theano. The dimension ordering\nconvention used by the model is the one\nspecified in your Keras config file.\n\n\nArgs:\n\n\n\n\ninclude_top\n:  whether to include the 3 fully-connected\n  layers at the top of the network.\n\n\nweights\n:  one of \nNone\n (random initialization)\n  or \"imagenet\" (pre-training on ImageNet).\n\n\ninput_tensor\n:  optional Keras tensor (i.e. output of \nlayers.Input()\n)\n  to use as image input for the model.\n\n\n\n\nReturns:\n\n\nA Keras model instance.", 
+            "title": "vggnet"
+        }, 
+        {
+            "location": "/vis.utils.vggnet/#global-variables", 
+            "text": "TH_WEIGHTS_PATH  TF_WEIGHTS_PATH  TH_WEIGHTS_PATH_NO_TOP  TF_WEIGHTS_PATH_NO_TOP", 
+            "title": "Global Variables"
+        }, 
+        {
+            "location": "/vis.utils.vggnet/#vgg16", 
+            "text": "VGG16(include_top=True, weights= imagenet , input_tensor=None)  Instantiate the VGG16 architecture,\noptionally loading weights pre-trained\non ImageNet. Note that when using TensorFlow,\nfor best performance you should set image_dim_ordering=\"tf\"  in your Keras config\nat ~/.keras/keras.json.  The model and the weights are compatible with both\nTensorFlow and Theano. The dimension ordering\nconvention used by the model is the one\nspecified in your Keras config file.  Args:   include_top :  whether to include the 3 fully-connected\n  layers at the top of the network.  weights :  one of  None  (random initialization)\n  or \"imagenet\" (pre-training on ImageNet).  input_tensor :  optional Keras tensor (i.e. output of  layers.Input() )\n  to use as image input for the model.   Returns:  A Keras model instance.", 
+            "title": "VGG16"
         }
     ]
 }

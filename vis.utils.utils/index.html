@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>utils - Keras-vis Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "utils";
+    var mkdocs_page_input_path = "vis.utils.utils.md";
+    var mkdocs_page_url = "/vis.utils.utils/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Keras-vis Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Home</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Core API</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../vis.losses/">losses</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../vis.regularizers/">regularizers</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../vis.optimizer/">optimizer</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../vis.visualization/">visualization</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Utils</span></li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">utils</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#global-variables">Global Variables</a></li>
+                
+                    <li><a class="toctree-l4" href="#deprocess_image">deprocess_image</a></li>
+                
+                    <li><a class="toctree-l4" href="#stitch_images">stitch_images</a></li>
+                
+                    <li><a class="toctree-l4" href="#generate_rand_img">generate_rand_img</a></li>
+                
+                    <li><a class="toctree-l4" href="#get_img_shape">get_img_shape</a></li>
+                
+                    <li><a class="toctree-l4" href="#get_img_indices">get_img_indices</a></li>
+                
+                    <li><a class="toctree-l4" href="#load_img">load_img</a></li>
+                
+                    <li><a class="toctree-l4" href="#get_imagenet_label">get_imagenet_label</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../vis.utils.vggnet/">vggnet</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Keras-vis Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Utils &raquo;</li>
+        
+      
+    
+    <li>utils</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L0">vis/utils/utils.py#L0</a></p>
+<h2 id="global-variables"><strong>Global Variables</strong></h2>
+<ul>
+<li><strong>slicer</strong></li>
+</ul>
+<hr />
+<h3 id="deprocess_image"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L16">deprocess_image</a></h3>
+<pre><code class="python">deprocess_image(img)
+</code></pre>
+
+<p>Utility function to convert optimized image output into a valid image.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>img</strong>:  3D numpy array with shape: <code>(channels, rows, cols)</code> if dim_ordering='th' or
+  <code>(rows, cols, channels)</code> if dim_ordering='tf'.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>A valid image output.</p>
+<hr />
+<h3 id="stitch_images"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L46">stitch_images</a></h3>
+<pre><code class="python">stitch_images(images, margin=5, cols=5)
+</code></pre>
+
+<p>Utility function to stitch images together with a <code>margin</code>.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>images</strong>:  The array of images to stitch.</li>
+<li><strong>margin</strong>:  The black border margin size between images (Default value = 5)</li>
+<li><strong>cols</strong>:  Max number of image cols. New row is created when number of images exceed the column size.
+  (Default value = 5)</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>A single numpy image array comprising of input images.</p>
+<hr />
+<h3 id="generate_rand_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L81">generate_rand_img</a></h3>
+<pre><code class="python">generate_rand_img(c, w, h)
+</code></pre>
+
+<p>Generates a random image.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>c</strong>:  image channels</li>
+<li><strong>w</strong>:  image width</li>
+<li><strong>h</strong>:  image height</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>A numpy array of shape: <code>(channels, rows, cols)</code> if dim_ordering='th' or
+  <code>(rows, cols, channels)</code> if dim_ordering='tf'.</p>
+<hr />
+<h3 id="get_img_shape"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L101">get_img_shape</a></h3>
+<pre><code class="python">get_img_shape(img)
+</code></pre>
+
+<p>Returns image shape in a backend agnostic manner.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>img</strong>:  The image tensor in 'th' or 'tf' dim ordering.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>Tuple containing image shape information in <code>(samples, channels, width, height)</code> order.</p>
+<hr />
+<h3 id="get_img_indices"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L117">get_img_indices</a></h3>
+<pre><code class="python">get_img_indices()
+</code></pre>
+
+<p>Returns image indices in a backend agnostic manner.</p>
+<p><em>Returns:</em></p>
+<p>A tuple representing indices for image in <code>(samples, channels, width, height)</code> order.</p>
+<hr />
+<h3 id="load_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L129">load_img</a></h3>
+<pre><code class="python">load_img(path, grayscale=False, target_size=None)
+</code></pre>
+
+<p>Utility function to load an image from disk.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>path</strong>:  The image file path.</li>
+<li><strong>grayscale</strong>:  True to convert to grayscale image (Default value = False)</li>
+<li><strong>target_size</strong>:  (w, h) to resize. (Default value = None)</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The loaded numpy image.</p>
+<hr />
+<h3 id="get_imagenet_label"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L149">get_imagenet_label</a></h3>
+<pre><code class="python">get_imagenet_label(index)
+</code></pre>
+
+<p>Utility function to return the image net label for the final dense later output index.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>index</strong>:  The image net output category value,</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>Image net label corresponding to the image category.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../vis.utils.vggnet/" class="btn btn-neutral float-right" title="vggnet">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../vis.visualization/" class="btn btn-neutral" title="visualization"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../vis.visualization/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../vis.utils.vggnet/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+      <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>

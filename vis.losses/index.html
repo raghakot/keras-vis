@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>losses - Keras-vis Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "losses";
+    var mkdocs_page_input_path = "vis.losses.md";
+    var mkdocs_page_url = "/vis.losses/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Keras-vis Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Home</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Core API</span></li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">losses</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#loss">Loss</a></li>
+                
+                    <li><a class="toctree-l4" href="#loss__init__">Loss.__init__</a></li>
+                
+                    <li><a class="toctree-l4" href="#lossbuild_loss">Loss.build_loss</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#activationmaximization">ActivationMaximization</a></li>
+                
+                    <li><a class="toctree-l4" href="#activationmaximization__init__">ActivationMaximization.__init__</a></li>
+                
+                    <li><a class="toctree-l4" href="#activationmaximizationbuild_loss">ActivationMaximization.build_loss</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../vis.regularizers/">regularizers</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../vis.optimizer/">optimizer</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../vis.visualization/">visualization</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Utils</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../vis.utils.utils/">utils</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../vis.utils.vggnet/">vggnet</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Keras-vis Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Core API &raquo;</li>
+        
+      
+    
+    <li>losses</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L0">vis/losses.py#L0</a></p>
+<hr />
+<h2 id="loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L5">Loss</a></h2>
+<p>Abstract class for defining the loss function to be minimized.
+The loss function should be built by defining <code>build_loss</code> function.</p>
+<p>The attribute <code>name</code> should be defined to identify loss function with verbose outputs.
+Defaults to 'Unnamed Loss' if not overridden.</p>
+<hr />
+<h3 id="loss__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L12">Loss.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self)
+</code></pre>
+
+<hr />
+<h3 id="lossbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L18">Loss.build_loss</a></h3>
+<pre><code class="python">build_loss(self, img)
+</code></pre>
+
+<p>Implement this function to build the loss function expression.
+Any additional arguments required to build this loss function may be passed in via <code>__init__</code>.</p>
+<p>Ideally, the function expression must be compatible with both theano/tensorflow backends with
+'th' or 'tf' image dim ordering. <code>utils.slicer</code> can be used to define backend agnostic slices
+(just define it for theano, it will automatically shuffle indices for tensorflow).</p>
+<pre><code class="python"># theano slice
+conv_layer[:, filter_idx, :, :]
+
+# TF slice
+conv_layer[:, :, :, filter_idx]
+
+# Backend agnostic slice
+conv_layer[utils.slicer[:, filter_idx, :, :]]
+</code></pre>
+
+<p><a href="../vis.utils.utils/#get_img_shape">utils.get_img_shape</a> and
+<a href="../vis.utils.utils/#get_img_indices">utils.get_img_indices</a> are other optional utilities that make this easier.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>img</strong>:  4D tensor with shape: <code>(samples, channels, rows, cols)</code> if dim_ordering='th' or
+  <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The loss expression.</p>
+<hr />
+<h2 id="activationmaximization"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L50">ActivationMaximization</a></h2>
+<p>A loss function that maximizes the activation of a set of filters within a particular layer.</p>
+<p>Typically this loss is used to ask the reverse question - What kind of input image would increase the networks
+confidence, for say, dog class. This helps determine what the network might be internalizing as being the 'dog'
+image space.</p>
+<p>One might also use this to generate an input image that maximizes both 'dog' and 'human' outputs on the final
+<code>keras.layers.Dense</code> layer.</p>
+<hr />
+<h3 id="activationmaximization__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L60">ActivationMaximization.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, layer, filter_indices)
+</code></pre>
+
+<p><em>Args:</em></p>
+<ul>
+<li><strong>layer</strong>:  The keras layer whose filters need to be maximized. This can either be a convolutional layer
+  or a dense layer.</li>
+<li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
+  For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</li>
+</ul>
+<p>If you are optimizing final <code>keras.layers.Dense</code> layer to maximize class output, you tend to get
+  better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
+  output can be maximized by minimizing scores for other classes.</p>
+<hr />
+<h3 id="activationmaximizationbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L77">ActivationMaximization.build_loss</a></h3>
+<pre><code class="python">build_loss(self, img)
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../vis.regularizers/" class="btn btn-neutral float-right" title="regularizers">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../vis.regularizers/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+      <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>
