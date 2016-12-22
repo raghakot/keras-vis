@@ -4,6 +4,7 @@
 
 # docs
 docs/site/*
+docs/templates/*
 
 # test-related
 .coverage
