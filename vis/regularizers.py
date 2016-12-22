@@ -28,17 +28,23 @@ class TotalVariation(Loss):
 
     def __init__(self, beta=2.0):
         """Total variation regularizer encourages blobbier and coherent image structures, akin to natural images.
-        See section 3.2.2 in https://arxiv.org/pdf/1512.02017v3.pdf for details.
+        See `section 3.2.2` in
+        [Visualizing deep convolutional neural networks using natural pre-images](https://arxiv.org/pdf/1512.02017v3.pdf)
+        for details.
 
         Args:
             beta: Smaller values of beta give sharper but 'spikier' images.
-            values > 1.5 are recommended as a reasonable compromise.
+            Values \(\in [1.5, 2.0]\) are recommended as a reasonable compromise.
         """
         super(TotalVariation, self).__init__()
         self.name = "TV Loss"
         self.beta = beta
 
     def build_loss(self, img):
+        r"""Implements the function
+        $$TV^{\beta}(x) = \sum_{whc} \left ( \left ( x(h, w+1, c) - x(h, w, c) \right )^{2} +
+        \left ( x(h+1, w, c) - x(h, w, c) \right )^{2} \right )^{\frac{\beta}{2}}$$
+        """
         assert 4 == K.ndim(img)
         a = K.square(img[utils.slicer[:, :, 1:, :-1]] - img[utils.slicer[:, :, :-1, :-1]])
         b = K.square(img[utils.slicer[:, :, :-1, 1:]] - img[utils.slicer[:, :, :-1, :-1]])

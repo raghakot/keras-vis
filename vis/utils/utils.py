@@ -10,7 +10,7 @@ from keras import backend as K
 
 
 # Globals
-CLASS_INDEX = None
+_CLASS_INDEX = None
 
 
 def deprocess_image(img):
@@ -87,8 +87,8 @@ def generate_rand_img(c, w, h):
       h: image height
 
     Returns:
-        A numpy array of shape (c, w, h) if image dim ordering == 'th'.
-            (w, h, c) for 'tf'.
+        A numpy array of shape: `(channels, rows, cols)` if dim_ordering='th' or
+            `(rows, cols, channels)` if dim_ordering='tf'.
     """
     if K.image_dim_ordering() == 'th':
         x = np.random.random((c, w, h))
@@ -105,7 +105,7 @@ def get_img_shape(img):
         img: The image tensor in 'th' or 'tf' dim ordering.
 
     Returns:
-        Tuple containing image shape information (samples, channels, width, height).
+        Tuple containing image shape information in `(samples, channels, width, height)` order.
     """
     if K.image_dim_ordering() == 'th':
         return K.int_shape(img)
@@ -114,11 +114,11 @@ def get_img_shape(img):
         return samples, c, w, h
 
 
-def get_image_indices():
+def get_img_indices():
     """Returns image indices in a backend agnostic manner.
 
     Returns:
-        A tuple representing indices for (samples, channels, width, height)
+        A tuple representing indices for image in `(samples, channels, width, height)` order.
     """
     if K.image_dim_ordering() == 'th':
         return 0, 1, 2, 3
@@ -155,19 +155,19 @@ def get_imagenet_label(index):
     Returns:
         Image net label corresponding to the image category.
     """
-    global CLASS_INDEX
-    if CLASS_INDEX is None:
+    global _CLASS_INDEX
+    if _CLASS_INDEX is None:
         with open(os.path.join(os.path.dirname(__file__), '../resources/imagenet_class_index.json')) as f:
-            CLASS_INDEX = json.load(f)
-    return CLASS_INDEX[str(index)][1]
+            _CLASS_INDEX = json.load(f)
+    return _CLASS_INDEX[str(index)][1]
 
 
-class BackendAgnosticImageSlice(object):
+class _BackendAgnosticImageSlice(object):
     """Utility class to make image slicing across 'th'/'tf' backends easier.
     """
 
     def __getitem__(self, item_slice):
-        """Assuming a slice for shape (samples, channels, width, height)
+        """Assuming a slice for shape `(samples, channels, width, height)`
         """
         assert len(item_slice) == 4
         if K.image_dim_ordering() == 'th':
@@ -176,5 +176,9 @@ class BackendAgnosticImageSlice(object):
             return tuple([item_slice[0], item_slice[2], item_slice[3], item_slice[1]])
 
 
-# Globals
-slicer = BackendAgnosticImageSlice()
+"""Slice utility to image slicing across 'th'/'tf' backends easier.
+Example:
+    conv_layer[utils.slicer[:, filter_idx, :, :]] will work for both theano and tensorflow backends
+    even though, in tensorflow, slice should be conv_layer[utils.slicer[:, :, :, filter_idx]]
+"""
+slicer = _BackendAgnosticImageSlice()

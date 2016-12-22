@@ -16,7 +16,7 @@ class Optimizer(object):
         Args:
             img: 4D tensor with shape: `(samples, channels, rows, cols)` if dim_ordering='th' or
                 `(samples, rows, cols, channels)` if dim_ordering='tf'.
-            losses: List of (`~losses.Loss`, weight) tuples.
+            losses: List of ([Loss](vis.losses#Loss), weight) tuples.
         """
         self.img = img
         self.loss_functions = []
@@ -44,7 +44,7 @@ class Optimizer(object):
                 `(samples, rows, cols, channels)` if dim_ordering='tf'.
 
         Returns:
-            A dictionary of (:attr:`~losses.Loss.name`, loss_value) values for various losses.
+            A dictionary of ([Loss](vis.losses#Loss).name, loss_value) values for various losses.
         """
         losses = OrderedDict()
         for name, fn in self.loss_functions:
@@ -97,7 +97,7 @@ class Optimizer(object):
         Returns:
             The jittered numpy image array.
         """
-        s, c, w, h = utils.get_image_indices()
+        s, c, w, h = utils.get_img_indices()
         ox, oy = np.random.randint(-jitter, jitter+1, 2)
         return np.roll(np.roll(img, ox, w), oy, h)
 
@@ -132,7 +132,7 @@ class Optimizer(object):
                 This slows down perf quite a bit, use with care.
 
         Returns:
-            The tuple of (optimized image, gradients) of image with respect to losses.
+            The tuple of `(optimized image, gradients)` of image with respect to losses.
         """
         seed_img = self._get_seed_img(seed_img)
 

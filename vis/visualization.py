@@ -30,21 +30,22 @@ def visualize_saliency(img, layer, filter_indices,
     maximizing `filter_indices` output in the given `layer`.
 
     For example, if you wanted to visualize the which pixels contributed to classifying an image as 'bird', say output
-    index 22 on final `Dense` layer, then, filter_indices = [22], layer = dense_layer.
+    index 22 on final `keras.layers.Dense` layer, then, `filter_indices = [22]`, `layer = dense_layer`.
 
-    Alternatively one could use filter_indices = [22, 23] and hope to see image regions that are common to output
+    Alternatively one could use `filter_indices = [22, 23]` and hope to see image regions that are common to output
     categories 22, 23 to show up in the heatmap.
 
     Args:
         img: 4D input image tensor with shape: `(samples, channels, rows, cols)` if dim_ordering='th'
             or `(samples, rows, cols, channels)` if dim_ordering='tf'.
-        layer: The keras layer whose filters needs to be visualized.
+        layer: The `keras.Layer` layer whose filters needs to be visualized.
         filter_indices: filter indices within the layer to be maximized.
-            For `Dense` layers, `filter_idx` is interpreted as the output index.
+            For `keras.layers.Dense` layer, `filter_idx` is interpreted as the output index.
 
-            If you are visualizing final :class:`~keras.layers.Dense` layer, you tend to get
+            If you are visualizing final `keras.layers.Dense` layer, you tend to get
             better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
             output can be maximized by minimizing scores for other classes.
+
         seed_img: The input image for which activation map needs to be visualized.
         overlay: If true, overlays the heatmap over the original image (Default value = True)
 
@@ -59,7 +60,7 @@ def visualize_saliency(img, layer, filter_indices,
     opt = Optimizer(img, losses)
     _, grads = opt.minimize(max_iter=1, verbose=True, jitter=0, seed_img=seed_img)
 
-    s, c, w, h = utils.get_image_indices()
+    s, c, w, h = utils.get_img_indices()
     grads = np.max(np.abs(grads), axis=c, keepdims=True)
 
     # Smoothen activation map
@@ -84,28 +85,29 @@ def visualize_activation(img, layer, filter_indices=None,
     the filter output activation.
 
     For example, if you wanted to visualize the input image that would maximize the output index 22, say on
-    final `Dense` layer, then, filter_indices = [22], layer = dense_layer.
+    final `keras.layers.Dense` layer, then, `filter_indices = [22]`, `layer = dense_layer`.
 
-    If filter_indices = [22, 23], then a stitched image comprising of two images are generated, each
+    If `filter_indices = [22, 23]`, then a stitched image comprising of two images are generated, each
     corresponding to the entry in `filter_indices`.
 
     Args:
         img: 4D input image tensor with shape: `(samples, channels, rows, cols)` if dim_ordering='th'
             or `(samples, rows, cols, channels)` if dim_ordering='tf'.
-        layer: The keras layer whose filters needs to be visualized.
+        layer: The `keras.Layer` layer whose filters needs to be visualized.
         filter_indices: filter indices within the layer to be maximized.
             If None, all filters are visualized. (Default value = None)
 
             An input image is generated for each entry in `filter_indices`. The entry can also be an array.
-            For example, filter_indices = [[1, 2], 3, [4, 5, 6]] would generate three input images. The first one
+            For example, `filter_indices = [[1, 2], 3, [4, 5, 6]]` would generate three input images. The first one
             would maximize output of filters 1, 2, 3 jointly. A fun use of this might be to generate a dog-fish
             image by maximizing 'dog' and 'fish' output in final `Dense` layer.
 
-            For `Dense` layers, `filter_idx` is interpreted as the output index.
+            For `keras.layers.Dense` layers, `filter_idx` is interpreted as the output index.
 
-            If you are visualizing final :class:`~keras.layers.Dense` layer, you tend to get
+            If you are visualizing final `keras.layers.Dense` layer, you tend to get
             better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
             output can be maximized by minimizing scores for other classes.
+
         seed_img: Seeds the optimization with a starting image. Initialized with a random value when set to None.
             (Default value = None)
         max_iter: The maximum number of gradient descent iterations. (Default value = 200)

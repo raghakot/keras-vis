@@ -1,14 +1,12 @@
 from keras import backend as K
-
 from utils import utils
 
 
 class Loss(object):
     """Abstract class for defining the loss function to be minimized.
+    The loss function should be built by defining `build_loss` function.
 
-    The loss function should be built by defining :func:`build_loss` function.
-
-    The attribute :attr:`name` should be defined to identify loss function with verbose outputs.
+    The attribute `name` should be defined to identify loss function with verbose outputs.
     Defaults to 'Unnamed Loss' if not overridden.
     """
     def __init__(self):
@@ -19,15 +17,25 @@ class Loss(object):
 
     def build_loss(self, img):
         """Implement this function to build the loss function expression.
-
-        Any additional arguments required to build this loss function may be passed in via :func:`__init__`.
+        Any additional arguments required to build this loss function may be passed in via `__init__`.
 
         Ideally, the function expression must be compatible with both theano/tensorflow backends with
-        'th' or 'tf' image dim ordering. :func:`~utils.slicer` can be used to define backend agnostic slices
+        'th' or 'tf' image dim ordering. `utils.slicer` can be used to define backend agnostic slices
         (just define it for theano, it will automatically shuffle indices for tensorflow).
 
-        :func:`~utils.get_img_shape` and :func:`~utils.get_img_indices` are other optional utilities that make this
-        easier.
+        ```python
+        # theano slice
+        conv_layer[:, filter_idx, :, :]
+
+        # TF slice
+        conv_layer[:, :, :, filter_idx]
+
+        # Backend agnostic slice
+        conv_layer[utils.slicer[:, filter_idx, :, :]]
+        ```
+
+        [utils.get_img_shape](vis.utils.utils.md#get_img_shape) and
+        [utils.get_img_indices](vis.utils.utils.md#get_img_indices) are other optional utilities that make this easier.
 
         Args:
             img: 4D tensor with shape: `(samples, channels, rows, cols)` if dim_ordering='th' or
@@ -46,8 +54,8 @@ class ActivationMaximization(Loss):
     confidence, for say, dog class. This helps determine what the network might be internalizing as being the 'dog'
     image space.
 
-    One might also use this to generate an input image that maximizes both 'dog'/'human' outputs on the final
-    `Dense` layer.
+    One might also use this to generate an input image that maximizes both 'dog' and 'human' outputs on the final
+    `keras.layers.Dense` layer.
     """
     def __init__(self, layer, filter_indices):
         """
@@ -55,9 +63,9 @@ class ActivationMaximization(Loss):
             layer: The keras layer whose filters need to be maximized. This can either be a convolutional layer
                 or a dense layer.
             filter_indices: filter indices within the layer to be maximized.
-                For `Dense` layers, `filter_idx` is interpreted as the output index.
+                For `keras.layers.Dense` layer, `filter_idx` is interpreted as the output index.
 
-                If you are optimizing final :class:`~keras.layers.Dense` layer to maximize class output, you tend to get
+                If you are optimizing final `keras.layers.Dense` layer to maximize class output, you tend to get
                 better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
                 output can be maximized by minimizing scores for other classes.
         """
