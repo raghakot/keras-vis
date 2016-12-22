@@ -11,4 +11,6 @@ docs/templates/*
 .cache
 
 keras_vis.egg-info
+dist/*
+build/*
 *.pyc
