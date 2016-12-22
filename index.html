@@ -174,13 +174,13 @@ Compatible with both theano and tensorflow backends. </p>
 <p>Read the documentation at <a href="https://raghakot.github.io/keras-vis">https://raghakot.github.io/keras-vis</a></p>
 <h2 id="getting-started">Getting Started</h2>
 <p>In image backprop problems, the goal is to generate an input image that minimizes some loss function.</p>
-<p>Various useful loss functions are defined in <a href="./vis/losses.py">losses.py</a>.
-A custom loss function can be defined by implementing <a href="./vis/losses.py#L5">Loss</a>
+<p>Various useful loss functions are defined in <a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py">losses.py</a>.
+A custom loss function can be defined by implementing <a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L5">Loss</a>
 class.</p>
 <p>In order to generate natural looking images, image search space is constrained using regularization penalties. 
-Some common regularizers are defined in <a href="./vis/regularizers.py">regularizers.py</a>.
+Some common regularizers are defined in <a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py">regularizers.py</a>.
 Like loss functions, custom regularizer can be defined by implementing 
-<a href="./vis/losses.py#L5">Loss</a> class.</p>
+<a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L5">Loss</a> class.</p>
 <p>Setting up an image backprop problem is easy.</p>
 <p><strong>Define weighted loss function</strong></p>
 <pre><code class="python">from vis.losses import ActivationMaximization
@@ -205,7 +205,7 @@ opt_img, grads = optimizer.minimize()
 </code></pre>
 
 <h2 id="quick-start">Quick start</h2>
-<p>See examples for various visualizations in <a href="https://github.com/raghakot/keras-vis/tree/master/examples">examples/</a> folder.</p>
+<p>See examples for various visualizations in <a href="https://github.com/raghakot/keras-vis/tree/master/examples">examples folder</a>.</p>
 <h2 id="visualizations">Visualizations</h2>
 <p>Neural nets are black boxes. How can we be sure that they are learning the right thing? If the neural net generates a
 wrong prediction, how could we diagnose the issue? In the recent years, several approaches for understanding and 
@@ -400,5 +400,5 @@ opt.minimize(max_iter=500, verbose=True, jitter=0,
 
 <!--
 MkDocs version : 0.16.0
-Build Date UTC : 2016-12-22 10:02:02
+Build Date UTC : 2016-12-22 18:11:23
 -->
