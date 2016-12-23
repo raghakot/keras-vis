@@ -90,11 +90,15 @@ Guided backprop can also be used to create [trippy art](https://deepdreamgenerat
 
 Various visualizations, documented in their own pages, are summarized here.
 
+<hr/>
+
 ### [Conv filter visualization](https://raghakot.github.io/keras-vis/visualizations/conv_filters)
 <img src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/cover.jpg?raw=true"/>
 
 *Convolutional filters learn 'template matching' filters that maximize the output when a similar template 
 pattern is found in the input image. Visualize those templates via Activation Maximization.*
+
+<hr/>
 
 ### [Dense layer visualization](https://raghakot.github.io/keras-vis/visualizations/dense)
 
@@ -102,14 +106,22 @@ pattern is found in the input image. Visualize those templates via Activation Ma
 
 *How can we assess whether a network is over/under fitting or generalizing well?*
 
+<hr/>
+
 ### [Saliency Maps](https://raghakot.github.io/keras-vis/visualizations/saliency)
 TODO
+
+<hr/>
 
 ### Caricaturization (deep dream)
 TODO
 
+<hr/>
+
 ### Neural Style Transfer
 TODO
+
+<hr/>
 
 ### Generating animated gif of optimization progress
 It is possible to generate an animated gif of optimization progress. Below is an example for activation maximization
@@ -144,3 +156,5 @@ opt.minimize(max_iter=500, verbose=True, jitter=0,
 ```
 
 ![opt_progress](https://raw.githubusercontent.com/raghakot/keras-vis/master/images/opt_progress.gif?raw=true "Optimization progress")
+
+<hr/>
