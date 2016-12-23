@@ -1,3 +1,4 @@
+import os
 import shutil
 
 from md_autogen import MarkdownAPIGenerator
@@ -33,6 +34,7 @@ def update_index_md():
 
 
 def copy_templates():
+    shutil.rmtree('sources', ignore_errors=True)
     shutil.copytree('templates', 'sources')
 
 
