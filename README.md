@@ -88,16 +88,18 @@ Guided backprop can also be used to create [trippy art](https://deepdreamgenerat
 
 Various visualizations, documented in their own pages, are summarized here.
 
-### [Conv filter visualization](https://raghakot.github.io/keras-vis/visualizations/conv_filter)
-<img src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/activation-max/cover.jpg?raw=true" align="middle"/>
+### [Conv filter visualization](https://raghakot.github.io/keras-vis/visualizations/conv_filters)
+<img src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/cover.jpg?raw=true" align="middle"/>
+
 Convolutional filters learn 'template matching' filters that maximize the output when a similar template 
 pattern is found in the input image. Visualize those templates via Activation Maximization.
 
-### [Dense layer visualization](https://raghakot.github.io/keras-vis/visualizations/dense.md)
+### [Dense layer visualization](https://raghakot.github.io/keras-vis/visualizations/dense)
 <img src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/dense_vis/cover.png?raw=true" align="middle"/>
+
 How can we assess whether a network is over/under fitting or generalizing well?
 
-### [Saliency Maps](https://raghakot.github.io/keras-vis/visualizations/saliency.md)
+### [Saliency Maps](https://raghakot.github.io/keras-vis/visualizations/saliency)
 TODO
 
 ### Caricaturization (deep dream)
