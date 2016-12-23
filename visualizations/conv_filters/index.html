@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Convolutional Filters - Keras-vis Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Convolutional Filters";
+    var mkdocs_page_input_path = "visualizations/conv_filters.md";
+    var mkdocs_page_url = "/visualizations/conv_filters/";
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Keras-vis Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../..">Home</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Visualizations</span></li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Convolutional Filters</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#conv-filter-visualization">Conv filter visualization</a></li>
+                
+                    <li><a class="toctree-l4" href="#block2_conv2-random-sample-of-the-128-filters">block2_conv2: random sample of the 128 filters</a></li>
+                
+                    <li><a class="toctree-l4" href="#block3_conv3-random-sample-of-the-256-filters">block3_conv3: random sample of the 256 filters</a></li>
+                
+                    <li><a class="toctree-l4" href="#block3_conv4-random-sample-of-the-512-filters">block3_conv4: random sample of the 512 filters</a></li>
+                
+                    <li><a class="toctree-l4" href="#block3_conv5-random-sample-of-the-512-filters">block3_conv5: random sample of the 512 filters</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../dense/">Dense Layers</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Core API</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.losses/">losses</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.regularizers/">regularizers</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.optimizer/">optimizer</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.visualization/">visualization</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Utils</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.utils.utils/">utils</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.utils.vggnet/">vggnet</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Keras-vis Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Visualizations &raquo;</li>
+        
+      
+    
+    <li>Convolutional Filters</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h2 id="conv-filter-visualization">Conv filter visualization</h2>
+<p>Each conv layer has several learned 'template matching' filters that maximize their output when a similar template 
+pattern is found in the input image. This makes the first conv net layer highly interpretable by simply visualizing 
+their weights as it is operating over raw pixels.</p>
+<p>Subsequent conv filters operate over the outputs of previous conv filters (which indicate the presence or absence of 
+some templates), so visualizing them directly is not very interpretable.</p>
+<p>One way of interpreting them is to generate an input image that maximizes the filter output. With keras-vis, setting
+this up is easy. Lets visualize the second conv layer of vggnet (named as 'block1_conv2').</p>
+<pre><code class="python">import cv2
+from vis.utils.vggnet import VGG16
+from vis.visualization import visualize_activation
+
+# Build the VGG16 network with ImageNet weights
+model = VGG16(weights='imagenet', include_top=True)
+print('Model loaded.')
+
+# The name of the layer we want to visualize
+# (see model definition in vggnet.py)
+layer_name = 'block1_conv2'
+layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
+
+vis_img = visualize_activation(model.input, layer_dict[layer_name])
+cv2.imshow(layer_name, vis_img)
+cv2.waitKey(0)
+</code></pre>
+
+<p>This generates the following stitched image representing input image(s) that maximize the filter_idx output.
+They mostly seem to match for specific color and directional patterns.</p>
+<p><img alt="block1_conv2 filters" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/block1_conv2_filters.jpg?raw=true" title="conv_1 filters" /></p>
+<p>Lets visualize the remaining conv filters (first few) by iterating over different <code>layer_name</code> values.</p>
+<h4 id="block2_conv2-random-sample-of-the-128-filters">block2_conv2: random sample of the 128 filters</h4>
+<p><img alt="block2_conv2 filters" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/block2_conv2_filters.jpg?raw=true" title="conv_2 filters" /></p>
+<h4 id="block3_conv3-random-sample-of-the-256-filters">block3_conv3: random sample of the 256 filters</h4>
+<p><img alt="block3_conv3 filters" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/block3_conv3_filters.jpg?raw=true" title="conv_3 filters" /></p>
+<h4 id="block3_conv4-random-sample-of-the-512-filters">block3_conv4: random sample of the 512 filters</h4>
+<p><img alt="block4_conv3 filters" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/block4_conv3_filters.jpg?raw=true" title="conv_4 filters" /></p>
+<h4 id="block3_conv5-random-sample-of-the-512-filters">block3_conv5: random sample of the 512 filters</h4>
+<p><img alt="block5_conv3 filters" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/block5_conv3_filters.jpg?raw=true" title="conv_5 filters" /></p>
+<p>Some of the 'block5_conv3' filters failed to converge. This is because regularization losses (total variation and 
+LP norm) are overtaking activation maximization loss (set <code>verbose=True</code> to observe). </p>
+<p>Whenever activation maximization fails to converge, total variation regularization is the typical culprit. 
+It is easier to minimize total variation from a random image (just have to create blobbier color structures), 
+and this sets the input image in a bad local minima that makes it difficult to optimize for activation maximization. 
+We can turn off total variation by setting <code>tv_weight=0</code>. This generates most of the previously unconverged filters.</p>
+<p><img alt="block5_conv3 filters_no_tv" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/block5_conv3_filters_no_tv.jpg?raw=true" title="conv_5 filters_no_tv" /></p>
+<p>By this layer, we can clearly notice templates for complex patterns such as flower buds / corals 
+(filters 67, 84 respectively). Notice that images are not as coherent due to lack of total variation loss.</p>
+<p>A good strategy in these situations might be to seed the optimization with image output generated via tv_weight=0
+and add the tv_weight back. Lets specifically look at filter 67.</p>
+<pre><code class="python">layer_name = 'block5_conv3'
+
+no_tv_seed_img = visualize_activation(model.input, layer_dict[layer_name], filter_indices=[67],
+                                      tv_weight=0, verbose=True)
+post_tv_img = visualize_activation(model.input, layer_dict[layer_name], filter_indices=[67],
+                                   tv_weight=1, seed_img=no_tv_seed_img, verbose=True, max_iter=300)
+cv2.imshow(layer_name, post_tv_img)
+cv2.waitKey(0)
+</code></pre>
+
+<p>As expected, this generates a blobbier and smoother image:</p>
+<p><img alt="filter_67" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/filter_67.png?raw=true" title="filter_75" /></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../dense/" class="btn btn-neutral float-right" title="Dense Layers">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../.." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../.." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../dense/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>

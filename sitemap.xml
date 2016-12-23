@@ -12,6 +12,22 @@
     
         
     <url>
+     <loc>/visualizations/conv_filters/</loc>
+     <lastmod>2016-12-22</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/visualizations/dense/</loc>
+     <lastmod>2016-12-22</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+        
+    <url>
      <loc>/vis.losses/</loc>
      <lastmod>2016-12-22</lastmod>
      <changefreq>daily</changefreq>

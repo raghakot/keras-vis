@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Dense Layers - Keras-vis Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Dense Layers";
+    var mkdocs_page_input_path = "visualizations/dense.md";
+    var mkdocs_page_url = "/visualizations/dense/";
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Keras-vis Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../..">Home</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Visualizations</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../conv_filters/">Convolutional Filters</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Dense Layers</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#dense-layer-visualization">Dense layer visualization</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Core API</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.losses/">losses</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.regularizers/">regularizers</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.optimizer/">optimizer</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.visualization/">visualization</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Utils</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.utils.utils/">utils</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.utils.vggnet/">vggnet</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Keras-vis Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Visualizations &raquo;</li>
+        
+      
+    
+    <li>Dense Layers</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h3 id="dense-layer-visualization">Dense layer visualization</h3>
+<p>How can we assess whether a network is over/under fitting or generalizing well? Given an input image, 
+conv net can classify whether it is a cat, bird etc. How can we be sure that it is capturing the correct notion of 
+what it means to be a bird? Suppose that all the training images of 'bird' class contains a tree
+with leaves. How do we know that the conv net is indeed leveraging bird-related pixels as opposed to some 
+other features such as the tree or leaves in the image.</p>
+<p>One way to answer these questions is to pose the reverse question:</p>
+<blockquote>
+<p>Generate an input image that maximizes the final <code>Dense</code> layer output corresponding to bird class. </p>
+</blockquote>
+<p>Lets try this for 'ouzel' (imagenet output category: 20)</p>
+<pre><code class="python">import cv2
+from vis.utils.vggnet import VGG16
+from vis.visualization import visualize_activation
+
+# Build the VGG16 network with ImageNet weights
+model = VGG16(weights='imagenet', include_top=True)
+print('Model loaded.')
+
+# The name of the layer we want to visualize
+# (see model definition in vggnet.py)
+layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
+layer_name = 'predictions'
+
+# Generate three different images of the same output index.
+img = visualize_activation(model.input, layer_dict[layer_name],
+                           filter_indices=[20, 20, 20], max_iter=500)
+cv2.imshow(layer_name, img)
+cv2.waitKey(0)
+</code></pre>
+
+<p>and out comes this..</p>
+<p><img alt="ouzel_vis" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/dense_vis/ouzel_vis.png?raw=true" title="ouzel_vis" /></p>
+<p>Not only has the conv net captured what it means to be an ouzel, but it also seems to encode for different orientations 
+and scales, a further proof of rotational and scale invariance. </p>
+<p>Lets do this for a few more random imagenet categories.</p>
+<p><img alt="random_imagenet" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/dense_vis/random_imagenet.png?raw=true" title="random_imagenet" /></p>
+<p>If you squint really hard, we can sort of see that most images are more or less accurate representations of the 
+corresponding class.</p>
+<p>You might notice that in most of these visualizations, the same pattern tends to repeat all over the image 
+with different orientations and scales. Why is this the case? If you think about it, it is essentially the consequence
+of activation maximization loss. Multiple copies of 'template pattern' all over the image should increase the output value.</p>
+<p>If we want more natural looking images, we need a better 'natural image' regularizer that penalizes this sort of 
+behavior. Instead of hand crafting the regularizer, we can use the negative of 'discriminator' output probability 
+(since we want to maximize probability that the image is real) of a generative adversarial network (GAN). </p>
+<p>See this article for details about GANs in general: <a href="https://arxiv.org/abs/1511.06434">Unsupervised Representation Learning with Deep Convolutional 
+Generative Adversarial Networks</a></p>
+<p><em>GAN regularizer is currently a work in progress. Check back in a few days.</em></p>
+<p>At this point, it might be fun to see the effect of total variation regularizer. The following images are generated with
+<code>tv_weight=0</code></p>
+<p><img alt="random_imagenet_no_tv" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/dense_vis/random_imagenet_no_tv.png?raw=true" title="random_imagenet_no_tv" /></p>
+<p>Total variation regularizer definitely helps in creating more natural looking images. I am excited to see what
+a GAN discriminator could do.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../vis.losses/" class="btn btn-neutral float-right" title="losses">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../conv_filters/" class="btn btn-neutral" title="Convolutional Filters"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../conv_filters/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../../vis.losses/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>
