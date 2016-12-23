@@ -22,6 +22,7 @@ In image backprop problems, the goal is to generate an input image that minimize
 Setting up an image backprop problem is easy.
 
 **Define weighted loss function**
+
 Various useful loss functions are defined in [losses](https://raghakot.github.io/keras-vis/vis.losses).
 A custom loss function can be defined by implementing [Loss.build_loss](https://raghakot.github.io/keras-vis/vis.losses/#lossbuild_loss).
 
@@ -41,6 +42,7 @@ losses = [
 ```
 
 **Configure optimizer to minimize weighted loss**
+
 In order to generate natural looking images, image search space is constrained using regularization penalties. 
 Some common regularizers are defined in [regularizers](https://raghakot.github.io/keras-vis/vis.regularizers).
 Like loss functions, custom regularizer can be defined by implementing 
@@ -89,15 +91,16 @@ Guided backprop can also be used to create [trippy art](https://deepdreamgenerat
 Various visualizations, documented in their own pages, are summarized here.
 
 ### [Conv filter visualization](https://raghakot.github.io/keras-vis/visualizations/conv_filters)
-<img src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/cover.jpg?raw=true" align="middle"/>
+<img src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/cover.jpg?raw=true"/>
 
-Convolutional filters learn 'template matching' filters that maximize the output when a similar template 
-pattern is found in the input image. Visualize those templates via Activation Maximization.
+*Convolutional filters learn 'template matching' filters that maximize the output when a similar template 
+pattern is found in the input image. Visualize those templates via Activation Maximization.*
 
 ### [Dense layer visualization](https://raghakot.github.io/keras-vis/visualizations/dense)
-<img src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/dense_vis/cover.png?raw=true" align="middle"/>
 
-How can we assess whether a network is over/under fitting or generalizing well?
+<img src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/dense_vis/cover.png?raw=true"/>
+
+*How can we assess whether a network is over/under fitting or generalizing well?*
 
 ### [Saliency Maps](https://raghakot.github.io/keras-vis/visualizations/saliency)
 TODO
@@ -109,7 +112,6 @@ TODO
 TODO
 
 ### Generating animated gif of optimization progress
-
 It is possible to generate an animated gif of optimization progress. Below is an example for activation maximization
 of 'ouzel' class (output_index: 20).
 
