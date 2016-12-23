@@ -197,8 +197,8 @@ Join the slack channel for questions/discussions.</p>
 <h2 id="getting-started">Getting Started</h2>
 <p>In image backprop problems, the goal is to generate an input image that minimizes some loss function.
 Setting up an image backprop problem is easy.</p>
-<p><strong>Define weighted loss function</strong>
-Various useful loss functions are defined in <a href="https://raghakot.github.io/keras-vis/vis.losses">losses</a>.
+<p><strong>Define weighted loss function</strong></p>
+<p>Various useful loss functions are defined in <a href="https://raghakot.github.io/keras-vis/vis.losses">losses</a>.
 A custom loss function can be defined by implementing <a href="https://raghakot.github.io/keras-vis/vis.losses/#lossbuild_loss">Loss.build_loss</a>.</p>
 <pre><code class="python">from vis.losses import ActivationMaximization
 from vis.regularizers import TotalVariation, LPNorm
@@ -214,8 +214,8 @@ losses = [
 ]
 </code></pre>
 
-<p><strong>Configure optimizer to minimize weighted loss</strong>
-In order to generate natural looking images, image search space is constrained using regularization penalties. 
+<p><strong>Configure optimizer to minimize weighted loss</strong></p>
+<p>In order to generate natural looking images, image search space is constrained using regularization penalties. 
 Some common regularizers are defined in <a href="https://raghakot.github.io/keras-vis/vis.regularizers">regularizers</a>.
 Like loss functions, custom regularizer can be defined by implementing 
 <a href="https://raghakot.github.io/keras-vis/vis.losses/#lossbuild_loss">Loss.build_loss</a>.</p>
@@ -255,12 +255,12 @@ diagnose mis-classifications, and assess whether the network is over/under fitti
 <a href="https://github.com/jcjohnson/neural-style">style transfer</a> among the list of other growing applications.</p>
 <p>Various visualizations, documented in their own pages, are summarized here.</p>
 <h3 id="conv-filter-visualization"><a href="https://raghakot.github.io/keras-vis/visualizations/conv_filters">Conv filter visualization</a></h3>
-<p><img src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/cover.jpg?raw=true" align="middle"/></p>
-<p>Convolutional filters learn 'template matching' filters that maximize the output when a similar template 
-pattern is found in the input image. Visualize those templates via Activation Maximization.</p>
+<p><img src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/cover.jpg?raw=true"/></p>
+<p><em>Convolutional filters learn 'template matching' filters that maximize the output when a similar template 
+pattern is found in the input image. Visualize those templates via Activation Maximization.</em></p>
 <h3 id="dense-layer-visualization"><a href="https://raghakot.github.io/keras-vis/visualizations/dense">Dense layer visualization</a></h3>
-<p><img src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/dense_vis/cover.png?raw=true" align="middle"/></p>
-<p>How can we assess whether a network is over/under fitting or generalizing well?</p>
+<p><img src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/dense_vis/cover.png?raw=true"/></p>
+<p><em>How can we assess whether a network is over/under fitting or generalizing well?</em></p>
 <h3 id="saliency-maps"><a href="https://raghakot.github.io/keras-vis/visualizations/saliency">Saliency Maps</a></h3>
 <p>TODO</p>
 <h3 id="caricaturization-deep-dream">Caricaturization (deep dream)</h3>
@@ -345,5 +345,5 @@ opt.minimize(max_iter=500, verbose=True, jitter=0,
 
 <!--
 MkDocs version : 0.16.1
-Build Date UTC : 2016-12-23 00:07:14
+Build Date UTC : 2016-12-23 00:26:56
 -->
