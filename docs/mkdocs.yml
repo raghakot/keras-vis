@@ -1,13 +1,16 @@
 site_name: Keras-vis Documentation
 theme: readthedocs
 docs_dir: sources
-site_description: 'Documentation for keras-vis, neural network visualization toolkit.'
+site_description: 'Documentation for keras-vis, Neural Network Visualization Toolkit.'
 
 extra_javascript:
-    - https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+  - https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+
+extra_css:
+  - css/extras.css
 
 markdown_extensions:
-    - mdx_math
+  - mdx_math
 
 pages:
   - Home: index.md
