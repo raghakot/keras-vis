@@ -65,6 +65,10 @@ def visualize_saliency(model, layer_idx, filter_indices,
     opt = Optimizer(model.input, losses)
     grads = opt.minimize(max_iter=1, verbose=True, jitter=0, seed_img=seed_img)[1]
 
+    # We are minimizing loss as opposed to maximizing output as with the paper.
+    # So, negative gradients here mean that they reduce loss, maximizing class probability.
+    grads *= -1
+
     s, c, row, col = utils.get_img_indices()
     grads = np.max(np.abs(grads), axis=c, keepdims=True)
 
@@ -144,6 +148,10 @@ def visualize_cam(model, layer_idx, filter_indices,
     penultimate_output = model.layers[penultimate_layer_idx].output
     opt = Optimizer(model.input, losses, wrt=penultimate_output)
     _, grads, penultimate_output_value = opt.minimize(seed_img, max_iter=1, jitter=0)
+
+    # We are minimizing loss as opposed to maximizing output as with the paper.
+    # So, negative gradients here mean that they reduce loss, maximizing class probability.
+    grads *= -1
 
     # Average pooling across all feature maps.
     # This captures the importance of feature map (channel) idx to the output
