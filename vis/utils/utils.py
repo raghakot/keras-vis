@@ -7,6 +7,7 @@ import json
 import cv2
 import itertools
 
+from skimage import io
 from keras import backend as K
 
 
@@ -153,10 +154,8 @@ def load_img(path, grayscale=False, target_size=None):
     Returns:
         The loaded numpy image.
     """
-    if grayscale:
-        img = cv2.imread(path, cv2.CV_LOAD_IMAGE_GRAYSCALE)
-    else:
-        img = cv2.imread(path)
+    img = io.imread(path, grayscale)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     if target_size:
         img = cv2.resize(img, (target_size[1], target_size[0]))
     return img
