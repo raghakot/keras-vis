@@ -125,7 +125,7 @@ TODO
 
 ### Generating animated gif of optimization progress
 It is possible to generate an animated gif of optimization progress. Below is an example for activation maximization
-of 'ouzel' class (output_index: 20).
+of 'ouzel' class (output_index: 20). This example also shows how to use the optimizer directly.
 
 ```python
 from vis.utils.vggnet import VGG16
@@ -144,9 +144,9 @@ layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
 output_class = [20]
 
 losses = [
-    (ActivationMaximization(layer_dict[layer_name], output_class), 1),
+    (ActivationMaximization(layer_dict[layer_name], output_class), 2),
     (LPNorm(model.input), 10),
-    (TotalVariation(model.input), 1)
+    (TotalVariation(model.input), 10)
 ]
 opt = Optimizer(model.input, losses)
 

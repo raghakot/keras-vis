@@ -18,9 +18,9 @@ def generate_opt_gif():
     output_class = [20]
 
     losses = [
-        (ActivationMaximization(layer_dict[layer_name], output_class), 1),
+        (ActivationMaximization(layer_dict[layer_name], output_class), 2),
         (LPNorm(model.input), 10),
-        (TotalVariation(model.input), 1)
+        (TotalVariation(model.input), 10)
     ]
     opt = Optimizer(model.input, losses)
 
