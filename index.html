@@ -293,7 +293,7 @@ pattern is found in the input image. Visualize those templates via Activation Ma
 
 <h3 id="generating-animated-gif-of-optimization-progress">Generating animated gif of optimization progress</h3>
 <p>It is possible to generate an animated gif of optimization progress. Below is an example for activation maximization
-of 'ouzel' class (output_index: 20).</p>
+of 'ouzel' class (output_index: 20). This example also shows how to use the optimizer directly.</p>
 <pre><code class="python">from vis.utils.vggnet import VGG16
 from vis.optimizer import Optimizer
 from vis.losses import ActivationMaximization
@@ -310,9 +310,9 @@ layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
 output_class = [20]
 
 losses = [
-    (ActivationMaximization(layer_dict[layer_name], output_class), 1),
+    (ActivationMaximization(layer_dict[layer_name], output_class), 2),
     (LPNorm(model.input), 10),
-    (TotalVariation(model.input), 1)
+    (TotalVariation(model.input), 10)
 ]
 opt = Optimizer(model.input, losses)
 
@@ -372,5 +372,5 @@ opt.minimize(max_iter=500, verbose=True, jitter=0,
 
 <!--
 MkDocs version : 0.16.0
-Build Date UTC : 2016-12-24 06:15:35
+Build Date UTC : 2016-12-24 06:44:52
 -->
