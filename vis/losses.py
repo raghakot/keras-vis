@@ -15,7 +15,7 @@ class Loss(object):
     def __str__(self):
         return self.name
 
-    def build_loss(self, img):
+    def build_loss(self):
         """Implement this function to build the loss function expression.
         Any additional arguments required to build this loss function may be passed in via `__init__`.
 
@@ -36,10 +36,6 @@ class Loss(object):
 
         [utils.get_img_shape](vis.utils.utils.md#get_img_shape) and
         [utils.get_img_indices](vis.utils.utils.md#get_img_indices) are other optional utilities that make this easier.
-
-        Args:
-            img: 4D tensor with shape: `(samples, channels, rows, cols)` if dim_ordering='th' or
-                `(samples, rows, cols, channels)` if dim_ordering='tf'.
 
         Returns:
             The loss expression.
@@ -74,7 +70,7 @@ class ActivationMaximization(Loss):
         self.layer = layer
         self.filter_indices = filter_indices
 
-    def build_loss(self, img):
+    def build_loss(self):
         layer_output = self.layer.output
 
         # For all other layers it is 4

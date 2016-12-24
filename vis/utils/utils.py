@@ -5,12 +5,28 @@ import os
 import math
 import json
 import cv2
+import itertools
 
 from keras import backend as K
 
 
 # Globals
 _CLASS_INDEX = None
+
+
+def set_random_seed(seed_value=1337):
+    """Sets random seed value for reproducibility.
+
+    Args:
+        seed_value: The seed value to use. (Default Value = infamous 1337)
+    """
+    np.random.seed(seed_value)
+
+
+def reverse_enumerate(iterable):
+    """Enumerate over an iterable in reverse order while retaining proper indexes, without creating any copies.
+    """
+    return itertools.izip(reversed(range(len(iterable))), reversed(iterable))
 
 
 def deprocess_image(img):
@@ -78,22 +94,22 @@ def stitch_images(images, margin=5, cols=5):
     return stitched_images
 
 
-def generate_rand_img(c, w, h):
+def generate_rand_img(ch, rows, cols):
     """Generates a random image.
 
     Args:
-      c: image channels
-      w: image width
-      h: image height
+      ch: image channels
+      rows: image rows or height
+      cols: image cols or width
 
     Returns:
         A numpy array of shape: `(channels, rows, cols)` if dim_ordering='th' or
             `(rows, cols, channels)` if dim_ordering='tf'.
     """
     if K.image_dim_ordering() == 'th':
-        x = np.random.random((c, w, h))
+        x = np.random.random((ch, rows, cols))
     else:
-        x = np.random.random((w, h, c))
+        x = np.random.random((rows, cols, ch))
     x = (x - 0.5) * 20 + 128
     return x
 
@@ -105,20 +121,20 @@ def get_img_shape(img):
         img: The image tensor in 'th' or 'tf' dim ordering.
 
     Returns:
-        Tuple containing image shape information in `(samples, channels, width, height)` order.
+        Tuple containing image shape information in `(samples, channels, rows, cols)` order.
     """
     if K.image_dim_ordering() == 'th':
         return K.int_shape(img)
     else:
-        samples, w, h, c = K.int_shape(img)
-        return samples, c, w, h
+        samples, rows, cols, ch = K.int_shape(img)
+        return samples, ch, rows, cols
 
 
 def get_img_indices():
     """Returns image indices in a backend agnostic manner.
 
     Returns:
-        A tuple representing indices for image in `(samples, channels, width, height)` order.
+        A tuple representing indices for image in `(samples, channels, rows, cols)` order.
     """
     if K.image_dim_ordering() == 'th':
         return 0, 1, 2, 3
@@ -157,7 +173,7 @@ def get_imagenet_label(index):
     """
     global _CLASS_INDEX
     if _CLASS_INDEX is None:
-        with open(os.path.join(os.path.dirname(__file__), '../resources/imagenet_class_index.json')) as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../resources/imagenet_class_index.json')) as f:
             _CLASS_INDEX = json.load(f)
     return _CLASS_INDEX[str(index)][1]
 

@@ -21,11 +21,11 @@ print('Model loaded.')
 
 # The name of the layer we want to visualize
 # (see model definition in vggnet.py)
-layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
 layer_name = 'predictions'
+layer_idx = [idx for idx, layer in enumerate(model.layers) if layer.name == layer_name][0]
 
 # Generate three different images of the same output index.
-img = visualize_activation(model.input, layer_dict[layer_name],
+img = visualize_activation(model, layer_idx,
                            filter_indices=[20, 20, 20], max_iter=500)
 cv2.imshow(layer_name, img)
 cv2.waitKey(0)

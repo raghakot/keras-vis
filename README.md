@@ -36,8 +36,8 @@ filter_indices = [1, 2, 3]
 # Add regularizers as needed.
 losses = [
     (ActivationMaximization(keras_layer, filter_indices), 1),
-    (LPNorm(), 10),
-    (TotalVariation(), 10)
+    (LPNorm(model.input), 10),
+    (TotalVariation(model.input), 10)
 ]
 ```
 
@@ -52,8 +52,8 @@ Like loss functions, custom regularizer can be defined by implementing
 ```python
 from vis.optimizer import Optimizer
 
-optimizer = Optimizer(img_input_layer, losses)
-opt_img, grads = optimizer.minimize()
+optimizer = Optimizer(model.input, losses)
+opt_img, grads, _ = optimizer.minimize()
 ```
 
 Concrete examples of various visualizations can be found in 
@@ -108,7 +108,7 @@ pattern is found in the input image. Visualize those templates via Activation Ma
 
 <hr/>
 
-### [Saliency Maps](https://raghakot.github.io/keras-vis/visualizations/saliency)
+### [Attention Maps](https://raghakot.github.io/keras-vis/visualizations/attention)
 TODO
 
 <hr/>
@@ -145,8 +145,8 @@ output_class = [20]
 
 losses = [
     (ActivationMaximization(layer_dict[layer_name], output_class), 1),
-    (LPNorm(), 10),
-    (TotalVariation(), 1)
+    (LPNorm(model.input), 10),
+    (TotalVariation(model.input), 1)
 ]
 opt = Optimizer(model.input, losses)
 

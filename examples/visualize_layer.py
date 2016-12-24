@@ -6,8 +6,11 @@ from vis.utils.vggnet import VGG16
 from vis.visualization import visualize_activation
 
 
-def visualize_random():
-    """Example to show how to visualize multiple filters via activation maximization
+def visualize_random(num_categories=20):
+    """Example to show how to visualize multiple filters via activation maximization.
+
+    Args:
+        num_categories: The number of random categories to visualize. (Default Value = 5)
     """
     # Build the VGG16 network with ImageNet weights
     model = VGG16(weights='imagenet', include_top=True)
@@ -16,20 +19,23 @@ def visualize_random():
     # The name of the layer we want to visualize
     # (see model definition in vggnet.py)
     layer_name = 'predictions'
-    layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
+    layer_idx = [idx for idx, layer in enumerate(model.layers) if layer.name == layer_name][0]
 
     # Visualize couple random categories from imagenet.
-    indices = np.random.permutation(1000)[:15]
+    indices = np.random.permutation(1000)[:num_categories]
     idx_label_map = dict((idx, utils.get_imagenet_label(idx)) for idx in indices)
 
-    vis_img = visualize_activation(model.input, layer_dict[layer_name], max_iter=500,
-                                   filter_indices=indices, idx_label_map=idx_label_map)
+    vis_img = visualize_activation(model, layer_idx, filter_indices=indices,
+                                   max_iter=500, idx_label_map=idx_label_map)
     cv2.imshow('Random imagenet output categories', vis_img)
     cv2.waitKey(0)
 
 
-def visualize_multiple_same_filter():
+def visualize_multiple_same_filter(num_runs=3):
     """Example to show how to visualize same filter multiple times via different runs.
+
+    Args:
+        num_runs: The number of times the same filter is visualized
     """
     # Build the VGG16 network with ImageNet weights
     model = VGG16(weights='imagenet', include_top=True)
@@ -38,14 +44,14 @@ def visualize_multiple_same_filter():
     # The name of the layer we want to visualize
     # (see model definition in vggnet.py)
     layer_name = 'predictions'
-    layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
+    layer_idx = [idx for idx, layer in enumerate(model.layers) if layer.name == layer_name][0]
 
     # 20 is the imagenet category for 'ouzel'
-    indices = [20, 20, 20]
+    indices = [20] * num_runs
     idx_label_map = dict((idx, utils.get_imagenet_label(idx)) for idx in indices)
 
-    vis_img = visualize_activation(model.input, layer_dict[layer_name], max_iter=500,
-                                   filter_indices=indices, idx_label_map=idx_label_map)
+    vis_img = visualize_activation(model, layer_idx, filter_indices=indices,
+                                   max_iter=500, idx_label_map=idx_label_map)
     cv2.imshow('Multiple runs of ouzel', vis_img)
     cv2.waitKey(0)
 
@@ -60,21 +66,21 @@ def visualize_multiple_categories():
     # The name of the layer we want to visualize
     # (see model definition in vggnet.py)
     layer_name = 'predictions'
-    layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
+    layer_idx = [idx for idx, layer in enumerate(model.layers) if layer.name == layer_name][0]
 
     # Visualize [20] (ouzel) and [20, 71] (An ouzel-scorpion :D)
     indices = [20, [20, 71]]
     idx_label_map = dict((idx, utils.get_imagenet_label(idx)) for idx in [20, 71])
 
-    vis_img = visualize_activation(model.input, layer_dict[layer_name], max_iter=500,
-                                   filter_indices=indices, idx_label_map=idx_label_map)
+    vis_img = visualize_activation(model, layer_idx, filter_indices=indices,
+                                   max_iter=500, idx_label_map=idx_label_map)
     cv2.imshow('Multiple category visualization', vis_img)
     cv2.waitKey(0)
 
 
 if __name__ == '__main__':
     print('Visualizing random imagenet output categories')
-    visualize_random()
+    visualize_random(3)
 
     print('Visualizing same filter over multiple runs')
     visualize_multiple_same_filter()

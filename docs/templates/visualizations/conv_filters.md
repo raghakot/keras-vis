@@ -21,9 +21,9 @@ print('Model loaded.')
 # The name of the layer we want to visualize
 # (see model definition in vggnet.py)
 layer_name = 'block1_conv2'
-layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
+layer_idx = [idx for idx, layer in enumerate(model.layers) if layer.name == layer_name][0]
 
-vis_img = visualize_activation(model.input, layer_dict[layer_name])
+vis_img = visualize_activation(model, layer_idx)
 cv2.imshow(layer_name, vis_img)
 cv2.waitKey(0)
 ```
@@ -70,9 +70,9 @@ and add the tv_weight back. Lets specifically look at filter 67.
 ```python
 layer_name = 'block5_conv3'
 
-no_tv_seed_img = visualize_activation(model.input, layer_dict[layer_name], filter_indices=[67],
+no_tv_seed_img = visualize_activation(model, layer_idx, filter_indices=[67],
                                       tv_weight=0, verbose=True)
-post_tv_img = visualize_activation(model.input, layer_dict[layer_name], filter_indices=[67],
+post_tv_img = visualize_activation(model, layer_idx, filter_indices=[67],
                                    tv_weight=1, seed_img=no_tv_seed_img, verbose=True, max_iter=300)
 cv2.imshow(layer_name, post_tv_img)
 cv2.waitKey(0)
