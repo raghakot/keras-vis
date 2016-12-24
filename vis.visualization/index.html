@@ -78,6 +78,11 @@
           
             <li>
     <ul class="subnav">
+    <li><span>API Docs</span></li>
+
+        
+            
+    <ul class="subnav">
     <li><span>Core API</span></li>
 
         
@@ -123,9 +128,9 @@
 
         
     </ul>
-<li>
-          
-            <li>
+
+        
+            
     <ul class="subnav">
     <li><span>Utils</span></li>
 
@@ -142,6 +147,9 @@
         <a class="" href="../vis.utils.vggnet/">vggnet</a>
         
     </li>
+
+        
+    </ul>
 
         
     </ul>
@@ -169,12 +177,19 @@
     
       
         
+          <li>API Docs &raquo;</li>
+        
+      
+        
           <li>Core API &raquo;</li>
         
       
     
     <li>visualization</li>
     <li class="wy-breadcrumbs-aside">
+      
+        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.visualization.md"
+          class="icon icon-github"> Edit on GitHub</a>
       
     </li>
   </ul>
@@ -216,7 +231,7 @@ final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</
 <p>The heatmap image indicating image regions that, when changed, would contribute the most towards maximizing
 a the filter output.</p>
 <hr />
-<h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L85">visualize_cam</a></h3>
+<h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L89">visualize_cam</a></h3>
 <pre><code class="python">visualize_cam(model, layer_idx, filter_indices, seed_img, penultimate_layer_idx=None, overlay=True)
 </code></pre>
 
@@ -255,7 +270,7 @@ as opposed inefficient sliding window approach.</p>
 <p>The heatmap image indicating image regions that, when changed, would contribute the most towards maximizing
 a the filter output.</p>
 <hr />
-<h3 id="visualize_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L176">visualize_activation</a></h3>
+<h3 id="visualize_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L184">visualize_activation</a></h3>
 <pre><code class="python">visualize_activation(model, layer_idx, filter_indices=None, seed_img=None, act_max_weight=1, \
     lp_norm_weight=10, tv_weight=10, max_iter=200, verbose=False, show_filter_idx_text=True, \
     idx_label_map=None, cols=5)
@@ -335,6 +350,8 @@ corresponding to the entry in <code>filter_indices</code>.</p>
 
   <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="http://github.com/raghakot/keras-vis" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
         <span><a href="../vis.optimizer/" style="color: #fcfcfc;">&laquo; Previous</a></span>

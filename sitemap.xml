@@ -28,42 +28,14 @@
     
         
     <url>
-     <loc>/vis.losses/</loc>
-     <lastmod>2016-12-23</lastmod>
+     <loc></loc>
+     <lastmod></lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>/vis.regularizers/</loc>
-     <lastmod>2016-12-23</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
-     <loc>/vis.optimizer/</loc>
-     <lastmod>2016-12-23</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
-     <loc>/vis.visualization/</loc>
-     <lastmod>2016-12-23</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    
-
-    
-        
-    <url>
-     <loc>/vis.utils.utils/</loc>
-     <lastmod>2016-12-23</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
-     <loc>/vis.utils.vggnet/</loc>
-     <lastmod>2016-12-23</lastmod>
+     <loc></loc>
+     <lastmod></lastmod>
      <changefreq>daily</changefreq>
     </url>
         
