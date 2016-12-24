@@ -111,6 +111,9 @@
                 <li class="toctree-l3"><a href="#visualize_saliency">visualize_saliency</a></li>
                 
             
+                <li class="toctree-l3"><a href="#visualize_cam">visualize_cam</a></li>
+                
+            
                 <li class="toctree-l3"><a href="#visualize_activation">visualize_activation</a></li>
                 
             
@@ -182,21 +185,18 @@
               
                 <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L0">vis/visualization.py#L0</a></p>
 <hr />
-<h3 id="visualize_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L27">visualize_saliency</a></h3>
-<pre><code class="python">visualize_saliency(img, layer, filter_indices, seed_img, overlay=True)
+<h3 id="visualize_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L30">visualize_saliency</a></h3>
+<pre><code class="python">visualize_saliency(model, layer_idx, filter_indices, seed_img, overlay=True)
 </code></pre>
 
-<p>Generates a heatmap indicating the pixels that contributed the most towards
-maximizing <code>filter_indices</code> output in the given <code>layer</code>.</p>
-<p>For example, if you wanted to visualize the which pixels contributed to classifying an image as 'bird', say output
-index 22 on final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</code>, <code>layer = dense_layer</code>.</p>
-<p>Alternatively one could use <code>filter_indices = [22, 23]</code> and hope to see image regions that are common to output
-categories 22, 23 to show up in the heatmap.</p>
+<p>Generates an attention heatmap over the <code>seed_img</code> for maximizing <code>filter_indices</code> output in the given <code>layer</code>.
+For a full description of saliency, see the paper:
+<a href="https://arxiv.org/pdf/1312.6034v2.pdf">Deep Inside Convolutional Networks: Visualising Image Classification Models and Saliency Maps</a></p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img</strong>:  4D input image tensor with shape: <code>(samples, channels, rows, cols)</code> if dim_ordering='th'
-  or <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
-<li><strong>layer</strong>:  The <code>keras.Layer</code> layer whose filters needs to be visualized.</li>
+<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. Model input is expected to be a 4D image input of shape:
+  <code>(samples, channels, rows, cols)</code> if dim_ordering='th' or <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
+<li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
 <li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
   For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</li>
 </ul>
@@ -207,13 +207,57 @@ categories 22, 23 to show up in the heatmap.</p>
 <li><strong>seed_img</strong>:  The input image for which activation map needs to be visualized.</li>
 <li><strong>overlay</strong>:  If true, overlays the heatmap over the original image (Default value = True)</li>
 </ul>
+<p><em>Example:</em></p>
+<p>If you wanted to visualize attention over 'bird' category, say output index 22 on the
+final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</code>, <code>layer = dense_layer</code>.</p>
+<p>One could also set filter indices to more than one value. For example, <code>filter_indices = [22, 23]</code> should
+(hopefully) show attention map that corresponds to both 22, 23 output categories.</p>
 <p><em>Returns:</em></p>
 <p>The heatmap image indicating image regions that, when changed, would contribute the most towards maximizing
 a the filter output.</p>
 <hr />
-<h3 id="visualize_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L80">visualize_activation</a></h3>
-<pre><code class="python">visualize_activation(img, layer, filter_indices=None, seed_img=None, max_iter=200, act_max_weight=1, \
-    lp_norm_weight=10, tv_weight=10, verbose=False, show_filter_idx_text=True, \
+<h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L85">visualize_cam</a></h3>
+<pre><code class="python">visualize_cam(model, layer_idx, filter_indices, seed_img, penultimate_layer_idx=None, overlay=True)
+</code></pre>
+
+<p>Generates a gradient based class activation map (CAM) as described in paper
+<a href="https://arxiv.org/pdf/1610.02391v1.pdf">Grad-CAM: Why did you say that? Visual Explanations from Deep Networks via Gradient-based Localization</a>.
+Unlike <a href="https://arxiv.org/pdf/1512.04150v1.pdf">class activation mapping</a>, which requires minor changes to
+network architecture in some instances, grad-CAM has a more general applicability.</p>
+<p>Compared to saliency maps, grad-CAM is class discriminative; i.e., the 'cat' explanation exclusively highlights
+cat regions and not the 'dog' region and vice-versa.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. Model input is expected to be a 4D image input of shape:
+  <code>(samples, channels, rows, cols)</code> if dim_ordering='th' or <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
+<li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
+<li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
+  For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</li>
+</ul>
+<p>If you are visualizing final <code>keras.layers.Dense</code> layer, you tend to get
+  better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
+  output can be maximized by minimizing scores for other classes.</p>
+<ul>
+<li><strong>seed_img</strong>:  The input image for which activation map needs to be visualized.</li>
+<li><strong>penultimate_layer_idx</strong>:  The pre-layer to <code>layer_idx</code> whose feature maps should be used to compute gradients
+  wrt filter output. If not provided, it is set to the nearest penultimate <code>Convolutional</code> or <code>Pooling</code> layer.</li>
+<li><strong>overlay</strong>:  If true, overlays the heatmap over the original image (Default value = True)</li>
+</ul>
+<p><em>Example:</em></p>
+<p>If you wanted to visualize attention over 'bird' category, say output index 22 on the
+final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</code>, <code>layer = dense_layer</code>.</p>
+<p>One could also set filter indices to more than one value. For example, <code>filter_indices = [22, 23]</code> should
+(hopefully) show attention map that corresponds to both 22, 23 output categories.</p>
+<p><em>Notes:</em></p>
+<p>This technique deprecates occlusion maps as it gives similar results, but with one-pass gradient computation
+as opposed inefficient sliding window approach.</p>
+<p><em>Returns:</em></p>
+<p>The heatmap image indicating image regions that, when changed, would contribute the most towards maximizing
+a the filter output.</p>
+<hr />
+<h3 id="visualize_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L176">visualize_activation</a></h3>
+<pre><code class="python">visualize_activation(model, layer_idx, filter_indices=None, seed_img=None, act_max_weight=1, \
+    lp_norm_weight=10, tv_weight=10, max_iter=200, verbose=False, show_filter_idx_text=True, \
     idx_label_map=None, cols=5)
 </code></pre>
 
@@ -225,9 +269,9 @@ final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</
 corresponding to the entry in <code>filter_indices</code>.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img</strong>:  4D input image tensor with shape: <code>(samples, channels, rows, cols)</code> if dim_ordering='th'
-  or <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
-<li><strong>layer</strong>:  The <code>keras.Layer</code> layer whose filters needs to be visualized.</li>
+<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. Model input is expected to be a 4D image input of shape:
+  <code>(samples, channels, rows, cols)</code> if dim_ordering='th' or <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
+<li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
 <li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
   If None, all filters are visualized. (Default value = None)</li>
 </ul>

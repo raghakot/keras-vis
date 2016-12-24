@@ -208,10 +208,10 @@ uniform across various input image dimensions.</p>
 <p><em>Returns:</em></p>
 <p>The normalized expression.</p>
 <hr />
-<h2 id="totalvariation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L27">TotalVariation</a></h2>
+<h2 id="totalvariation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L26">TotalVariation</a></h2>
 <hr />
-<h3 id="totalvariation__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L29">TotalVariation.<code>__init__</code></a></h3>
-<pre><code class="python">__init__(self, beta=2.0)
+<h3 id="totalvariation__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L28">TotalVariation.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, img_input, beta=2.0)
 </code></pre>
 
 <p>Total variation regularizer encourages blobbier and coherent image structures, akin to natural images.
@@ -220,12 +220,14 @@ See <code>section 3.2.2</code> in
 for details.</p>
 <p><em>Args:</em></p>
 <ul>
+<li><strong>img_input</strong>:  4D image input tensor to the model of shape: <code>(samples, channels, rows, cols)</code>
+  if dim_ordering='th' or <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
 <li><strong>beta</strong>:  Smaller values of beta give sharper but 'spikier' images.
-Values <script type="math/tex">\in [1.5, 2.0]</script> are recommended as a reasonable compromise.</li>
+  Values <script type="math/tex">\in [1.5, 2.0]</script> are recommended as a reasonable compromise.</li>
 </ul>
 <hr />
-<h3 id="totalvariationbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L43">TotalVariation.build_loss</a></h3>
-<pre><code class="python">build_loss(self, img)
+<h3 id="totalvariationbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L45">TotalVariation.build_loss</a></h3>
+<pre><code class="python">build_loss(self)
 </code></pre>
 
 <p>Implements the function
@@ -233,21 +235,23 @@ Values <script type="math/tex">\in [1.5, 2.0]</script> are recommended as a reas
 \left ( x(h+1, w, c) - x(h, w, c) \right )^{2} \right )^{\frac{\beta}{2}}</script>
 </p>
 <hr />
-<h2 id="lpnorm"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L55">LPNorm</a></h2>
+<h2 id="lpnorm"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L57">LPNorm</a></h2>
 <hr />
-<h3 id="lpnorm__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L57">LPNorm.<code>__init__</code></a></h3>
-<pre><code class="python">__init__(self, p=6.0)
+<h3 id="lpnorm__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L59">LPNorm.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, img_input, p=6.0)
 </code></pre>
 
 <p>Builds a L-p norm function. This regularizer encourages the intensity of pixels to stay bounded.
   i.e., prevents pixels from taking on very large values.</p>
 <p><em>Args:</em></p>
 <ul>
+<li><strong>img_input</strong>:  4D image input tensor to the model of shape: <code>(samples, channels, rows, cols)</code>
+  if dim_ordering='th' or <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
 <li><strong>p</strong>:  The pth norm to use. If p = float('inf'), infinity-norm will be used.</li>
 </ul>
 <hr />
-<h3 id="lpnormbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L71">LPNorm.build_loss</a></h3>
-<pre><code class="python">build_loss(self, img)
+<h3 id="lpnormbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L76">LPNorm.build_loss</a></h3>
+<pre><code class="python">build_loss(self)
 </code></pre>
               
             </div>

@@ -4,7 +4,7 @@
     
     <url>
      <loc>/</loc>
-     <lastmod>2016-12-22</lastmod>
+     <lastmod>2016-12-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -13,13 +13,13 @@
         
     <url>
      <loc>/visualizations/conv_filters/</loc>
-     <lastmod>2016-12-22</lastmod>
+     <lastmod>2016-12-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/visualizations/dense/</loc>
-     <lastmod>2016-12-22</lastmod>
+     <lastmod>2016-12-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -29,25 +29,25 @@
         
     <url>
      <loc>/vis.losses/</loc>
-     <lastmod>2016-12-22</lastmod>
+     <lastmod>2016-12-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/vis.regularizers/</loc>
-     <lastmod>2016-12-22</lastmod>
+     <lastmod>2016-12-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/vis.optimizer/</loc>
-     <lastmod>2016-12-22</lastmod>
+     <lastmod>2016-12-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/vis.visualization/</loc>
-     <lastmod>2016-12-22</lastmod>
+     <lastmod>2016-12-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -57,13 +57,13 @@
         
     <url>
      <loc>/vis.utils.utils/</loc>
-     <lastmod>2016-12-22</lastmod>
+     <lastmod>2016-12-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/vis.utils.vggnet/</loc>
-     <lastmod>2016-12-22</lastmod>
+     <lastmod>2016-12-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         

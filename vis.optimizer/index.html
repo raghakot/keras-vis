@@ -105,7 +105,15 @@
                 
                     <li><a class="toctree-l4" href="#optimizer__init__">Optimizer.__init__</a></li>
                 
+                    <li><a class="toctree-l4" href="#optimizereval_losses">Optimizer.eval_losses</a></li>
+                
+                    <li><a class="toctree-l4" href="#optimizerget_seed_img">Optimizer.get_seed_img</a></li>
+                
+                    <li><a class="toctree-l4" href="#optimizerjitter">Optimizer.jitter</a></li>
+                
                     <li><a class="toctree-l4" href="#optimizerminimize">Optimizer.minimize</a></li>
+                
+                    <li><a class="toctree-l4" href="#optimizerrmsprop">Optimizer.rmsprop</a></li>
                 
             
             </ul>
@@ -186,18 +194,55 @@
 <h2 id="optimizer"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L11">Optimizer</a></h2>
 <hr />
 <h3 id="optimizer__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L13">Optimizer.<code>__init__</code></a></h3>
-<pre><code class="python">__init__(self, img, losses)
+<pre><code class="python">__init__(self, img_input, losses, wrt=None)
 </code></pre>
 
 <p>Creates an optimizer that minimizes weighted loss function.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img</strong>:  4D tensor with shape: <code>(samples, channels, rows, cols)</code> if dim_ordering='th' or
-  <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
+<li><strong>img_input</strong>:  4D image input tensor to the model of shape: <code>(samples, channels, rows, cols)</code>
+  if dim_ordering='th' or <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
 <li><strong>losses</strong>:  List of (<a href="../vis.losses#Loss">Loss</a>, weight) tuples.</li>
+<li><strong>wrt</strong>:  Short for, with respect to. This instructs the optimizer that the aggregate loss from <code>losses</code>
+  should be minimized with respect to <code>wrt</code>. <code>wrt</code> can be any tensor that is part of the model graph.
+  Default value is set to None which means that loss will simply be minimized with respect to <code>img_input</code>.</li>
 </ul>
 <hr />
-<h3 id="optimizerminimize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L118">Optimizer.minimize</a></h3>
+<h3 id="optimizereval_losses"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L45">Optimizer.eval_losses</a></h3>
+<pre><code class="python">eval_losses(self, img)
+</code></pre>
+
+<p>Evaluates losses with respect to numpy input image.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>img</strong>:  4D numpy array with shape: <code>(samples, channels, rows, cols)</code> if dim_ordering='th' or
+  <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>A dictionary of (<a href="../vis.losses#Loss">Loss</a>.name, loss_value) values for various losses.</p>
+<hr />
+<h3 id="optimizerget_seed_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L97">Optimizer.get_seed_img</a></h3>
+<pre><code class="python">get_seed_img(self, seed_img)
+</code></pre>
+
+<p>Creates the seed_img, along with other sanity checks.</p>
+<hr />
+<h3 id="optimizerjitter"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L81">Optimizer.jitter</a></h3>
+<pre><code class="python">jitter(self, img, jitter=32)
+</code></pre>
+
+<p>Jitters the numpy input image randomly in width and height dimensions.
+This kind of regularization is known to produce crisper images via guided backprop.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>img</strong>:  4D numpy array with shape: <code>(samples, channels, rows, cols)</code> if dim_ordering='th' or
+  <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'</li>
+<li><strong>jitter</strong>:  Number of pixels to jitter in width and height directions.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The jittered numpy image array.</p>
+<hr />
+<h3 id="optimizerminimize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L111">Optimizer.minimize</a></h3>
 <pre><code class="python">minimize(self, seed_img=None, max_iter=200, jitter=8, verbose=True, progress_gif_path=None)
 </code></pre>
 
@@ -212,11 +257,28 @@
   Jitter is known to generate crisper images. (Default value = 8)</li>
 <li><strong>verbose</strong>:  Logs individual losses at the end of every gradient descent iteration.
   Very useful to estimate loss weight factor. (Default value = True)</li>
-<li><strong>progress_gif_path</strong>:  Saves a gif of input image being optimized.
-  This slows down perf quite a bit, use with care.</li>
+<li><strong>progress_gif_path</strong>:  Saves a gif of <code>seed_img</code> being optimized.
+  This slows down perf quite a bit, use with caution.</li>
 </ul>
 <p><em>Returns:</em></p>
-<p>The tuple of <code>(optimized image, gradients)</code> of image with respect to losses.</p>
+<p>The tuple of <code>(optimized_image, grads with respect to wrt, wrt_value)</code> after gradient descent iterations.</p>
+<hr />
+<h3 id="optimizerrmsprop"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L61">Optimizer.rmsprop</a></h3>
+<pre><code class="python">rmsprop(self, grads, cache=None, decay_rate=0.95)
+</code></pre>
+
+<p>Uses RMSProp to compute step from gradients.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>grads</strong>:  numpy array of gradients.</li>
+<li><strong>cache</strong>:  numpy array of same shape as <code>grads</code> as RMSProp cache</li>
+<li><strong>decay_rate</strong>:  How fast to decay cache</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>A tuple of
+ - <strong>step</strong>:  numpy array of the same shape as <code>grads</code> giving the step.
+  Note that this does not yet take the learning rate into account.
+ - <strong>cache</strong>:  Updated RMSProp cache.</p>
               
             </div>
           </div>

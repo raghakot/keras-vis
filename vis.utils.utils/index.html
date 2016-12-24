@@ -125,6 +125,10 @@
             
                 <li class="toctree-l3"><a href="#global-variables">Global Variables</a></li>
                 
+                    <li><a class="toctree-l4" href="#set_random_seed">set_random_seed</a></li>
+                
+                    <li><a class="toctree-l4" href="#reverse_enumerate">reverse_enumerate</a></li>
+                
                     <li><a class="toctree-l4" href="#deprocess_image">deprocess_image</a></li>
                 
                     <li><a class="toctree-l4" href="#stitch_images">stitch_images</a></li>
@@ -197,7 +201,23 @@
 <li><strong>slicer</strong></li>
 </ul>
 <hr />
-<h3 id="deprocess_image"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L16">deprocess_image</a></h3>
+<h3 id="set_random_seed"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L17">set_random_seed</a></h3>
+<pre><code class="python">set_random_seed(seed_value=1337)
+</code></pre>
+
+<p>Sets random seed value for reproducibility.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>seed_value</strong>:  The seed value to use. (Default Value = infamous 1337)</li>
+</ul>
+<hr />
+<h3 id="reverse_enumerate"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L26">reverse_enumerate</a></h3>
+<pre><code class="python">reverse_enumerate(iterable)
+</code></pre>
+
+<p>Enumerate over an iterable in reverse order while retaining proper indexes, without creating any copies.</p>
+<hr />
+<h3 id="deprocess_image"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L32">deprocess_image</a></h3>
 <pre><code class="python">deprocess_image(img)
 </code></pre>
 
@@ -210,7 +230,7 @@
 <p><em>Returns:</em></p>
 <p>A valid image output.</p>
 <hr />
-<h3 id="stitch_images"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L46">stitch_images</a></h3>
+<h3 id="stitch_images"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L62">stitch_images</a></h3>
 <pre><code class="python">stitch_images(images, margin=5, cols=5)
 </code></pre>
 
@@ -225,22 +245,22 @@
 <p><em>Returns:</em></p>
 <p>A single numpy image array comprising of input images.</p>
 <hr />
-<h3 id="generate_rand_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L81">generate_rand_img</a></h3>
-<pre><code class="python">generate_rand_img(c, w, h)
+<h3 id="generate_rand_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L97">generate_rand_img</a></h3>
+<pre><code class="python">generate_rand_img(ch, rows, cols)
 </code></pre>
 
 <p>Generates a random image.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>c</strong>:  image channels</li>
-<li><strong>w</strong>:  image width</li>
-<li><strong>h</strong>:  image height</li>
+<li><strong>ch</strong>:  image channels</li>
+<li><strong>rows</strong>:  image rows or height</li>
+<li><strong>cols</strong>:  image cols or width</li>
 </ul>
 <p><em>Returns:</em></p>
 <p>A numpy array of shape: <code>(channels, rows, cols)</code> if dim_ordering='th' or
   <code>(rows, cols, channels)</code> if dim_ordering='tf'.</p>
 <hr />
-<h3 id="get_img_shape"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L101">get_img_shape</a></h3>
+<h3 id="get_img_shape"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L117">get_img_shape</a></h3>
 <pre><code class="python">get_img_shape(img)
 </code></pre>
 
@@ -250,17 +270,17 @@
 <li><strong>img</strong>:  The image tensor in 'th' or 'tf' dim ordering.</li>
 </ul>
 <p><em>Returns:</em></p>
-<p>Tuple containing image shape information in <code>(samples, channels, width, height)</code> order.</p>
+<p>Tuple containing image shape information in <code>(samples, channels, rows, cols)</code> order.</p>
 <hr />
-<h3 id="get_img_indices"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L117">get_img_indices</a></h3>
+<h3 id="get_img_indices"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L133">get_img_indices</a></h3>
 <pre><code class="python">get_img_indices()
 </code></pre>
 
 <p>Returns image indices in a backend agnostic manner.</p>
 <p><em>Returns:</em></p>
-<p>A tuple representing indices for image in <code>(samples, channels, width, height)</code> order.</p>
+<p>A tuple representing indices for image in <code>(samples, channels, rows, cols)</code> order.</p>
 <hr />
-<h3 id="load_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L129">load_img</a></h3>
+<h3 id="load_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L145">load_img</a></h3>
 <pre><code class="python">load_img(path, grayscale=False, target_size=None)
 </code></pre>
 
@@ -274,7 +294,7 @@
 <p><em>Returns:</em></p>
 <p>The loaded numpy image.</p>
 <hr />
-<h3 id="get_imagenet_label"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L149">get_imagenet_label</a></h3>
+<h3 id="get_imagenet_label"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L165">get_imagenet_label</a></h3>
 <pre><code class="python">get_imagenet_label(index)
 </code></pre>
 
