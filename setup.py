@@ -3,7 +3,7 @@ from setuptools import find_packages
 
 
 setup(name='keras-vis',
-      version='0.1',
+      version='0.1.1',
       description='Network visualization toolkit for keras',
       author='Raghavendra Kotikalapudi',
       author_email='ragha@outlook.com',
