@@ -1,6 +1,8 @@
 site_name: Keras-vis Documentation
 theme: readthedocs
 docs_dir: sources
+repo_url: http://github.com/raghakot/keras-vis
+edit_uri: blob/master/docs/templates
 site_description: 'Documentation for keras-vis, Neural Network Visualization Toolkit.'
 
 extra_javascript:
@@ -17,11 +19,12 @@ pages:
   - Visualizations:
     - Convolutional Filters: visualizations/conv_filters.md
     - Dense Layers: visualizations/dense.md
-  - Core API:
-    - losses: vis.losses.md
-    - regularizers: vis.regularizers.md
-    - optimizer: vis.optimizer.md
-    - visualization: vis.visualization.md
-  - Utils:
-    - utils: vis.utils.utils.md
-    - vggnet: vis.utils.vggnet.md
+  - API Docs:
+    - Core API:
+      - losses: vis.losses.md
+      - regularizers: vis.regularizers.md
+      - optimizer: vis.optimizer.md
+      - visualization: vis.visualization.md
+    - Utils:
+      - utils: vis.utils.utils.md
+      - vggnet: vis.utils.vggnet.md
