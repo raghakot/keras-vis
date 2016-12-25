@@ -267,8 +267,10 @@ information. This visualization should look a lot better if we used 1 X 1 convol
 <p>As you might expect, since the inception of saliency maps by Simonyan et al, various other techniques have been developed 
 to improve upon these visualizations. One problem with saliency maps is that it is not class discriminative; i.e., there
 is some overlap in heatmaps between, say the 'dog' and 'cat' class. Notable methods to solve this problem includes:  </p>
-<p>1) <a href="https://arxiv.org/pdf/1311.2901v3.pdf">Occulusion maps</a>
-2) <a href="http://cnnlocalization.csail.mit.edu/">Class Activation maps</a></p>
+<ul>
+<li><a href="https://arxiv.org/pdf/1311.2901v3.pdf">Occulusion maps</a></li>
+<li><a href="http://cnnlocalization.csail.mit.edu/">Class Activation maps</a></li>
+</ul>
 <p>In keras-vis, we however adopt the <a href="../(https://arxiv.org/pdf/1610.02391v1.pdf)">grad-CAM</a> method as it solves the inefficiency
 problem with occlusion maps and architectural constraint problem with CAM.</p>
 <p>Generating grad-CAM visualization is simple, just replace <code>visualize_saliency</code> with <code>visualize_cam</code> in the above code.
