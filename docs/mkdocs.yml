@@ -19,6 +19,7 @@ pages:
   - Visualizations:
     - Convolutional Filters: visualizations/conv_filters.md
     - Dense Layers: visualizations/dense.md
+    - Attention Maps: visualizations/attention.md
   - API Docs:
     - Core API:
       - losses: vis.losses.md

@@ -1,4 +1,3 @@
-import os
 import shutil
 
 from md_autogen import MarkdownAPIGenerator
