@@ -6,16 +6,16 @@ keras-vis is a high-level toolkit for visualizing input images via guided backpr
 There are several repositories out there to visualize: 
 
 - Activation maximization
-- Saliency maps
+- Saliency and class activation maps
 - Caricaturization (deep dream)
 - Texture/Artistic style transfer
 - Any other guided image backprop
 
-This toolkit generalizes all of the above as energy minimization problem. 
-Compatible with both theano and tensorflow backends. 
+This toolkit generalizes all of the above as energy minimization problems. 
+Compatible with both theano and tensorflow backends with 'th'/'tf' image dim orderings. 
 
 Read the documentation at [https://raghakot.github.io/keras-vis](https://raghakot.github.io/keras-vis). 
-Join the slack channel for questions/discussions.
+Join the slack [channel](https://keras-vis.herokuapp.com/) for questions/discussions.
 
 ## Getting Started
 In image backprop problems, the goal is to generate an input image that minimizes some loss function.
