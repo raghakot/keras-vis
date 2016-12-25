@@ -14,7 +14,7 @@ how output category value changes with respect to a small change in input image 
 in the gradients tell us that a small change to that pixel will increase the output value. 
 Hence, visualizing these gradients, which are the same shape as the image should provide some intuition of attention.
 
-keras-vis abstracts all of this under the hood with [visualize_saliency](vis.visulization#visualize_saliency). Lets
+keras-vis abstracts all of this under the hood with [visualize_saliency](../vis.visualization/#visualize_saliency). Lets
 try to visualize attention over images with: *tiger, penguin, dumbbell, speedboat, spider*. Note there is no guarantee
 that these image urls haven't expired. Update them as needed.
  
@@ -77,11 +77,11 @@ is some overlap in heatmaps between, say the 'dog' and 'cat' class. Notable meth
 * [Occulusion maps](https://arxiv.org/pdf/1311.2901v3.pdf)
 * [Class Activation maps](http://cnnlocalization.csail.mit.edu/)
 
-In keras-vis, we however adopt the [grad-CAM]((https://arxiv.org/pdf/1610.02391v1.pdf)) method as it solves the inefficiency
+In keras-vis, we however adopt the [grad-CAM](https://arxiv.org/pdf/1610.02391v1.pdf) method as it solves the inefficiency
 problem with occlusion maps and architectural constraint problem with CAM.
 
-Generating grad-CAM visualization is simple, just replace `visualize_saliency` with `visualize_cam` in the above code.
-This generates the following:
+Generating grad-CAM visualization is simple, just replace `visualize_saliency` with 
+[visualize_cam](../vis.visualization/#visualize_cam) in the above code. This generates the following:
 
 ![grad-cam](https://raw.githubusercontent.com/raghakot/keras-vis/master/images/attention_vis/grad-cam.png?raw=true "grad cam")
 
