@@ -78,22 +78,6 @@ class Optimizer(object):
         step = -grads / np.sqrt(cache + K.epsilon())
         return step, cache
 
-    def jitter(self, img, jitter=32):
-        """Jitters the numpy input image randomly in width and height dimensions.
-        This kind of regularization is known to produce crisper images via guided backprop.
-
-        Args:
-          img: 4D numpy array with shape: `(samples, channels, rows, cols)` if dim_ordering='th' or
-                `(samples, rows, cols, channels)` if dim_ordering='tf'
-          jitter: Number of pixels to jitter in width and height directions.
-
-        Returns:
-            The jittered numpy image array.
-        """
-        s, ch, row, col = utils.get_img_indices()
-        ox, oy = np.random.randint(-jitter, jitter+1, 2)
-        return np.roll(np.roll(img, ox, row), oy, col)
-
     def get_seed_img(self, seed_img):
         """Creates the seed_img, along with other sanity checks.
         """
@@ -108,8 +92,8 @@ class Optimizer(object):
         seed_img = np.array([seed_img], dtype=np.float32)
         return seed_img
 
-    def minimize(self, seed_img=None, max_iter=200,
-                 jitter=8, verbose=True, progress_gif_path=None):
+    def minimize(self, seed_img=None, max_iter=200, image_modifiers=None,
+                 verbose=True, progress_gif_path=None):
         """Performs gradient descent on the input image with respect to defined losses.
 
         Args:
@@ -117,7 +101,9 @@ class Optimizer(object):
                 `(rows, cols, channels)` if dim_ordering='tf'.
                 Seeded with random noise if set to None. (Default value = None)
             max_iter: The maximum number of gradient descent iterations. (Default value = 200)
-            jitter: The number of pixels to jitter between subsequent gradient descent iterations.
+            image_modifiers: A list of [../vis/modifiers/#ImageModifier](ImageModifier) instances specifying `pre` and
+                `post` image processing steps with the gradient descent update step. Order matters.
+            The number of pixels to jitter between subsequent gradient descent iterations.
                 Jitter is known to generate crisper images. (Default value = 8)
             verbose: Logs individual losses at the end of every gradient descent iteration.
                 Very useful to estimate loss weight factor. (Default value = True)
@@ -128,6 +114,8 @@ class Optimizer(object):
             The tuple of `(optimized_image, grads with respect to wrt, wrt_value)` after gradient descent iterations.
         """
         seed_img = self.get_seed_img(seed_img)
+        if image_modifiers is None:
+            image_modifiers = []
 
         cache = None
         best_loss = float('inf')
@@ -145,8 +133,9 @@ class Optimizer(object):
                 writer = imageio.get_writer(progress_gif_path, mode='I', loop=1)
 
             for i in range(max_iter):
-                if jitter > 0:
-                    seed_img = self.jitter(seed_img, jitter)
+                # Apply modifiers `pre` step
+                for modifier in image_modifiers:
+                    seed_img = modifier.pre(seed_img)
 
                 # 0 learning phase for 'test'
                 loss, grads, wrt_value = self.overall_loss_grad_wrt_fn([seed_img, 0])
@@ -160,6 +149,10 @@ class Optimizer(object):
                 if self.wrt is self.img:
                     step, cache = self.rmsprop(grads, cache)
                     seed_img += step
+
+                # Apply modifiers `post` step
+                for modifier in image_modifiers:
+                    seed_img = modifier.post(seed_img)
 
                 if writer:
                     seed_img_copy = utils.deprocess_image(seed_img.copy()[0])

@@ -25,8 +25,7 @@ def generate_opt_gif():
     ]
     opt = Optimizer(model.input, losses)
 
-    # Jitter is used as a regularizer to create crisper images, but it makes gif animation ugly.
-    opt.minimize(max_iter=500, verbose=True, jitter=0,
+    opt.minimize(max_iter=500, verbose=True,
                  progress_gif_path='opt_progress')
 
 

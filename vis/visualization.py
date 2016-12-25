@@ -9,7 +9,13 @@ from keras import backend as K
 from .losses import ActivationMaximization
 from .optimizer import Optimizer
 from .regularizers import TotalVariation, LPNorm
+from .modifiers import Jitter
 from .utils import utils
+
+
+_DEFAULT_IMG_MODIFIERS = [
+    Jitter()
+]
 
 
 def get_num_filters(layer):
@@ -86,7 +92,8 @@ def visualize_activation(model, layer_idx, filter_indices=None,
     optimizer_params_default = {
         'seed_img': seed_img,
         'max_iter': 200,
-        'verbose': False
+        'verbose': False,
+        'image_modifiers': _DEFAULT_IMG_MODIFIERS
     }
     optimizer_params_default.update(optimizer_params)
     optimizer_params = optimizer_params_default

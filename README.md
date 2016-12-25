@@ -11,8 +11,8 @@ There are several repositories out there to visualize:
 - Texture/Artistic style transfer
 - Any other guided image backprop
 
-This toolkit generalizes all of the above as energy minimization problems. 
-Compatible with both theano and tensorflow backends with 'th'/'tf' image dim orderings. 
+This toolkit generalizes all of the above as energy minimization problems with a clean, easy to use, 
+and extendable interface. Compatible with both theano and tensorflow backends with 'th'/'tf' image dim orderings. 
 
 ## Quick links
 * Read the documentation at [https://raghakot.github.io/keras-vis](https://raghakot.github.io/keras-vis). 
@@ -50,7 +50,6 @@ In order to generate natural looking images, image search space is constrained u
 Some common regularizers are defined in [regularizers](https://raghakot.github.io/keras-vis/vis.regularizers).
 Like loss functions, custom regularizer can be defined by implementing 
 [Loss.build_loss](https://raghakot.github.io/keras-vis/vis.losses/#lossbuild_loss).
-
 
 ```python
 from vis.optimizer import Optimizer
@@ -156,8 +155,7 @@ losses = [
 ]
 opt = Optimizer(model.input, losses)
 
-# Jitter is used as a regularizer to create crisper images, but it makes gif animation ugly.
-opt.minimize(max_iter=500, verbose=True, jitter=0,
+opt.minimize(max_iter=500, verbose=True,
              progress_gif_path='opt_progress')
 
 ```
