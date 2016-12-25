@@ -5,7 +5,7 @@ import numpy as np
 
 from collections import OrderedDict
 from keras import backend as K
-from utils import utils
+from .utils import utils
 
 
 class Optimizer(object):
