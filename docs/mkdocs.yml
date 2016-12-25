@@ -24,6 +24,7 @@ pages:
     - Core API:
       - losses: vis.losses.md
       - regularizers: vis.regularizers.md
+      - modifiers: vis.modifiers.md
       - optimizer: vis.optimizer.md
       - visualization: vis.visualization.md
     - Utils:

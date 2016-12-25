@@ -5,6 +5,7 @@ from md_autogen import to_md_file
 
 from vis import losses
 from vis import regularizers
+from vis import modifiers
 from vis import optimizer
 from vis import visualization
 
@@ -16,6 +17,7 @@ def generate_api_docs():
     modules = [
         losses,
         regularizers,
+        modifiers,
         optimizer,
         visualization,
         utils,
