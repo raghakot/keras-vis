@@ -6,7 +6,7 @@ from vis.utils.vggnet import VGG16
 from vis.visualization import visualize_activation
 
 
-def visualize_random(num_categories=20):
+def visualize_random(num_categories=10):
     """Example to show how to visualize multiple filters via activation maximization.
 
     Args:
@@ -23,11 +23,12 @@ def visualize_random(num_categories=20):
 
     # Visualize couple random categories from imagenet.
     indices = np.random.permutation(1000)[:num_categories]
-    idx_label_map = dict((idx, utils.get_imagenet_label(idx)) for idx in indices)
+    images = [visualize_activation(model, layer_idx, filter_indices=idx,
+                                   text=utils.get_imagenet_label(idx),
+                                   max_iter=500) for idx in indices]
 
-    vis_img = visualize_activation(model, layer_idx, filter_indices=indices,
-                                   max_iter=500, idx_label_map=idx_label_map)
-    cv2.imshow('Random imagenet output categories', vis_img)
+    # Easily stitch images via `utils.stitch_images`
+    cv2.imshow('Random imagenet categories', utils.stitch_images(images))
     cv2.waitKey(0)
 
 
@@ -48,11 +49,11 @@ def visualize_multiple_same_filter(num_runs=3):
 
     # 20 is the imagenet category for 'ouzel'
     indices = [20] * num_runs
-    idx_label_map = dict((idx, utils.get_imagenet_label(idx)) for idx in indices)
+    images = [visualize_activation(model, layer_idx, filter_indices=idx,
+                                   text=utils.get_imagenet_label(idx),
+                                   max_iter=500) for idx in indices]
 
-    vis_img = visualize_activation(model, layer_idx, filter_indices=indices,
-                                   max_iter=500, idx_label_map=idx_label_map)
-    cv2.imshow('Multiple runs of ouzel', vis_img)
+    cv2.imshow('Multiple runs of ouzel', utils.stitch_images(images))
     cv2.waitKey(0)
 
 
@@ -70,11 +71,10 @@ def visualize_multiple_categories():
 
     # Visualize [20] (ouzel) and [20, 71] (An ouzel-scorpion :D)
     indices = [20, [20, 71]]
-    idx_label_map = dict((idx, utils.get_imagenet_label(idx)) for idx in [20, 71])
-
-    vis_img = visualize_activation(model, layer_idx, filter_indices=indices,
-                                   max_iter=500, idx_label_map=idx_label_map)
-    cv2.imshow('Multiple category visualization', vis_img)
+    images = [visualize_activation(model, layer_idx, filter_indices=idx,
+                                   text=utils.get_imagenet_label(idx),
+                                   max_iter=500) for idx in indices]
+    cv2.imshow('Multiple category visualization', utils.stitch_images(images))
     cv2.waitKey(0)
 
 

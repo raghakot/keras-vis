@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import pprint
 
 from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import _Pooling2D
@@ -11,9 +12,10 @@ from regularizers import TotalVariation, LPNorm
 from utils import utils
 
 
-def _get_num_filters(layer):
+def get_num_filters(layer):
     """
-    Returns: Total number of filters within this layer
+    Returns: Total number of filters within `layer`.
+        For `keras.layers.Dense` layer, this is the total number of outputs.
     """
     # For all other layers it is 4
     isDense = K.ndim(layer.output) == 2
@@ -27,8 +29,83 @@ def _get_num_filters(layer):
             return layer.output._keras_shape[3]
 
 
+def visualize_activation(model, layer_idx, filter_indices=None,
+                         seed_img=None, text=None,
+                         act_max_weight=1, lp_norm_weight=10, tv_weight=10,
+                         **optimizer_params):
+    """Generates stitched input image(s) over all `filter_indices` in the given `layer` that maximize
+    the filter output activation.
+
+    Args:
+        model: The `keras.models.Model` instance. Model input is expected to be a 4D image input of shape:
+            `(samples, channels, rows, cols)` if dim_ordering='th' or `(samples, rows, cols, channels)` if dim_ordering='tf'.
+        layer_idx: The layer index within `model.layers` whose filters needs to be visualized.
+        filter_indices: filter indices within the layer to be maximized.
+            For `keras.layers.Dense` layer, `filter_idx` is interpreted as the output index.
+
+            If you are visualizing final `keras.layers.Dense` layer, you tend to get
+            better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
+            output can be maximized by minimizing scores for other classes.
+
+        filter indices within the layer to be maximized.
+            If None, all filters are visualized. (Default value = None)
+
+            An input image is generated for each entry in `filter_indices`. The entry can also be an array.
+            For example, `filter_indices = [[1, 2], 3, [4, 5, 6]]` would generate three input images. The first one
+            would maximize output of filters 1, 2, 3 jointly. A fun use of this might be to generate a dog-fish
+            image by maximizing 'dog' and 'fish' output in final `Dense` layer.
+
+            For `keras.layers.Dense` layers, `filter_idx` is interpreted as the output index.
+
+            If you are visualizing final `keras.layers.Dense` layer, you tend to get
+            better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
+            output can be maximized by minimizing scores for other classes.
+
+        seed_img: Seeds the optimization with a starting image. Initialized with a random value when set to None.
+            (Default value = None)
+        text: The text to overlay on top of the generated image. (Default Value = None)
+        act_max_weight: The weight param for `ActivationMaximization` loss. Not used if 0 or None. (Default value = 1)
+        lp_norm_weight: The weight param for `LPNorm` regularization loss. Not used if 0 or None. (Default value = 10)
+        tv_weight: The weight param for `TotalVariation` regularization loss. Not used if 0 or None. (Default value = 10)
+        optimizer_params: The **kwargs for optimizer [params](vis.optimizer.md##optimizerminimize). Will default to
+            reasonable values when required keys are not found.
+
+    Example:
+        If you wanted to visualize the input image that would maximize the output index 22, say on
+        final `keras.layers.Dense` layer, then, `filter_indices = [22]`, `layer = dense_layer`.
+
+        If `filter_indices = [22, 23]`, then it should generate an input image that shows features of both classes.
+
+    Returns:
+        Stitched image output visualizing input images that maximize the filter output(s). (Default value = 10)
+    """
+    filter_indices = utils.listify(filter_indices)
+    print("Working on filters: {}".format(pprint.pformat(filter_indices)))
+
+    # Default optimizer kwargs.
+    optimizer_params_default = {
+        'seed_img': seed_img,
+        'max_iter': 200,
+        'verbose': False
+    }
+    optimizer_params_default.update(optimizer_params)
+    optimizer_params = optimizer_params_default
+
+    losses = [
+        (ActivationMaximization(model.layers[layer_idx], filter_indices), act_max_weight),
+        (LPNorm(model.input), lp_norm_weight),
+        (TotalVariation(model.input), tv_weight)
+    ]
+
+    opt = Optimizer(model.input, losses)
+    img = opt.minimize(**optimizer_params)[0]
+    if text:
+        cv2.putText(img, text, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 0), 2)
+    return img
+
+
 def visualize_saliency(model, layer_idx, filter_indices,
-                       seed_img, overlay=True):
+                       seed_img, text=None, overlay=True):
     """Generates an attention heatmap over the `seed_img` for maximizing `filter_indices` output in the given `layer`.
      For a full description of saliency, see the paper:
      [Deep Inside Convolutional Networks: Visualising Image Classification Models and Saliency Maps](https://arxiv.org/pdf/1312.6034v2.pdf)
@@ -45,6 +122,7 @@ def visualize_saliency(model, layer_idx, filter_indices,
             output can be maximized by minimizing scores for other classes.
 
         seed_img: The input image for which activation map needs to be visualized.
+        text: The text to overlay on top of the generated image. (Default Value = None)
         overlay: If true, overlays the heatmap over the original image (Default value = True)
 
     Example:
@@ -58,12 +136,14 @@ def visualize_saliency(model, layer_idx, filter_indices,
         The heatmap image indicating image regions that, when changed, would contribute the most towards maximizing
         a the filter output.
     """
+    filter_indices = utils.listify(filter_indices)
+    print("Working on filters: {}".format(pprint.pformat(filter_indices)))
 
     losses = [
         (ActivationMaximization(model.layers[layer_idx], filter_indices), 1)
     ]
     opt = Optimizer(model.input, losses)
-    grads = opt.minimize(max_iter=1, verbose=True, jitter=0, seed_img=seed_img)[1]
+    grads = opt.minimize(max_iter=1, verbose=False, jitter=0, seed_img=seed_img)[1]
 
     # We are minimizing loss as opposed to maximizing output as with the paper.
     # So, negative gradients here mean that they reduce loss, maximizing class probability.
@@ -81,14 +161,15 @@ def visualize_saliency(model, layer_idx, filter_indices,
     heatmap[np.where(grads <= 0.2)] = 0
 
     if overlay:
-        return cv2.addWeighted(seed_img, 1, heatmap, 0.5, 0)
-    else:
-        return heatmap
+        heatmap = cv2.addWeighted(seed_img, 0.5, heatmap, 1, 0)
+    if text:
+        cv2.putText(heatmap, text, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 0), 2)
+    return heatmap
 
 
 def visualize_cam(model, layer_idx, filter_indices,
-                  seed_img,
-                  penultimate_layer_idx=None, overlay=True):
+                  seed_img, penultimate_layer_idx=None,
+                  text=None, overlay=True):
     """Generates a gradient based class activation map (CAM) as described in paper
     [Grad-CAM: Why did you say that? Visual Explanations from Deep Networks via Gradient-based Localization](https://arxiv.org/pdf/1610.02391v1.pdf).
     Unlike [class activation mapping](https://arxiv.org/pdf/1512.04150v1.pdf), which requires minor changes to
@@ -111,6 +192,7 @@ def visualize_cam(model, layer_idx, filter_indices,
         seed_img: The input image for which activation map needs to be visualized.
         penultimate_layer_idx: The pre-layer to `layer_idx` whose feature maps should be used to compute gradients
             wrt filter output. If not provided, it is set to the nearest penultimate `Convolutional` or `Pooling` layer.
+        text: The text to overlay on top of the generated image. (Default Value = None)
         overlay: If true, overlays the heatmap over the original image (Default value = True)
 
      Example:
@@ -128,6 +210,8 @@ def visualize_cam(model, layer_idx, filter_indices,
         The heatmap image indicating image regions that, when changed, would contribute the most towards maximizing
         a the filter output.
     """
+    filter_indices = utils.listify(filter_indices)
+    print("Working on filters: {}".format(pprint.pformat(filter_indices)))
 
     # Search for the nearest penultimate `Convolutional` or `Pooling` layer.
     if penultimate_layer_idx is None:
@@ -147,7 +231,7 @@ def visualize_cam(model, layer_idx, filter_indices,
 
     penultimate_output = model.layers[penultimate_layer_idx].output
     opt = Optimizer(model.input, losses, wrt=penultimate_output)
-    _, grads, penultimate_output_value = opt.minimize(seed_img, max_iter=1, jitter=0)
+    _, grads, penultimate_output_value = opt.minimize(seed_img, max_iter=1, jitter=0, verbose=False)
 
     # We are minimizing loss as opposed to maximizing output as with the paper.
     # So, negative gradients here mean that they reduce loss, maximizing class probability.
@@ -172,93 +256,12 @@ def visualize_cam(model, layer_idx, filter_indices,
     heatmap = np.maximum(heatmap, 0)
     heatmap /= np.max(heatmap)
 
-    # Convert to heatmap
-    heatmap = cv2.applyColorMap(np.uint8(255*heatmap), cv2.COLORMAP_JET)
+    # Convert to heatmap and zero out low probabilities for a cleaner output.
+    heatmap_colored = cv2.applyColorMap(np.uint8(255*heatmap), cv2.COLORMAP_JET)
+    heatmap_colored[np.where(heatmap <= 0.2)] = 0
 
     if overlay:
-        return cv2.addWeighted(seed_img, 1, heatmap, 0.5, 0)
-    else:
-        return heatmap
-
-
-def visualize_activation(model, layer_idx, filter_indices=None,
-                         seed_img=None,
-                         act_max_weight=1, lp_norm_weight=10, tv_weight=10,
-                         max_iter=200, verbose=False,
-                         show_filter_idx_text=True, idx_label_map=None, cols=5):
-    """Generates stitched input image(s) over all `filter_indices` in the given `layer` that maximize
-    the filter output activation.
-
-    For example, if you wanted to visualize the input image that would maximize the output index 22, say on
-    final `keras.layers.Dense` layer, then, `filter_indices = [22]`, `layer = dense_layer`.
-
-    If `filter_indices = [22, 23]`, then a stitched image comprising of two images are generated, each
-    corresponding to the entry in `filter_indices`.
-
-    Args:
-        model: The `keras.models.Model` instance. Model input is expected to be a 4D image input of shape:
-            `(samples, channels, rows, cols)` if dim_ordering='th' or `(samples, rows, cols, channels)` if dim_ordering='tf'.
-        layer_idx: The layer index within `model.layers` whose filters needs to be visualized.
-        filter_indices: filter indices within the layer to be maximized.
-            If None, all filters are visualized. (Default value = None)
-
-            An input image is generated for each entry in `filter_indices`. The entry can also be an array.
-            For example, `filter_indices = [[1, 2], 3, [4, 5, 6]]` would generate three input images. The first one
-            would maximize output of filters 1, 2, 3 jointly. A fun use of this might be to generate a dog-fish
-            image by maximizing 'dog' and 'fish' output in final `Dense` layer.
-
-            For `keras.layers.Dense` layers, `filter_idx` is interpreted as the output index.
-
-            If you are visualizing final `keras.layers.Dense` layer, you tend to get
-            better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
-            output can be maximized by minimizing scores for other classes.
-
-        seed_img: Seeds the optimization with a starting image. Initialized with a random value when set to None.
-            (Default value = None)
-        max_iter: The maximum number of gradient descent iterations. (Default value = 200)
-        act_max_weight: The weight param for `ActivationMaximization` loss. Not used if 0 or None. (Default value = 1)
-        lp_norm_weight: The weight param for `LPNorm` regularization loss. Not used if 0 or None. (Default value = 10)
-        tv_weight: The weight param for `TotalVariation` regularization loss. Not used if 0 or None. (Default value = 10)
-        verbose: Shows verbose loss output for each filter. (Default value = False)
-                Very useful to estimate loss weight factor. (Default value = True)
-        show_filter_idx_text: Adds filter_idx text to the image if set to True. (Default value = True)
-            If the entry in `filter_indices` is an array, then comma separated labels are generated.
-        idx_label_map: Map of filter_idx to text label. If not None, this map is used to translate filter_idx
-            to text value when show_filter_idx_text = True. (Default value = None)
-        cols: Max number of image cols. New row is created when number of images exceed the column size.
-            (Default value = 5)
-
-    Returns:
-        Stitched image output visualizing input images that maximize the filter output(s). (Default value = 10)
-    """
-
-    layer = model.layers[layer_idx]
-    if filter_indices is None:
-        filter_indices = np.arange(_get_num_filters(layer))
-
-    imgs = []
-    for i, idx in enumerate(filter_indices):
-        indices = idx if isinstance(idx, list) else [idx]
-
-        losses = [
-            (ActivationMaximization(layer, indices), act_max_weight or 0),
-            (LPNorm(model.input), lp_norm_weight or 0),
-            (TotalVariation(model.input), tv_weight or 0)
-        ]
-
-        opt = Optimizer(model.input, losses)
-        print('Working on filter {}/{}'.format(i + 1, len(filter_indices)))
-        opt_img = opt.minimize(seed_img=seed_img, max_iter=max_iter, verbose=verbose)[0]
-
-        # Add filter text to image if applicable.
-        if show_filter_idx_text:
-            label = None
-            if idx_label_map:
-                label = ', '.join([idx_label_map.get(i) for i in indices])
-            if label is None:
-                label = "Filter {}".format(', '.join([str(i) for i in indices]))
-            cv2.putText(opt_img, label, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 0), 2)
-
-        imgs.append(opt_img)
-
-    return utils.stitch_images(imgs, cols=cols)
+        heatmap_colored = cv2.addWeighted(seed_img, 1, heatmap_colored, 0.5, 0)
+    if text:
+        cv2.putText(heatmap_colored, text, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 0), 2)
+    return heatmap_colored

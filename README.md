@@ -109,7 +109,10 @@ pattern is found in the input image. Visualize those templates via Activation Ma
 <hr/>
 
 ### [Attention Maps](https://raghakot.github.io/keras-vis/visualizations/attention)
-TODO
+
+<img src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/attention_vis/cover.png?raw=true"/>
+
+*How can we assess whether a network is attending to correct parts of the image in order to generate a decision?*
 
 <hr/>
 
@@ -153,6 +156,7 @@ opt = Optimizer(model.input, losses)
 # Jitter is used as a regularizer to create crisper images, but it makes gif animation ugly.
 opt.minimize(max_iter=500, verbose=True, jitter=0,
              progress_gif_path='opt_progress')
+
 ```
 
 ![opt_progress](https://raw.githubusercontent.com/raghakot/keras-vis/master/images/opt_progress.gif?raw=true "Optimization progress")

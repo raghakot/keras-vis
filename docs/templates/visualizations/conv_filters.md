@@ -1,4 +1,4 @@
-## Conv filter visualization
+## Overview
 Each conv layer has several learned 'template matching' filters that maximize their output when a similar template 
 pattern is found in the input image. This makes the first conv net layer highly interpretable by simply visualizing 
 their weights as it is operating over raw pixels.
@@ -11,8 +11,11 @@ this up is easy. Lets visualize the second conv layer of vggnet (named as 'block
 
 ```python
 import cv2
+import numpy as np
+
+from vis.utils.utils import stitch_images
 from vis.utils.vggnet import VGG16
-from vis.visualization import visualize_activation
+from vis.visualization import visualize_activation, get_num_filters
 
 # Build the VGG16 network with ImageNet weights
 model = VGG16(weights='imagenet', include_top=True)
@@ -23,9 +26,17 @@ print('Model loaded.')
 layer_name = 'block1_conv2'
 layer_idx = [idx for idx, layer in enumerate(model.layers) if layer.name == layer_name][0]
 
-vis_img = visualize_activation(model, layer_idx)
-cv2.imshow(layer_name, vis_img)
+# Visualize all filters in this layer.
+filters = np.arange(get_num_filters(model.layers[layer_idx]))
+
+# Generate input image for each filter. Here `text` field is used to overlay `filter_value` on top of the image.
+vis_images = [visualize_activation(model, layer_idx, filter_indices=idx, text=str(idx))
+              for idx in filters]
+
+# Generate stitched image pallette with 10 cols.
+cv2.imshow(layer_name, stitch_images(vis_images, cols=8))
 cv2.waitKey(0)
+
 ```
 
 This generates the following stitched image representing input image(s) that maximize the filter_idx output.
@@ -35,19 +46,19 @@ They mostly seem to match for specific color and directional patterns.
 
 Lets visualize the remaining conv filters (first few) by iterating over different `layer_name` values.
 
-####block2_conv2: random sample of the 128 filters
+## block2_conv2: random sample of the 128 filters
 
 ![block2_conv2 filters](https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/block2_conv2_filters.jpg?raw=true "conv_2 filters")
 
-####block3_conv3: random sample of the 256 filters
+## block3_conv3: random sample of the 256 filters
 
 ![block3_conv3 filters](https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/block3_conv3_filters.jpg?raw=true "conv_3 filters")
 
-####block3_conv4: random sample of the 512 filters
+## block3_conv4: random sample of the 512 filters
 
 ![block4_conv3 filters](https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/block4_conv3_filters.jpg?raw=true "conv_4 filters")
 
-####block3_conv5: random sample of the 512 filters
+## block3_conv5: random sample of the 512 filters
 
 ![block5_conv3 filters](https://raw.githubusercontent.com/raghakot/keras-vis/master/images/conv_vis/block5_conv3_filters.jpg?raw=true "conv_5 filters")
 

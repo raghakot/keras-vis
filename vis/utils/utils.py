@@ -8,6 +8,7 @@ import cv2
 import itertools
 
 from skimage import io
+from collections import Iterable
 from keras import backend as K
 
 
@@ -28,6 +29,14 @@ def reverse_enumerate(iterable):
     """Enumerate over an iterable in reverse order while retaining proper indexes, without creating any copies.
     """
     return itertools.izip(reversed(range(len(iterable))), reversed(iterable))
+
+
+def listify(value):
+    """Ensures that the value is a list. If it is not a list, it creates a new list with `value` as an item within it.
+    """
+    if not isinstance(value, Iterable):
+        value = [value]
+    return value
 
 
 def deprocess_image(img):
@@ -161,11 +170,12 @@ def load_img(path, grayscale=False, target_size=None):
     return img
 
 
-def get_imagenet_label(index):
+def get_imagenet_label(indices, join=', '):
     """Utility function to return the image net label for the final `dense` layer output index.
 
     Args:
-        index: The image net output category value,
+        indices: Could be a single value or an array of indices whose labels needs looking up.
+        join: When multiple indices are passed, the output labels are joined using this value. (Default Value = ', ')
 
     Returns:
         Image net label corresponding to the image category.
@@ -174,7 +184,9 @@ def get_imagenet_label(index):
     if _CLASS_INDEX is None:
         with open(os.path.join(os.path.dirname(__file__), '../../resources/imagenet_class_index.json')) as f:
             _CLASS_INDEX = json.load(f)
-    return _CLASS_INDEX[str(index)][1]
+
+    indices = listify(indices)
+    return join.join([_CLASS_INDEX[str(idx)][1] for idx in indices])
 
 
 class _BackendAgnosticImageSlice(object):

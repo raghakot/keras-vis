@@ -6,6 +6,7 @@ from vis.utils.vggnet import VGG16
 
 def generate_opt_gif():
     """Example to show how to generate the gif of optimization progress.
+    This example also shows how to use the optimizer directly with losses.
     """
     # Build the VGG16 network with ImageNet weights
     model = VGG16(weights='imagenet', include_top=True)
