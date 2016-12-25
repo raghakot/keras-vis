@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Attention Maps - Keras-vis Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/highlight.css">
+  <link href="../../css/extras.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Attention Maps";
+    var mkdocs_page_input_path = "visualizations/attention.md";
+    var mkdocs_page_url = "/visualizations/attention/";
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Keras-vis Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../..">Home</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Visualizations</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../conv_filters/">Convolutional Filters</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../dense/">Dense Layers</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Attention Maps</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#overview">Overview</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#saliency-maps">Saliency maps</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#class-activation-maps">Class activation maps</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>API Docs</span></li>
+
+        
+            
+    <ul class="subnav">
+    <li><span>Core API</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.losses/">losses</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.regularizers/">regularizers</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.optimizer/">optimizer</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.visualization/">visualization</a>
+        
+    </li>
+
+        
+    </ul>
+
+        
+            
+    <ul class="subnav">
+    <li><span>Utils</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.utils.utils/">utils</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../vis.utils.vggnet/">vggnet</a>
+        
+    </li>
+
+        
+    </ul>
+
+        
+    </ul>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Keras-vis Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Visualizations &raquo;</li>
+        
+      
+    
+    <li>Attention Maps</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/visualizations/attention.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h2 id="overview">Overview</h2>
+<p>Suppose that all the training images of 'bird' class contains a tree with leaves. How do we know that the conv net is 
+indeed leveraging bird-related pixels as opposed to some other features such as the tree or leaves in the image. </p>
+<p>Attention maps are a family of methods that try to answer these questions by generating a heatmap over input 
+image that most contributed towards maximizing the probability of an output class.</p>
+<h2 id="saliency-maps">Saliency maps</h2>
+<p>Saliency maps was first introduced in the paper: 
+<a href="https://arxiv.org/pdf/1312.6034v2.pdf">Deep Inside Convolutional Networks: Visualising Image Classification Models and Saliency Maps</a></p>
+<p>The idea is pretty simple. We compute the gradient of output category with respect to input image. This should tell us
+how output category value changes with respect to a small change in input image pixels. All the positive values
+in the gradients tell us that a small change to that pixel will increase the output value. 
+Hence, visualizing these gradients, which are the same shape as the image should provide some intuition of attention.</p>
+<p>keras-vis abstracts all of this under the hood with <a href="../vis.visulization#visualize_saliency">visualize_saliency</a>. Lets
+try to visualize attention over images with: <em>tiger, penguin, dumbbell, speedboat, spider</em>. Note there is no guarantee
+that these image urls haven't expired. Update them as needed.</p>
+<pre><code class="python">import cv2
+import numpy as np
+
+from keras.preprocessing.image import img_to_array
+from vis.utils import utils
+from vis.utils.vggnet import VGG16
+from vis.visualization import visualize_saliency
+
+
+# Build the VGG16 network with ImageNet weights
+model = VGG16(weights='imagenet', include_top=True)
+print('Model loaded.')
+
+# The name of the layer we want to visualize
+# (see model definition in vggnet.py)
+layer_name = 'predictions'
+layer_idx = [idx for idx, layer in enumerate(model.layers) if layer.name == layer_name][0]
+
+# Images corresponding to tiger, penguin, dumbbell, speedboat, spider
+image_paths = [
+    &quot;http://www.tigerfdn.com/wp-content/uploads/2016/05/How-Much-Does-A-Tiger-Weigh.jpg&quot;,
+    &quot;http://www.slate.com/content/dam/slate/articles/health_and_science/wild_things/2013/10/131025_WILD_AdeliePenguin.jpg.CROP.promo-mediumlarge.jpg&quot;,
+    &quot;https://www.kshs.org/cool2/graphics/dumbbell1lg.jpg&quot;,
+    &quot;http://tampaspeedboatadventures.com/wp-content/uploads/2010/10/DSC07011.jpg&quot;,
+    &quot;http://ichef-1.bbci.co.uk/news/660/cpsprodpb/1C24/production/_85540270_85540265.jpg&quot;
+]
+
+heatmaps = []
+for path in image_paths:
+    # Predict the corresponding class for use in `visualize_saliency`.
+    seed_img = utils.load_img(path, target_size=(224, 224))
+    pred_class = np.argmax(model.predict(np.array([img_to_array(seed_img)])))
+
+    # Here we are asking it to show attention such that prob of `pred_class` is maximized.
+    heatmap = visualize_saliency(model, layer_idx, [pred_class], seed_img, text=utils.get_imagenet_label(pred_class))
+    heatmaps.append(heatmap)
+
+cv2.imshow(&quot;Saliency map&quot;, utils.stitch_images(heatmaps))
+cv2.waitKey(0)
+
+</code></pre>
+
+<p>This generates heatmaps overlayed on top of images. overlay can be turned off using <code>overlay=False</code>.</p>
+<p><img alt="saliency_map" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/attention_vis/saliency_map.png?raw=true" title="saliency map" /></p>
+<p>This mostly looks pretty accurate! Note that the heatmap looks pretty sparse as the <code>Dense</code> layers destroys a lot of spatial 
+information. This visualization should look a lot better if we used 1 X 1 convolutions to 
+<a href="http://cs231n.github.io/convolutional-networks/#convert">mimic</a> the dense layer.</p>
+<h2 id="class-activation-maps">Class activation maps</h2>
+<p>As you might expect, since the inception of saliency maps by Simonyan et al, various other techniques have been developed 
+to improve upon these visualizations. One problem with saliency maps is that it is not class discriminative; i.e., there
+is some overlap in heatmaps between, say the 'dog' and 'cat' class. Notable methods to solve this problem includes:  </p>
+<p>1) <a href="https://arxiv.org/pdf/1311.2901v3.pdf">Occulusion maps</a>
+2) <a href="http://cnnlocalization.csail.mit.edu/">Class Activation maps</a></p>
+<p>In keras-vis, we however adopt the <a href="../(https://arxiv.org/pdf/1610.02391v1.pdf)">grad-CAM</a> method as it solves the inefficiency
+problem with occlusion maps and architectural constraint problem with CAM.</p>
+<p>Generating grad-CAM visualization is simple, just replace <code>visualize_saliency</code> with <code>visualize_cam</code> in the above code.
+This generates the following:</p>
+<p><img alt="grad-cam" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/attention_vis/grad-cam.png?raw=true" title="grad cam" /></p>
+<p>Compared to saliency, notice how this excludes the spider the in <code>spider_web</code> prediction. I personally feel that grad-CAM 
+is more helpful in diagnosing issues with conv-nets, especially for Kaggle competitions. </p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../vis.losses/" class="btn btn-neutral float-right" title="losses">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../dense/" class="btn btn-neutral" title="Dense Layers"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="http://github.com/raghakot/keras-vis" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../dense/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../../vis.losses/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>

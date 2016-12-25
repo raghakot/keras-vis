@@ -73,6 +73,13 @@
     </li>
 
         
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../visualizations/attention/">Attention Maps</a>
+        
+    </li>
+
+        
     </ul>
 <li>
           
@@ -113,13 +120,16 @@
         
             <ul>
             
+                <li class="toctree-l3"><a href="#get_num_filters">get_num_filters</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#visualize_activation">visualize_activation</a></li>
+                
+            
                 <li class="toctree-l3"><a href="#visualize_saliency">visualize_saliency</a></li>
                 
             
                 <li class="toctree-l3"><a href="#visualize_cam">visualize_cam</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#visualize_activation">visualize_activation</a></li>
                 
             
             </ul>
@@ -200,8 +210,60 @@
               
                 <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L0">vis/visualization.py#L0</a></p>
 <hr />
-<h3 id="visualize_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L30">visualize_saliency</a></h3>
-<pre><code class="python">visualize_saliency(model, layer_idx, filter_indices, seed_img, overlay=True)
+<h3 id="get_num_filters"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L15">get_num_filters</a></h3>
+<pre><code class="python">get_num_filters(layer)
+</code></pre>
+
+<p><em>Returns: Total number of filters within <code>layer</code>.</em></p>
+<p>For <code>keras.layers.Dense</code> layer, this is the total number of outputs.</p>
+<hr />
+<h3 id="visualize_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L32">visualize_activation</a></h3>
+<pre><code class="python">visualize_activation(model, layer_idx, filter_indices=None, seed_img=None, text=None, \
+    act_max_weight=1, lp_norm_weight=10, tv_weight=10, **optimizer_params)
+</code></pre>
+
+<p>Generates stitched input image(s) over all <code>filter_indices</code> in the given <code>layer</code> that maximize
+the filter output activation.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. Model input is expected to be a 4D image input of shape:
+  <code>(samples, channels, rows, cols)</code> if dim_ordering='th' or <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
+<li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
+<li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
+  For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</li>
+</ul>
+<p>If you are visualizing final <code>keras.layers.Dense</code> layer, you tend to get
+  better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
+  output can be maximized by minimizing scores for other classes.</p>
+<p>filter indices within the layer to be maximized.
+  If None, all filters are visualized. (Default value = None)</p>
+<p>An input image is generated for each entry in <code>filter_indices</code>. The entry can also be an array.
+  For example, <code>filter_indices = [[1, 2], 3, [4, 5, 6]]</code> would generate three input images. The first one
+  would maximize output of filters 1, 2, 3 jointly. A fun use of this might be to generate a dog-fish
+  image by maximizing 'dog' and 'fish' output in final <code>Dense</code> layer.</p>
+<p>For <code>keras.layers.Dense</code> layers, <code>filter_idx</code> is interpreted as the output index.</p>
+<p>If you are visualizing final <code>keras.layers.Dense</code> layer, you tend to get
+  better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
+  output can be maximized by minimizing scores for other classes.</p>
+<ul>
+<li><strong>seed_img</strong>:  Seeds the optimization with a starting image. Initialized with a random value when set to None.
+  (Default value = None)</li>
+<li><strong>text</strong>:  The text to overlay on top of the generated image. (Default Value = None)</li>
+<li><strong>act_max_weight</strong>:  The weight param for <code>ActivationMaximization</code> loss. Not used if 0 or None. (Default value = 1)</li>
+<li><strong>lp_norm_weight</strong>:  The weight param for <code>LPNorm</code> regularization loss. Not used if 0 or None. (Default value = 10)</li>
+<li><strong>tv_weight</strong>:  The weight param for <code>TotalVariation</code> regularization loss. Not used if 0 or None. (Default value = 10)</li>
+<li><strong>optimizer_params</strong>:  The **kwargs for optimizer <a href="../vis.optimizer/##optimizerminimize">params</a>. Will default to
+  reasonable values when required keys are not found.</li>
+</ul>
+<p><em>Example:</em></p>
+<p>If you wanted to visualize the input image that would maximize the output index 22, say on
+final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</code>, <code>layer = dense_layer</code>.</p>
+<p>If <code>filter_indices = [22, 23]</code>, then it should generate an input image that shows features of both classes.</p>
+<p><em>Returns:</em></p>
+<p>Stitched image output visualizing input images that maximize the filter output(s). (Default value = 10)</p>
+<hr />
+<h3 id="visualize_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L107">visualize_saliency</a></h3>
+<pre><code class="python">visualize_saliency(model, layer_idx, filter_indices, seed_img, text=None, overlay=True)
 </code></pre>
 
 <p>Generates an attention heatmap over the <code>seed_img</code> for maximizing <code>filter_indices</code> output in the given <code>layer</code>.
@@ -220,6 +282,7 @@ For a full description of saliency, see the paper:
   output can be maximized by minimizing scores for other classes.</p>
 <ul>
 <li><strong>seed_img</strong>:  The input image for which activation map needs to be visualized.</li>
+<li><strong>text</strong>:  The text to overlay on top of the generated image. (Default Value = None)</li>
 <li><strong>overlay</strong>:  If true, overlays the heatmap over the original image (Default value = True)</li>
 </ul>
 <p><em>Example:</em></p>
@@ -231,8 +294,9 @@ final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</
 <p>The heatmap image indicating image regions that, when changed, would contribute the most towards maximizing
 a the filter output.</p>
 <hr />
-<h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L89">visualize_cam</a></h3>
-<pre><code class="python">visualize_cam(model, layer_idx, filter_indices, seed_img, penultimate_layer_idx=None, overlay=True)
+<h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L170">visualize_cam</a></h3>
+<pre><code class="python">visualize_cam(model, layer_idx, filter_indices, seed_img, penultimate_layer_idx=None, text=None, \
+    overlay=True)
 </code></pre>
 
 <p>Generates a gradient based class activation map (CAM) as described in paper
@@ -256,6 +320,7 @@ cat regions and not the 'dog' region and vice-versa.</p>
 <li><strong>seed_img</strong>:  The input image for which activation map needs to be visualized.</li>
 <li><strong>penultimate_layer_idx</strong>:  The pre-layer to <code>layer_idx</code> whose feature maps should be used to compute gradients
   wrt filter output. If not provided, it is set to the nearest penultimate <code>Convolutional</code> or <code>Pooling</code> layer.</li>
+<li><strong>text</strong>:  The text to overlay on top of the generated image. (Default Value = None)</li>
 <li><strong>overlay</strong>:  If true, overlays the heatmap over the original image (Default value = True)</li>
 </ul>
 <p><em>Example:</em></p>
@@ -269,53 +334,6 @@ as opposed inefficient sliding window approach.</p>
 <p><em>Returns:</em></p>
 <p>The heatmap image indicating image regions that, when changed, would contribute the most towards maximizing
 a the filter output.</p>
-<hr />
-<h3 id="visualize_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L184">visualize_activation</a></h3>
-<pre><code class="python">visualize_activation(model, layer_idx, filter_indices=None, seed_img=None, act_max_weight=1, \
-    lp_norm_weight=10, tv_weight=10, max_iter=200, verbose=False, show_filter_idx_text=True, \
-    idx_label_map=None, cols=5)
-</code></pre>
-
-<p>Generates stitched input image(s) over all <code>filter_indices</code> in the given <code>layer</code> that maximize
-the filter output activation.</p>
-<p>For example, if you wanted to visualize the input image that would maximize the output index 22, say on
-final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</code>, <code>layer = dense_layer</code>.</p>
-<p>If <code>filter_indices = [22, 23]</code>, then a stitched image comprising of two images are generated, each
-corresponding to the entry in <code>filter_indices</code>.</p>
-<p><em>Args:</em></p>
-<ul>
-<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. Model input is expected to be a 4D image input of shape:
-  <code>(samples, channels, rows, cols)</code> if dim_ordering='th' or <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
-<li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
-<li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
-  If None, all filters are visualized. (Default value = None)</li>
-</ul>
-<p>An input image is generated for each entry in <code>filter_indices</code>. The entry can also be an array.
-  For example, <code>filter_indices = [[1, 2], 3, [4, 5, 6]]</code> would generate three input images. The first one
-  would maximize output of filters 1, 2, 3 jointly. A fun use of this might be to generate a dog-fish
-  image by maximizing 'dog' and 'fish' output in final <code>Dense</code> layer.</p>
-<p>For <code>keras.layers.Dense</code> layers, <code>filter_idx</code> is interpreted as the output index.</p>
-<p>If you are visualizing final <code>keras.layers.Dense</code> layer, you tend to get
-  better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
-  output can be maximized by minimizing scores for other classes.</p>
-<ul>
-<li><strong>seed_img</strong>:  Seeds the optimization with a starting image. Initialized with a random value when set to None.
-  (Default value = None)</li>
-<li><strong>max_iter</strong>:  The maximum number of gradient descent iterations. (Default value = 200)</li>
-<li><strong>act_max_weight</strong>:  The weight param for <code>ActivationMaximization</code> loss. Not used if 0 or None. (Default value = 1)</li>
-<li><strong>lp_norm_weight</strong>:  The weight param for <code>LPNorm</code> regularization loss. Not used if 0 or None. (Default value = 10)</li>
-<li><strong>tv_weight</strong>:  The weight param for <code>TotalVariation</code> regularization loss. Not used if 0 or None. (Default value = 10)</li>
-<li><strong>verbose</strong>:  Shows verbose loss output for each filter. (Default value = False)
-  Very useful to estimate loss weight factor. (Default value = True)</li>
-<li><strong>show_filter_idx_text</strong>:  Adds filter_idx text to the image if set to True. (Default value = True)
-  If the entry in <code>filter_indices</code> is an array, then comma separated labels are generated.</li>
-<li><strong>idx_label_map</strong>:  Map of filter_idx to text label. If not None, this map is used to translate filter_idx
-  to text value when show_filter_idx_text = True. (Default value = None)</li>
-<li><strong>cols</strong>:  Max number of image cols. New row is created when number of images exceed the column size.
-  (Default value = 5)</li>
-</ul>
-<p><em>Returns:</em></p>
-<p>Stitched image output visualizing input images that maximize the filter output(s). (Default value = 10)</p>
               
             </div>
           </div>

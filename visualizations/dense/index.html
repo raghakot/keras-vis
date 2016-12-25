@@ -72,10 +72,20 @@
         
             <ul>
             
-                <li class="toctree-l3"><a href="#dense-layer-visualization">Dense layer visualization</a></li>
+                <li class="toctree-l3"><a href="#overview">Overview</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#generating-more-natural-looking-images">Generating more natural looking images</a></li>
                 
             
             </ul>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../attention/">Attention Maps</a>
         
     </li>
 
@@ -188,20 +198,21 @@
           <div role="main">
             <div class="section">
               
-                <h3 id="dense-layer-visualization">Dense layer visualization</h3>
+                <h2 id="overview">Overview</h2>
 <p>How can we assess whether a network is over/under fitting or generalizing well? Given an input image, 
 conv net can classify whether it is a cat, bird etc. How can we be sure that it is capturing the correct notion of 
-what it means to be a bird? Suppose that all the training images of 'bird' class contains a tree
-with leaves. How do we know that the conv net is indeed leveraging bird-related pixels as opposed to some 
-other features such as the tree or leaves in the image.</p>
+what it means to be a bird?</p>
 <p>One way to answer these questions is to pose the reverse question:</p>
 <blockquote>
 <p>Generate an input image that maximizes the final <code>Dense</code> layer output corresponding to bird class. </p>
 </blockquote>
 <p>Lets try this for 'ouzel' (imagenet output category: 20)</p>
 <pre><code class="python">import cv2
+
+from vis.utils.utils import stitch_images
 from vis.utils.vggnet import VGG16
-from vis.visualization import visualize_activation
+from vis.visualization import visualize_activation, get_num_filters
+
 
 # Build the VGG16 network with ImageNet weights
 model = VGG16(weights='imagenet', include_top=True)
@@ -213,10 +224,11 @@ layer_name = 'predictions'
 layer_idx = [idx for idx, layer in enumerate(model.layers) if layer.name == layer_name][0]
 
 # Generate three different images of the same output index.
-img = visualize_activation(model, layer_idx,
-                           filter_indices=[20, 20, 20], max_iter=500)
-cv2.imshow(layer_name, img)
+vis_images = [visualize_activation(model, layer_idx, filter_indices=idx, text=str(idx), max_iter=500)
+              for idx in [20, 20, 20]]
+cv2.imshow(layer_name, stitch_images(vis_images))
 cv2.waitKey(0)
+
 </code></pre>
 
 <p>and out comes this..</p>
@@ -227,20 +239,25 @@ and scales, a further proof of rotational and scale invariance. </p>
 <p><img alt="random_imagenet" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/dense_vis/random_imagenet.png?raw=true" title="random_imagenet" /></p>
 <p>If you squint really hard, we can sort of see that most images are more or less accurate representations of the 
 corresponding class.</p>
+<h2 id="generating-more-natural-looking-images">Generating more natural looking images</h2>
 <p>You might notice that in most of these visualizations, the same pattern tends to repeat all over the image 
 with different orientations and scales. Why is this the case? If you think about it, it is essentially the consequence
-of activation maximization loss. Multiple copies of 'template pattern' all over the image should increase the output value.</p>
-<p>If we want more natural looking images, we need a better 'natural image' regularizer that penalizes this sort of 
-behavior. Instead of hand crafting the regularizer, we can use the negative of 'discriminator' output probability 
-(since we want to maximize probability that the image is real) of a generative adversarial network (GAN). </p>
-<p>See this article for details about GANs in general: <a href="https://arxiv.org/abs/1511.06434">Unsupervised Representation Learning with Deep Convolutional 
-Generative Adversarial Networks</a></p>
-<p><em>GAN regularizer is currently a work in progress. Check back in a few days.</em></p>
-<p>At this point, it might be fun to see the effect of total variation regularizer. The following images are generated with
-<code>tv_weight=0</code></p>
+of using <a href="../vis.losses#ActivationMaximization">ActivationMaximization</a> loss. Multiple copies of 'template pattern' 
+all over the image would certainly maximize the output value.</p>
+<p>If we want more natural looking images, we need a better <em>natural image prior</em>. A natural image prior is something that
+captures the degree of naturalness. By default <a href="../vis.visualization#visualize_activation">visualize_activation</a> uses:</p>
+<ul>
+<li><a href="../vis.regularizers#TotalVariation">TotalVariation</a> regularizer to Prefer blobbier images. i.e., not bobby images emit higher loss values.</li>
+<li><a href="../vis.regularizers#LPNorm">LPNorm</a> regularizer to limit the color range.</li>
+</ul>
+<p>If we set <code>tv_weight=0</code>, i.e., turn off total variation regularization, the following is generated:</p>
 <p><img alt="random_imagenet_no_tv" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/dense_vis/random_imagenet_no_tv.png?raw=true" title="random_imagenet_no_tv" /></p>
-<p>Total variation regularizer definitely helps in creating more natural looking images. I am excited to see what
-a GAN discriminator could do.</p>
+<p>Total variation regularizer definitely helps, but in order to get even more natural looking images, we need a better 
+image prior that penalizes unnatural images. Instead of hand-crafting these losses, perhaps the best approach is to 
+use a generative adversarial network (GAN) discriminator. A GAN discriminator is trained to emit probability that the 
+input image is real/fake. To learn more about GANs in general, read: <a href="https://arxiv.org/abs/1511.06434">Unsupervised Representation Learning with Deep Convolutional 
+Generative Adversarial Networks</a></p>
+<p><em>I am currently in the process of building a GAN regularizer. Stay tuned!</em></p>
               
             </div>
           </div>
@@ -248,7 +265,7 @@ a GAN discriminator could do.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../../vis.losses/" class="btn btn-neutral float-right" title="losses">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../attention/" class="btn btn-neutral float-right" title="Attention Maps">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../conv_filters/" class="btn btn-neutral" title="Convolutional Filters"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -282,7 +299,7 @@ a GAN discriminator could do.</p>
         <span><a href="../conv_filters/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../../vis.losses/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../attention/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

@@ -73,6 +73,13 @@
     </li>
 
         
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../visualizations/attention/">Attention Maps</a>
+        
+    </li>
+
+        
     </ul>
 <li>
           
@@ -133,6 +140,8 @@
                     <li><a class="toctree-l4" href="#set_random_seed">set_random_seed</a></li>
                 
                     <li><a class="toctree-l4" href="#reverse_enumerate">reverse_enumerate</a></li>
+                
+                    <li><a class="toctree-l4" href="#listify">listify</a></li>
                 
                     <li><a class="toctree-l4" href="#deprocess_image">deprocess_image</a></li>
                 
@@ -216,7 +225,7 @@
 <li><strong>slicer</strong></li>
 </ul>
 <hr />
-<h3 id="set_random_seed"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L18">set_random_seed</a></h3>
+<h3 id="set_random_seed"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L19">set_random_seed</a></h3>
 <pre><code class="python">set_random_seed(seed_value=1337)
 </code></pre>
 
@@ -226,13 +235,19 @@
 <li><strong>seed_value</strong>:  The seed value to use. (Default Value = infamous 1337)</li>
 </ul>
 <hr />
-<h3 id="reverse_enumerate"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L27">reverse_enumerate</a></h3>
+<h3 id="reverse_enumerate"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L28">reverse_enumerate</a></h3>
 <pre><code class="python">reverse_enumerate(iterable)
 </code></pre>
 
 <p>Enumerate over an iterable in reverse order while retaining proper indexes, without creating any copies.</p>
 <hr />
-<h3 id="deprocess_image"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L33">deprocess_image</a></h3>
+<h3 id="listify"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L34">listify</a></h3>
+<pre><code class="python">listify(value)
+</code></pre>
+
+<p>Ensures that the value is a list. If it is not a list, it creates a new list with <code>value</code> as an item within it.</p>
+<hr />
+<h3 id="deprocess_image"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L42">deprocess_image</a></h3>
 <pre><code class="python">deprocess_image(img)
 </code></pre>
 
@@ -245,7 +260,7 @@
 <p><em>Returns:</em></p>
 <p>A valid image output.</p>
 <hr />
-<h3 id="stitch_images"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L63">stitch_images</a></h3>
+<h3 id="stitch_images"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L72">stitch_images</a></h3>
 <pre><code class="python">stitch_images(images, margin=5, cols=5)
 </code></pre>
 
@@ -260,7 +275,7 @@
 <p><em>Returns:</em></p>
 <p>A single numpy image array comprising of input images.</p>
 <hr />
-<h3 id="generate_rand_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L98">generate_rand_img</a></h3>
+<h3 id="generate_rand_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L107">generate_rand_img</a></h3>
 <pre><code class="python">generate_rand_img(ch, rows, cols)
 </code></pre>
 
@@ -275,7 +290,7 @@
 <p>A numpy array of shape: <code>(channels, rows, cols)</code> if dim_ordering='th' or
   <code>(rows, cols, channels)</code> if dim_ordering='tf'.</p>
 <hr />
-<h3 id="get_img_shape"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L118">get_img_shape</a></h3>
+<h3 id="get_img_shape"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L127">get_img_shape</a></h3>
 <pre><code class="python">get_img_shape(img)
 </code></pre>
 
@@ -287,7 +302,7 @@
 <p><em>Returns:</em></p>
 <p>Tuple containing image shape information in <code>(samples, channels, rows, cols)</code> order.</p>
 <hr />
-<h3 id="get_img_indices"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L134">get_img_indices</a></h3>
+<h3 id="get_img_indices"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L143">get_img_indices</a></h3>
 <pre><code class="python">get_img_indices()
 </code></pre>
 
@@ -295,7 +310,7 @@
 <p><em>Returns:</em></p>
 <p>A tuple representing indices for image in <code>(samples, channels, rows, cols)</code> order.</p>
 <hr />
-<h3 id="load_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L146">load_img</a></h3>
+<h3 id="load_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L155">load_img</a></h3>
 <pre><code class="python">load_img(path, grayscale=False, target_size=None)
 </code></pre>
 
@@ -309,14 +324,15 @@
 <p><em>Returns:</em></p>
 <p>The loaded numpy image.</p>
 <hr />
-<h3 id="get_imagenet_label"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L164">get_imagenet_label</a></h3>
-<pre><code class="python">get_imagenet_label(index)
+<h3 id="get_imagenet_label"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L173">get_imagenet_label</a></h3>
+<pre><code class="python">get_imagenet_label(indices, join=&quot;, &quot;)
 </code></pre>
 
 <p>Utility function to return the image net label for the final <code>dense</code> layer output index.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>index</strong>:  The image net output category value,</li>
+<li><strong>indices</strong>:  Could be a single value or an array of indices whose labels needs looking up.</li>
+<li><strong>join</strong>:  When multiple indices are passed, the output labels are joined using this value. (Default Value = ', ')</li>
 </ul>
 <p><em>Returns:</em></p>
 <p>Image net label corresponding to the image category.</p>

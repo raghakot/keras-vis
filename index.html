@@ -86,6 +86,13 @@
     </li>
 
         
+            
+    <li class="toctree-l1 ">
+        <a class="" href="visualizations/attention/">Attention Maps</a>
+        
+    </li>
+
+        
     </ul>
 <li>
           
@@ -280,7 +287,8 @@ pattern is found in the input image. Visualize those templates via Activation Ma
 <hr/>
 
 <h3 id="attention-maps"><a href="https://raghakot.github.io/keras-vis/visualizations/attention">Attention Maps</a></h3>
-<p>TODO</p>
+<p><img src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/attention_vis/cover.png?raw=true"/></p>
+<p><em>How can we assess whether a network is attending to correct parts of the image in order to generate a decision?</em></p>
 <hr/>
 
 <h3 id="caricaturization-deep-dream">Caricaturization (deep dream)</h3>
@@ -319,6 +327,7 @@ opt = Optimizer(model.input, losses)
 # Jitter is used as a regularizer to create crisper images, but it makes gif animation ugly.
 opt.minimize(max_iter=500, verbose=True, jitter=0,
              progress_gif_path='opt_progress')
+
 </code></pre>
 
 <p><img alt="opt_progress" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/opt_progress.gif?raw=true" title="Optimization progress" /></p>
@@ -372,5 +381,5 @@ opt.minimize(max_iter=500, verbose=True, jitter=0,
 
 <!--
 MkDocs version : 0.16.0
-Build Date UTC : 2016-12-24 06:44:52
+Build Date UTC : 2016-12-25 00:33:02
 -->
