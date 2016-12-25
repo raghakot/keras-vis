@@ -22,9 +22,9 @@ def generate_api_docs():
         vggnet
     ]
 
-    mkgen = MarkdownAPIGenerator("vis", "https://github.com/raghakot/keras-vis/tree/master")
+    md_gen = MarkdownAPIGenerator("vis", "https://github.com/raghakot/keras-vis/tree/master")
     for module in modules:
-        md_string = mkgen.module2md(module)
+        md_string = md_gen.module2md(module)
         to_md_file(md_string, module.__name__, "sources")
 
 
