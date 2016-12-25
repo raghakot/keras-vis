@@ -4,7 +4,7 @@ from .utils import utils
 
 class ImageModifier(object):
     """Abstract class for defining an image modifier. An image modifier can be used with the
-    [Optimizer.minimize](../vis.optimizer/#optimizerminimize) to make `pre` and `post` image changes with the
+    [Optimizer.minimize](vis.optimizer/#optimizerminimize) to make `pre` and `post` image changes with the
     gradient descent update step.
 
     ```python
@@ -14,8 +14,32 @@ class ImageModifier(object):
     ```
     """
 
+    def __init__(self):
+        # These indices are required to handle difference in 'th'/'tf' dim orderings.
+        self._ch_idx, self._row_idx, self._col_idx = utils.get_img_indices()[1:]
+
+    @property
+    def channel_idx(self):
+        """Returns the proper channel index based on image dim ordering.
+        """
+        return self._ch_idx
+
+    @property
+    def row_idx(self):
+        """Returns the proper row index based on image dim ordering.
+        """
+        return self._row_idx
+
+    @property
+    def col_idx(self):
+        """Returns the proper col index based on image dim ordering.
+        """
+        return self._col_idx
+
     def pre(self, img):
         """Implement pre gradient descent update modification to the image.
+        Properties `self.channel_idx`, `self.row_idx`, `self.col_idx` can be used to handle 'th'/'tf'
+        image dim ordering differences.
 
         Args:
             img: 4D numpy array with shape: `(samples, channels, rows, cols)` if dim_ordering='th' or
@@ -28,7 +52,10 @@ class ImageModifier(object):
 
     def post(self, img):
         """Implement post gradient descent update modification to the image. If post processing is not desired,
-        simply return the unmodified `img`
+        simply return the unmodified `img`.
+
+        Properties `self.channel_idx`, `self.row_idx`, `self.col_idx` can be used to handle 'th'/'tf'
+        image dim ordering differences.
 
         Args:
             img: 4D numpy array with shape: `(samples, channels, rows, cols)` if dim_ordering='th' or
@@ -50,13 +77,6 @@ class Jitter(ImageModifier):
         """
         super(Jitter, self).__init__()
         self.jitter = jitter
-
-        # Maintain row and col indices for use in `pre` and `post`
-        s, ch, row, col = utils.get_img_indices()
-        self.row_idx = row
-        self.col_idx = col
-
-        # Jitter amounts in x and y directions.
         self.jx = 0
         self.jy = 0
 

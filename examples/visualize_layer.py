@@ -49,14 +49,10 @@ def visualize_multiple_same_filter(num_runs=3):
 
     # 20 is the imagenet category for 'ouzel'
     indices = [20] * num_runs
-    images1 = [visualize_activation(model, layer_idx, filter_indices=idx, image_modifiers=None,
+    images = [visualize_activation(model, layer_idx, filter_indices=idx,
                                    text=utils.get_imagenet_label(idx),
                                    max_iter=500) for idx in indices]
-    images2 = [visualize_activation(model, layer_idx, filter_indices=idx,
-                                    text=utils.get_imagenet_label(idx),
-                                    max_iter=500) for idx in indices]
-
-    cv2.imshow('Multiple runs of ouzel', utils.stitch_images(images1 + images2, cols=3))
+    cv2.imshow('Multiple runs of ouzel', utils.stitch_images(images))
     cv2.waitKey(0)
 
 
@@ -82,11 +78,11 @@ def visualize_multiple_categories():
 
 
 if __name__ == '__main__':
-    # print('Visualizing random imagenet output categories')
-    # visualize_random(3)
+    print('Visualizing random imagenet output categories')
+    visualize_random(3)
 
     print('Visualizing same filter over multiple runs')
     visualize_multiple_same_filter()
 
-    # print('Visualizing multiple categories')
-    # visualize_multiple_categories()
+    print('Visualizing multiple categories')
+    visualize_multiple_categories()
