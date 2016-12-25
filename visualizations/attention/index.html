@@ -213,7 +213,7 @@ image that most contributed towards maximizing the probability of an output clas
 how output category value changes with respect to a small change in input image pixels. All the positive values
 in the gradients tell us that a small change to that pixel will increase the output value. 
 Hence, visualizing these gradients, which are the same shape as the image should provide some intuition of attention.</p>
-<p>keras-vis abstracts all of this under the hood with <a href="../vis.visulization#visualize_saliency">visualize_saliency</a>. Lets
+<p>keras-vis abstracts all of this under the hood with <a href="../../vis.visualization/#visualize_saliency">visualize_saliency</a>. Lets
 try to visualize attention over images with: <em>tiger, penguin, dumbbell, speedboat, spider</em>. Note there is no guarantee
 that these image urls haven't expired. Update them as needed.</p>
 <pre><code class="python">import cv2
@@ -271,10 +271,10 @@ is some overlap in heatmaps between, say the 'dog' and 'cat' class. Notable meth
 <li><a href="https://arxiv.org/pdf/1311.2901v3.pdf">Occulusion maps</a></li>
 <li><a href="http://cnnlocalization.csail.mit.edu/">Class Activation maps</a></li>
 </ul>
-<p>In keras-vis, we however adopt the <a href="../(https://arxiv.org/pdf/1610.02391v1.pdf)">grad-CAM</a> method as it solves the inefficiency
+<p>In keras-vis, we however adopt the <a href="https://arxiv.org/pdf/1610.02391v1.pdf">grad-CAM</a> method as it solves the inefficiency
 problem with occlusion maps and architectural constraint problem with CAM.</p>
-<p>Generating grad-CAM visualization is simple, just replace <code>visualize_saliency</code> with <code>visualize_cam</code> in the above code.
-This generates the following:</p>
+<p>Generating grad-CAM visualization is simple, just replace <code>visualize_saliency</code> with 
+<a href="../../vis.visualization/#visualize_cam">visualize_cam</a> in the above code. This generates the following:</p>
 <p><img alt="grad-cam" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/attention_vis/grad-cam.png?raw=true" title="grad cam" /></p>
 <p>Compared to saliency, notice how this excludes the spider the in <code>spider_web</code> prediction. I personally feel that grad-CAM 
 is more helpful in diagnosing issues with conv-nets, especially for Kaggle competitions. </p>
