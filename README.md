@@ -14,8 +14,11 @@ There are several repositories out there to visualize:
 This toolkit generalizes all of the above as energy minimization problems. 
 Compatible with both theano and tensorflow backends with 'th'/'tf' image dim orderings. 
 
-Read the documentation at [https://raghakot.github.io/keras-vis](https://raghakot.github.io/keras-vis). 
-Join the slack [channel](https://keras-vis.herokuapp.com/) for questions/discussions.
+## Quick links
+* Read the documentation at [https://raghakot.github.io/keras-vis](https://raghakot.github.io/keras-vis). 
+* Join the slack [channel](https://keras-vis.herokuapp.com/) for questions/discussions.
+* We are tracking new features/tasks in [waffle.io](https://waffle.io/raghakot/keras-vis). Would love it if you lend us 
+a hand and submit PRs.
 
 ## Getting Started
 In image backprop problems, the goal is to generate an input image that minimizes some loss function.
