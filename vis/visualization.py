@@ -6,10 +6,10 @@ from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import _Pooling2D
 from keras import backend as K
 
-from losses import ActivationMaximization
-from optimizer import Optimizer
-from regularizers import TotalVariation, LPNorm
-from utils import utils
+from .losses import ActivationMaximization
+from .optimizer import Optimizer
+from .regularizers import TotalVariation, LPNorm
+from .utils import utils
 
 
 def get_num_filters(layer):

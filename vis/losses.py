@@ -1,5 +1,5 @@
 from keras import backend as K
-from utils import utils
+from .utils import utils
 
 
 class Loss(object):

@@ -3,8 +3,8 @@ from __future__ import division
 import numpy as np
 from keras import backend as K
 
-from losses import Loss
-from utils import utils
+from .losses import Loss
+from .utils import utils
 
 
 def normalize(img, value):
