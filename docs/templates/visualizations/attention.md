@@ -74,8 +74,8 @@ As you might expect, since the inception of saliency maps by Simonyan et al, var
 to improve upon these visualizations. One problem with saliency maps is that it is not class discriminative; i.e., there
 is some overlap in heatmaps between, say the 'dog' and 'cat' class. Notable methods to solve this problem includes:  
 
-1) [Occulusion maps](https://arxiv.org/pdf/1311.2901v3.pdf)
-2) [Class Activation maps](http://cnnlocalization.csail.mit.edu/)
+* [Occulusion maps](https://arxiv.org/pdf/1311.2901v3.pdf)
+* [Class Activation maps](http://cnnlocalization.csail.mit.edu/)
 
 In keras-vis, we however adopt the [grad-CAM]((https://arxiv.org/pdf/1610.02391v1.pdf)) method as it solves the inefficiency
 problem with occlusion maps and architectural constraint problem with CAM.
