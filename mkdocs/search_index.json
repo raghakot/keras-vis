@@ -202,7 +202,7 @@
         }, 
         {
             "location": "/vis.modifiers/", 
-            "text": "Source:\n \nvis/modifiers.py#L0\n\n\n\n\nImageModifier\n\n\nAbstract class for defining an image modifier. An image modifier can be used with the\n\nOptimizer.minimize\n to make \npre\n and \npost\n image changes with the\ngradient descent update step.\n\n\nmodifier.pre(img)\n# gradient descent update to img\nmodifier.post(img)\n\n\n\n\n\n\nImageModifier.post\n\n\npost(self, img)\n\n\n\n\nImplement post gradient descent update modification to the image. If post processing is not desired,\nsimply return the unmodified \nimg\n\n\nArgs:\n\n\n\n\nimg\n:  4D numpy array with shape: \n(samples, channels, rows, cols)\n if dim_ordering='th' or\n  \n(samples, rows, cols, channels)\n if dim_ordering='tf'\n\n\n\n\nReturns:\n\n\nThe modified post image.\n\n\n\n\nImageModifier.pre\n\n\npre(self, img)\n\n\n\n\nImplement pre gradient descent update modification to the image.\n\n\nArgs:\n\n\n\n\nimg\n:  4D numpy array with shape: \n(samples, channels, rows, cols)\n if dim_ordering='th' or\n  \n(samples, rows, cols, channels)\n if dim_ordering='tf'\n\n\n\n\nReturns:\n\n\nThe modified pre image.\n\n\n\n\nJitter\n\n\n\n\nJitter.\n__init__\n\n\n__init__(self, jitter=16)\n\n\n\n\nImplements an image modifier that introduces random jitter in \npre\n and undoes in \npost\n.\nJitter has been shown to produce crisper activation maximization images.\n\n\nArgs:\n\n\n\n\njitter\n:  Number of pixels to jitter in rows and cols dimensions.\n\n\n\n\n\n\nJitter.post\n\n\npost(self, img)\n\n\n\n\n\n\nJitter.pre\n\n\npre(self, img)", 
+            "text": "Source:\n \nvis/modifiers.py#L0\n\n\n\n\nImageModifier\n\n\nAbstract class for defining an image modifier. An image modifier can be used with the\n\nOptimizer.minimize\n to make \npre\n and \npost\n image changes with the\ngradient descent update step.\n\n\nmodifier.pre(img)\n# gradient descent update to img\nmodifier.post(img)\n\n\n\n\nImageModifier.channel_idx\n\n\nReturns the proper channel index based on image dim ordering.\n\n\nImageModifier.col_idx\n\n\nReturns the proper col index based on image dim ordering.\n\n\nImageModifier.row_idx\n\n\nReturns the proper row index based on image dim ordering.\n\n\n\n\nImageModifier.\n__init__\n\n\n__init__(self)\n\n\n\n\n\n\nImageModifier.post\n\n\npost(self, img)\n\n\n\n\nImplement post gradient descent update modification to the image. If post processing is not desired,\nsimply return the unmodified \nimg\n.\n\n\nProperties \nself.channel_idx\n, \nself.row_idx\n, \nself.col_idx\n can be used to handle 'th'/'tf'\nimage dim ordering differences.\n\n\nArgs:\n\n\n\n\nimg\n:  4D numpy array with shape: \n(samples, channels, rows, cols)\n if dim_ordering='th' or\n  \n(samples, rows, cols, channels)\n if dim_ordering='tf'\n\n\n\n\nReturns:\n\n\nThe modified post image.\n\n\n\n\nImageModifier.pre\n\n\npre(self, img)\n\n\n\n\nImplement pre gradient descent update modification to the image.\nProperties \nself.channel_idx\n, \nself.row_idx\n, \nself.col_idx\n can be used to handle 'th'/'tf'\nimage dim ordering differences.\n\n\nArgs:\n\n\n\n\nimg\n:  4D numpy array with shape: \n(samples, channels, rows, cols)\n if dim_ordering='th' or\n  \n(samples, rows, cols, channels)\n if dim_ordering='tf'\n\n\n\n\nReturns:\n\n\nThe modified pre image.\n\n\n\n\nJitter\n\n\nJitter.channel_idx\n\n\nReturns the proper channel index based on image dim ordering.\n\n\nJitter.col_idx\n\n\nReturns the proper col index based on image dim ordering.\n\n\nJitter.row_idx\n\n\nReturns the proper row index based on image dim ordering.\n\n\n\n\nJitter.\n__init__\n\n\n__init__(self, jitter=16)\n\n\n\n\nImplements an image modifier that introduces random jitter in \npre\n and undoes in \npost\n.\nJitter has been shown to produce crisper activation maximization images.\n\n\nArgs:\n\n\n\n\njitter\n:  Number of pixels to jitter in rows and cols dimensions.\n\n\n\n\n\n\nJitter.post\n\n\npost(self, img)\n\n\n\n\n\n\nJitter.pre\n\n\npre(self, img)", 
             "title": "modifiers"
         }, 
         {
@@ -211,19 +211,54 @@
             "title": "ImageModifier"
         }, 
         {
+            "location": "/vis.modifiers/#imagemodifierchannel_idx", 
+            "text": "Returns the proper channel index based on image dim ordering.", 
+            "title": "ImageModifier.channel_idx"
+        }, 
+        {
+            "location": "/vis.modifiers/#imagemodifiercol_idx", 
+            "text": "Returns the proper col index based on image dim ordering.", 
+            "title": "ImageModifier.col_idx"
+        }, 
+        {
+            "location": "/vis.modifiers/#imagemodifierrow_idx", 
+            "text": "Returns the proper row index based on image dim ordering.", 
+            "title": "ImageModifier.row_idx"
+        }, 
+        {
+            "location": "/vis.modifiers/#imagemodifier__init__", 
+            "text": "__init__(self)", 
+            "title": "ImageModifier.__init__"
+        }, 
+        {
             "location": "/vis.modifiers/#imagemodifierpost", 
-            "text": "post(self, img)  Implement post gradient descent update modification to the image. If post processing is not desired,\nsimply return the unmodified  img  Args:   img :  4D numpy array with shape:  (samples, channels, rows, cols)  if dim_ordering='th' or\n   (samples, rows, cols, channels)  if dim_ordering='tf'   Returns:  The modified post image.", 
+            "text": "post(self, img)  Implement post gradient descent update modification to the image. If post processing is not desired,\nsimply return the unmodified  img .  Properties  self.channel_idx ,  self.row_idx ,  self.col_idx  can be used to handle 'th'/'tf'\nimage dim ordering differences.  Args:   img :  4D numpy array with shape:  (samples, channels, rows, cols)  if dim_ordering='th' or\n   (samples, rows, cols, channels)  if dim_ordering='tf'   Returns:  The modified post image.", 
             "title": "ImageModifier.post"
         }, 
         {
             "location": "/vis.modifiers/#imagemodifierpre", 
-            "text": "pre(self, img)  Implement pre gradient descent update modification to the image.  Args:   img :  4D numpy array with shape:  (samples, channels, rows, cols)  if dim_ordering='th' or\n   (samples, rows, cols, channels)  if dim_ordering='tf'   Returns:  The modified pre image.", 
+            "text": "pre(self, img)  Implement pre gradient descent update modification to the image.\nProperties  self.channel_idx ,  self.row_idx ,  self.col_idx  can be used to handle 'th'/'tf'\nimage dim ordering differences.  Args:   img :  4D numpy array with shape:  (samples, channels, rows, cols)  if dim_ordering='th' or\n   (samples, rows, cols, channels)  if dim_ordering='tf'   Returns:  The modified pre image.", 
             "title": "ImageModifier.pre"
         }, 
         {
             "location": "/vis.modifiers/#jitter", 
             "text": "", 
             "title": "Jitter"
+        }, 
+        {
+            "location": "/vis.modifiers/#jitterchannel_idx", 
+            "text": "Returns the proper channel index based on image dim ordering.", 
+            "title": "Jitter.channel_idx"
+        }, 
+        {
+            "location": "/vis.modifiers/#jittercol_idx", 
+            "text": "Returns the proper col index based on image dim ordering.", 
+            "title": "Jitter.col_idx"
+        }, 
+        {
+            "location": "/vis.modifiers/#jitterrow_idx", 
+            "text": "Returns the proper row index based on image dim ordering.", 
+            "title": "Jitter.row_idx"
         }, 
         {
             "location": "/vis.modifiers/#jitter__init__", 
