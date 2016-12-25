@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>regularizers - Keras-vis Documentation</title>
+  <title>modifiers - Keras-vis Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -18,9 +18,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "regularizers";
-    var mkdocs_page_input_path = "vis.regularizers.md";
-    var mkdocs_page_url = "/vis.regularizers/";
+    var mkdocs_page_name = "modifiers";
+    var mkdocs_page_input_path = "vis.modifiers.md";
+    var mkdocs_page_url = "/vis.modifiers/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -101,36 +101,35 @@
 
         
             
-    <li class="toctree-l1 current">
-        <a class="current" href="./">regularizers</a>
-        
-            <ul>
-            
-                <li class="toctree-l3"><a href="#normalize">normalize</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#totalvariation">TotalVariation</a></li>
-                
-                    <li><a class="toctree-l4" href="#totalvariation__init__">TotalVariation.__init__</a></li>
-                
-                    <li><a class="toctree-l4" href="#totalvariationbuild_loss">TotalVariation.build_loss</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#lpnorm">LPNorm</a></li>
-                
-                    <li><a class="toctree-l4" href="#lpnorm__init__">LPNorm.__init__</a></li>
-                
-                    <li><a class="toctree-l4" href="#lpnormbuild_loss">LPNorm.build_loss</a></li>
-                
-            
-            </ul>
+    <li class="toctree-l1 ">
+        <a class="" href="../vis.regularizers/">regularizers</a>
         
     </li>
 
         
             
-    <li class="toctree-l1 ">
-        <a class="" href="../vis.modifiers/">modifiers</a>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">modifiers</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#imagemodifier">ImageModifier</a></li>
+                
+                    <li><a class="toctree-l4" href="#imagemodifierpost">ImageModifier.post</a></li>
+                
+                    <li><a class="toctree-l4" href="#imagemodifierpre">ImageModifier.pre</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#jitter">Jitter</a></li>
+                
+                    <li><a class="toctree-l4" href="#jitter__init__">Jitter.__init__</a></li>
+                
+                    <li><a class="toctree-l4" href="#jitterpost">Jitter.post</a></li>
+                
+                    <li><a class="toctree-l4" href="#jitterpre">Jitter.pre</a></li>
+                
+            
+            </ul>
         
     </li>
 
@@ -207,10 +206,10 @@
         
       
     
-    <li>regularizers</li>
+    <li>modifiers</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.regularizers.md"
+        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.modifiers.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -220,67 +219,65 @@
           <div role="main">
             <div class="section">
               
-                <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L0">vis/regularizers.py#L0</a></p>
+                <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L0">vis/modifiers.py#L0</a></p>
 <hr />
-<h3 id="normalize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L10">normalize</a></h3>
-<pre><code class="python">normalize(img, value)
+<h2 id="imagemodifier"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L5">ImageModifier</a></h2>
+<p>Abstract class for defining an image modifier. An image modifier can be used with the
+<a href="../../vis.optimizer/#optimizerminimize">Optimizer.minimize</a> to make <code>pre</code> and <code>post</code> image changes with the
+gradient descent update step.</p>
+<pre><code class="python">modifier.pre(img)
+# gradient descent update to img
+modifier.post(img)
 </code></pre>
 
-<p>Normalizes the value with respect to image dimensions. This makes regularizer weight factor more or less
-uniform across various input image dimensions.</p>
+<hr />
+<h3 id="imagemodifierpost"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L29">ImageModifier.post</a></h3>
+<pre><code class="python">post(self, img)
+</code></pre>
+
+<p>Implement post gradient descent update modification to the image. If post processing is not desired,
+simply return the unmodified <code>img</code></p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img</strong>:  4D tensor with shape: <code>(samples, channels, rows, cols)</code> if dim_ordering='th' or
-  <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
-<li><strong>value</strong>:  The function to normalize</li>
+<li><strong>img</strong>:  4D numpy array with shape: <code>(samples, channels, rows, cols)</code> if dim_ordering='th' or
+  <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'</li>
 </ul>
 <p><em>Returns:</em></p>
-<p>The normalized expression.</p>
+<p>The modified post image.</p>
 <hr />
-<h2 id="totalvariation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L26">TotalVariation</a></h2>
-<hr />
-<h3 id="totalvariation__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L28">TotalVariation.<code>__init__</code></a></h3>
-<pre><code class="python">__init__(self, img_input, beta=2.0)
+<h3 id="imagemodifierpre"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L17">ImageModifier.pre</a></h3>
+<pre><code class="python">pre(self, img)
 </code></pre>
 
-<p>Total variation regularizer encourages blobbier and coherent image structures, akin to natural images.
-See <code>section 3.2.2</code> in
-<a href="https://arxiv.org/pdf/1512.02017v3.pdf">Visualizing deep convolutional neural networks using natural pre-images</a>
-for details.</p>
+<p>Implement pre gradient descent update modification to the image.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img_input</strong>:  4D image input tensor to the model of shape: <code>(samples, channels, rows, cols)</code>
-  if dim_ordering='th' or <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
-<li><strong>beta</strong>:  Smaller values of beta give sharper but 'spikier' images.
-  Values <script type="math/tex">\in [1.5, 2.0]</script> are recommended as a reasonable compromise.</li>
+<li><strong>img</strong>:  4D numpy array with shape: <code>(samples, channels, rows, cols)</code> if dim_ordering='th' or
+  <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'</li>
 </ul>
+<p><em>Returns:</em></p>
+<p>The modified pre image.</p>
 <hr />
-<h3 id="totalvariationbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L45">TotalVariation.build_loss</a></h3>
-<pre><code class="python">build_loss(self)
+<h2 id="jitter"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L42">Jitter</a></h2>
+<hr />
+<h3 id="jitter__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L44">Jitter.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, jitter=16)
 </code></pre>
 
-<p>Implements the function
-<script type="math/tex; mode=display">TV^{\beta}(x) = \sum_{whc} \left ( \left ( x(h, w+1, c) - x(h, w, c) \right )^{2} +
-\left ( x(h+1, w, c) - x(h, w, c) \right )^{2} \right )^{\frac{\beta}{2}}</script>
-</p>
-<hr />
-<h2 id="lpnorm"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L57">LPNorm</a></h2>
-<hr />
-<h3 id="lpnorm__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L59">LPNorm.<code>__init__</code></a></h3>
-<pre><code class="python">__init__(self, img_input, p=6.0)
-</code></pre>
-
-<p>Builds a L-p norm function. This regularizer encourages the intensity of pixels to stay bounded.
-  i.e., prevents pixels from taking on very large values.</p>
+<p>Implements an image modifier that introduces random jitter in <code>pre</code> and undoes in <code>post</code>.
+Jitter has been shown to produce crisper activation maximization images.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img_input</strong>:  4D image input tensor to the model of shape: <code>(samples, channels, rows, cols)</code>
-  if dim_ordering='th' or <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
-<li><strong>p</strong>:  The pth norm to use. If p = float('inf'), infinity-norm will be used.</li>
+<li><strong>jitter</strong>:  Number of pixels to jitter in rows and cols dimensions.</li>
 </ul>
 <hr />
-<h3 id="lpnormbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L76">LPNorm.build_loss</a></h3>
-<pre><code class="python">build_loss(self)
+<h3 id="jitterpost"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L67">Jitter.post</a></h3>
+<pre><code class="python">post(self, img)
+</code></pre>
+
+<hr />
+<h3 id="jitterpre"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L63">Jitter.pre</a></h3>
+<pre><code class="python">pre(self, img)
 </code></pre>
               
             </div>
@@ -289,10 +286,10 @@ for details.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../vis.modifiers/" class="btn btn-neutral float-right" title="modifiers">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../vis.optimizer/" class="btn btn-neutral float-right" title="optimizer">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../vis.losses/" class="btn btn-neutral" title="losses"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../vis.regularizers/" class="btn btn-neutral" title="regularizers"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -320,10 +317,10 @@ for details.</p>
           <a href="http://github.com/raghakot/keras-vis" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../vis.losses/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../vis.regularizers/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../vis.modifiers/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../vis.optimizer/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

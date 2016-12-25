@@ -108,6 +108,13 @@
 
         
             
+    <li class="toctree-l1 ">
+        <a class="" href="../vis.modifiers/">modifiers</a>
+        
+    </li>
+
+        
+            
     <li class="toctree-l1 current">
         <a class="current" href="./">optimizer</a>
         
@@ -120,8 +127,6 @@
                     <li><a class="toctree-l4" href="#optimizereval_losses">Optimizer.eval_losses</a></li>
                 
                     <li><a class="toctree-l4" href="#optimizerget_seed_img">Optimizer.get_seed_img</a></li>
-                
-                    <li><a class="toctree-l4" href="#optimizerjitter">Optimizer.jitter</a></li>
                 
                     <li><a class="toctree-l4" href="#optimizerminimize">Optimizer.minimize</a></li>
                 
@@ -243,29 +248,15 @@
 <p><em>Returns:</em></p>
 <p>A dictionary of (<a href="../vis.losses#Loss">Loss</a>.name, loss_value) values for various losses.</p>
 <hr />
-<h3 id="optimizerget_seed_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L97">Optimizer.get_seed_img</a></h3>
+<h3 id="optimizerget_seed_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L81">Optimizer.get_seed_img</a></h3>
 <pre><code class="python">get_seed_img(self, seed_img)
 </code></pre>
 
 <p>Creates the seed_img, along with other sanity checks.</p>
 <hr />
-<h3 id="optimizerjitter"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L81">Optimizer.jitter</a></h3>
-<pre><code class="python">jitter(self, img, jitter=32)
-</code></pre>
-
-<p>Jitters the numpy input image randomly in width and height dimensions.
-This kind of regularization is known to produce crisper images via guided backprop.</p>
-<p><em>Args:</em></p>
-<ul>
-<li><strong>img</strong>:  4D numpy array with shape: <code>(samples, channels, rows, cols)</code> if dim_ordering='th' or
-  <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'</li>
-<li><strong>jitter</strong>:  Number of pixels to jitter in width and height directions.</li>
-</ul>
-<p><em>Returns:</em></p>
-<p>The jittered numpy image array.</p>
-<hr />
-<h3 id="optimizerminimize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L111">Optimizer.minimize</a></h3>
-<pre><code class="python">minimize(self, seed_img=None, max_iter=200, jitter=8, verbose=True, progress_gif_path=None)
+<h3 id="optimizerminimize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L95">Optimizer.minimize</a></h3>
+<pre><code class="python">minimize(self, seed_img=None, max_iter=200, image_modifiers=None, verbose=True, \
+    progress_gif_path=None)
 </code></pre>
 
 <p>Performs gradient descent on the input image with respect to defined losses.</p>
@@ -275,7 +266,9 @@ This kind of regularization is known to produce crisper images via guided backpr
   <code>(rows, cols, channels)</code> if dim_ordering='tf'.
   Seeded with random noise if set to None. (Default value = None)</li>
 <li><strong>max_iter</strong>:  The maximum number of gradient descent iterations. (Default value = 200)</li>
-<li><strong>jitter</strong>:  The number of pixels to jitter between subsequent gradient descent iterations.
+<li><strong>image_modifiers</strong>:  A list of <a href="../ImageModifier">../vis/modifiers/#ImageModifier</a> instances specifying <code>pre</code> and
+  <code>post</code> image processing steps with the gradient descent update step. Order matters.
+The number of pixels to jitter between subsequent gradient descent iterations.
   Jitter is known to generate crisper images. (Default value = 8)</li>
 <li><strong>verbose</strong>:  Logs individual losses at the end of every gradient descent iteration.
   Very useful to estimate loss weight factor. (Default value = True)</li>
@@ -311,7 +304,7 @@ This kind of regularization is known to produce crisper images via guided backpr
         <a href="../vis.visualization/" class="btn btn-neutral float-right" title="visualization">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../vis.regularizers/" class="btn btn-neutral" title="regularizers"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../vis.modifiers/" class="btn btn-neutral" title="modifiers"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -339,7 +332,7 @@ This kind of regularization is known to produce crisper images via guided backpr
           <a href="http://github.com/raghakot/keras-vis" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../vis.regularizers/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../vis.modifiers/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
         <span style="margin-left: 15px"><a href="../vis.visualization/" style="color: #fcfcfc">Next &raquo;</a></span>
