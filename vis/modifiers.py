@@ -37,7 +37,9 @@ class ImageModifier(object):
         return self._col_idx
 
     def pre(self, img):
-        """Implement pre gradient descent update modification to the image.
+        """Implement pre gradient descent update modification to the image. If pre-processing is not desired,
+        simply ignore the implementation. It returns the unmodified `img` by default.
+
         Properties `self.channel_idx`, `self.row_idx`, `self.col_idx` can be used to handle 'th'/'tf'
         image dim ordering differences.
 
@@ -48,11 +50,11 @@ class ImageModifier(object):
         Returns:
             The modified pre image.
         """
-        raise NotImplementedError()
+        return img
 
     def post(self, img):
-        """Implement post gradient descent update modification to the image. If post processing is not desired,
-        simply return the unmodified `img`.
+        """Implement post gradient descent update modification to the image. If post-processing is not desired,
+        simply ignore the implementation. It returns the unmodified `img` by default.
 
         Properties `self.channel_idx`, `self.row_idx`, `self.col_idx` can be used to handle 'th'/'tf'
         image dim ordering differences.
@@ -64,6 +66,7 @@ class ImageModifier(object):
         Returns:
             The modified post image.
         """
+        return img
 
 
 class Jitter(ImageModifier):

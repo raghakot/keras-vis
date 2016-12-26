@@ -102,9 +102,9 @@ class Optimizer(object):
                 Seeded with random noise if set to None. (Default value = None)
             max_iter: The maximum number of gradient descent iterations. (Default value = 200)
             image_modifiers: A list of [../vis/modifiers/#ImageModifier](ImageModifier) instances specifying `pre` and
-                `post` image processing steps with the gradient descent update step. Order matters.
-            The number of pixels to jitter between subsequent gradient descent iterations.
-                Jitter is known to generate crisper images. (Default value = 8)
+                `post` image processing steps with the gradient descent update step. `pre` is applied in list order while
+                `post` is applied in reverse order. For example, `image_modifiers = [f, g]` means that
+                `pre_img = g(f(img))` and `post_img = f(g(img))`
             verbose: Logs individual losses at the end of every gradient descent iteration.
                 Very useful to estimate loss weight factor. (Default value = True)
             progress_gif_path: Saves a gif of `seed_img` being optimized.
@@ -151,7 +151,7 @@ class Optimizer(object):
                     seed_img += step
 
                 # Apply modifiers `post` step
-                for modifier in image_modifiers:
+                for modifier in reversed(image_modifiers):
                     seed_img = modifier.post(seed_img)
 
                 if writer:
