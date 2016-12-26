@@ -256,12 +256,12 @@ modifier.post(img)
 </code></pre>
 
 <hr />
-<h3 id="imagemodifierpost"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L53">ImageModifier.post</a></h3>
+<h3 id="imagemodifierpost"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L55">ImageModifier.post</a></h3>
 <pre><code class="python">post(self, img)
 </code></pre>
 
-<p>Implement post gradient descent update modification to the image. If post processing is not desired,
-simply return the unmodified <code>img</code>.</p>
+<p>Implement post gradient descent update modification to the image. If post-processing is not desired,
+simply ignore the implementation. It returns the unmodified <code>img</code> by default.</p>
 <p>Properties <code>self.channel_idx</code>, <code>self.row_idx</code>, <code>self.col_idx</code> can be used to handle 'th'/'tf'
 image dim ordering differences.</p>
 <p><em>Args:</em></p>
@@ -276,8 +276,9 @@ image dim ordering differences.</p>
 <pre><code class="python">pre(self, img)
 </code></pre>
 
-<p>Implement pre gradient descent update modification to the image.
-Properties <code>self.channel_idx</code>, <code>self.row_idx</code>, <code>self.col_idx</code> can be used to handle 'th'/'tf'
+<p>Implement pre gradient descent update modification to the image. If pre-processing is not desired,
+simply ignore the implementation. It returns the unmodified <code>img</code> by default.</p>
+<p>Properties <code>self.channel_idx</code>, <code>self.row_idx</code>, <code>self.col_idx</code> can be used to handle 'th'/'tf'
 image dim ordering differences.</p>
 <p><em>Args:</em></p>
 <ul>
@@ -287,7 +288,7 @@ image dim ordering differences.</p>
 <p><em>Returns:</em></p>
 <p>The modified pre image.</p>
 <hr />
-<h2 id="jitter"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L69">Jitter</a></h2>
+<h2 id="jitter"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L72">Jitter</a></h2>
 <h4 id="jitterchannel_idx">Jitter.channel_idx</h4>
 <p>Returns the proper channel index based on image dim ordering.</p>
 <h4 id="jittercol_idx">Jitter.col_idx</h4>
@@ -295,7 +296,7 @@ image dim ordering differences.</p>
 <h4 id="jitterrow_idx">Jitter.row_idx</h4>
 <p>Returns the proper row index based on image dim ordering.</p>
 <hr />
-<h3 id="jitter__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L71">Jitter.<code>__init__</code></a></h3>
+<h3 id="jitter__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L74">Jitter.<code>__init__</code></a></h3>
 <pre><code class="python">__init__(self, jitter=16)
 </code></pre>
 
@@ -306,12 +307,12 @@ Jitter has been shown to produce crisper activation maximization images.</p>
 <li><strong>jitter</strong>:  Number of pixels to jitter in rows and cols dimensions.</li>
 </ul>
 <hr />
-<h3 id="jitterpost"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L87">Jitter.post</a></h3>
+<h3 id="jitterpost"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L90">Jitter.post</a></h3>
 <pre><code class="python">post(self, img)
 </code></pre>
 
 <hr />
-<h3 id="jitterpre"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L83">Jitter.pre</a></h3>
+<h3 id="jitterpre"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L86">Jitter.pre</a></h3>
 <pre><code class="python">pre(self, img)
 </code></pre>
               
