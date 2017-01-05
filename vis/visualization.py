@@ -238,7 +238,7 @@ def visualize_cam(model, layer_idx, filter_indices,
 
     penultimate_output = model.layers[penultimate_layer_idx].output
     opt = Optimizer(model.input, losses, wrt=penultimate_output)
-    _, grads, penultimate_output_value = opt.minimize(seed_img, max_iter=1, jitter=0, verbose=False)
+    _, grads, penultimate_output_value = opt.minimize(seed_img, max_iter=1, verbose=False)
 
     # We are minimizing loss as opposed to maximizing output as with the paper.
     # So, negative gradients here mean that they reduce loss, maximizing class probability.
