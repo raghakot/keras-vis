@@ -257,7 +257,7 @@ def visualize_cam(model, layer_idx, filter_indices,
 
     # The penultimate feature map size is definitely smaller than input image.
     s, ch, rows, cols = utils.get_img_shape(model.input)
-    heatmap = cv2.resize(heatmap, (rows, cols), interpolation=cv2.INTER_CUBIC)
+    heatmap = cv2.resize(heatmap, (cols, rows), interpolation=cv2.INTER_CUBIC)
 
     # ReLU thresholding, normalize between (0, 1)
     heatmap = np.maximum(heatmap, 0)
