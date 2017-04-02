@@ -85,7 +85,7 @@ class Optimizer(object):
         if seed_img is None:
             seed_img = utils.generate_rand_img(ch, rows, cols)
         else:
-            if K.image_dim_ordering() == 'th':
+            if K.image_data_format() == 'channels_first':
                 seed_img = seed_img.transpose(2, 0, 1)
 
         # Convert to image tensor containing samples.
@@ -139,6 +139,10 @@ class Optimizer(object):
 
                 # 0 learning phase for 'test'
                 loss, grads, wrt_value = self.overall_loss_grad_wrt_fn([seed_img, 0])
+
+                # TODO: theano grads shape in inconsistent for some reason. Patch for now and investigate later.
+                if grads.shape != seed_img.shape:
+                    grads = np.reshape(grads, seed_img.shape if self.wrt == self.img else wrt_value.shape)
 
                 if verbose:
                     losses = self.eval_losses(seed_img)

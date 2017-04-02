@@ -6,7 +6,7 @@ from vis.utils.vggnet import VGG16
 from vis.visualization import visualize_activation
 
 
-def visualize_random(num_categories=10):
+def visualize_random(num_categories=10, show=True):
     """Example to show how to visualize multiple filters via activation maximization.
 
     Args:
@@ -28,11 +28,13 @@ def visualize_random(num_categories=10):
                                    max_iter=500) for idx in indices]
 
     # Easily stitch images via `utils.stitch_images`
-    cv2.imshow('Random imagenet categories', utils.stitch_images(images))
-    cv2.waitKey(0)
+    stitched = utils.stitch_images(images)
+    if show:
+        cv2.imshow('Random imagenet categories', stitched)
+        cv2.waitKey(0)
 
 
-def visualize_multiple_same_filter(num_runs=3):
+def visualize_multiple_same_filter(num_runs=3, show=True):
     """Example to show how to visualize same filter multiple times via different runs.
 
     Args:
@@ -52,11 +54,15 @@ def visualize_multiple_same_filter(num_runs=3):
     images = [visualize_activation(model, layer_idx, filter_indices=idx,
                                    text=utils.get_imagenet_label(idx),
                                    max_iter=500) for idx in indices]
-    cv2.imshow('Multiple runs of ouzel', utils.stitch_images(images))
-    cv2.waitKey(0)
+
+    # Easily stitch images via `utils.stitch_images`
+    stitched = utils.stitch_images(images)
+    if show:
+        cv2.imshow('Multiple runs of ouzel', stitched)
+        cv2.waitKey(0)
 
 
-def visualize_multiple_categories():
+def visualize_multiple_categories(show=True):
     """Example to show how to visualize images that activate multiple categories
     """
     # Build the VGG16 network with ImageNet weights
@@ -73,8 +79,12 @@ def visualize_multiple_categories():
     images = [visualize_activation(model, layer_idx, filter_indices=idx,
                                    text=utils.get_imagenet_label(idx),
                                    max_iter=500) for idx in indices]
-    cv2.imshow('Multiple category visualization', utils.stitch_images(images))
-    cv2.waitKey(0)
+
+    # Easily stitch images via `utils.stitch_images`
+    stitched = utils.stitch_images(images)
+    if show:
+        cv2.imshow('Multiple category visualization', stitched)
+        cv2.waitKey(0)
 
 
 if __name__ == '__main__':

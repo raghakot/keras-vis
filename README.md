@@ -12,7 +12,8 @@ There are several repositories out there to visualize:
 - Any other guided image backprop
 
 This toolkit generalizes all of the above as energy minimization problems with a clean, easy to use, 
-and extendable interface. Compatible with both theano and tensorflow backends with 'th'/'tf' image dim orderings. 
+and extendable interface. Compatible with both theano and tensorflow backends with 'channels_first', 'channels_last' 
+data format.
 
 ## Quick links
 * Read the documentation at [https://raghakot.github.io/keras-vis](https://raghakot.github.io/keras-vis). 
@@ -64,7 +65,7 @@ Concrete examples of various visualizations can be found in
 ## Installation
 
 1) Install [keras](https://github.com/fchollet/keras/blob/master/README.md#installation) 
-with theano or tensorflow backend
+with theano or tensorflow backend. Note that the library is incompatible with keras < 2.0
 
 2) Install OpenCV 
 ```bash

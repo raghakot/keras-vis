@@ -43,8 +43,8 @@ def deprocess_image(img):
     """Utility function to convert optimized image output into a valid image.
 
     Args:
-        img: 3D numpy array with shape: `(channels, rows, cols)` if dim_ordering='th' or
-            `(rows, cols, channels)` if dim_ordering='tf'.
+        img: 3D numpy array with shape: `(channels, rows, cols)` if data_format='channels_first' or
+            `(rows, cols, channels)` if data_format='channels_last'.
 
     Returns:
         A valid image output.
@@ -113,10 +113,10 @@ def generate_rand_img(ch, rows, cols):
       cols: image cols or width
 
     Returns:
-        A numpy array of shape: `(channels, rows, cols)` if dim_ordering='th' or
-            `(rows, cols, channels)` if dim_ordering='tf'.
+        A numpy array of shape: `(channels, rows, cols)` if data_format='channels_first' or
+            `(rows, cols, channels)` if data_format='channels_last'.
     """
-    if K.image_dim_ordering() == 'th':
+    if K.image_data_format() == 'channels_first':
         x = np.random.random((ch, rows, cols))
     else:
         x = np.random.random((rows, cols, ch))
@@ -128,12 +128,12 @@ def get_img_shape(img):
     """Returns image shape in a backend agnostic manner.
 
     Args:
-        img: The image tensor in 'th' or 'tf' dim ordering.
+        img: The image tensor in 'channels_first' or 'channels_last' data format.
 
     Returns:
         Tuple containing image shape information in `(samples, channels, rows, cols)` order.
     """
-    if K.image_dim_ordering() == 'th':
+    if K.image_data_format() == 'channels_first':
         return K.int_shape(img)
     else:
         samples, rows, cols, ch = K.int_shape(img)
@@ -141,12 +141,12 @@ def get_img_shape(img):
 
 
 def get_img_indices():
-    """Returns image indices in a backend agnostic manner.
+    """Returns image indices in `data_format` agnostic manner.
 
     Returns:
         A tuple representing indices for image in `(samples, channels, rows, cols)` order.
     """
-    if K.image_dim_ordering() == 'th':
+    if K.image_data_format() == 'channels_first':
         return 0, 1, 2, 3
     else:
         return 0, 3, 1, 2
@@ -190,22 +190,22 @@ def get_imagenet_label(indices, join=', '):
 
 
 class _BackendAgnosticImageSlice(object):
-    """Utility class to make image slicing across 'th'/'tf' backends easier.
+    """Utility class to make image slicing uniform across various `data_format`.
     """
 
     def __getitem__(self, item_slice):
         """Assuming a slice for shape `(samples, channels, width, height)`
         """
         assert len(item_slice) == 4
-        if K.image_dim_ordering() == 'th':
+        if K.image_data_format() == 'channels_first':
             return item_slice
         else:
             return tuple([item_slice[0], item_slice[2], item_slice[3], item_slice[1]])
 
 
-"""Slice utility to image slicing across 'th'/'tf' backends easier.
+"""Slice utility to make image slicing uniform across various `data_format`.
 Example:
-    conv_layer[utils.slicer[:, filter_idx, :, :]] will work for both theano and tensorflow backends
+    conv_layer[utils.slicer[:, filter_idx, :, :]] will work for both `channels_first` and `channels_last` data formats
     even though, in tensorflow, slice should be conv_layer[utils.slicer[:, :, :, filter_idx]]
 """
 slicer = _BackendAgnosticImageSlice()

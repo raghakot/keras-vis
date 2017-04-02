@@ -29,10 +29,10 @@ def get_num_filters(layer):
     if isDense:
         return layer.output.shape[1]
     else:
-        if K.image_dim_ordering() == 'th':
-            return layer.output._keras_shape[1]
+        if K.image_data_format() == 'channels_first':
+            return K.int_shape(layer.output)[1]
         else:
-            return layer.output._keras_shape[3]
+            return K.int_shape(layer.output)[3]
 
 
 def visualize_activation(model, layer_idx, filter_indices=None,
@@ -150,7 +150,7 @@ def visualize_saliency(model, layer_idx, filter_indices,
         (ActivationMaximization(model.layers[layer_idx], filter_indices), 1)
     ]
     opt = Optimizer(model.input, losses)
-    grads = opt.minimize(max_iter=1, verbose=False, jitter=0, seed_img=seed_img)[1]
+    grads = opt.minimize(max_iter=1, verbose=False, seed_img=seed_img)[1]
 
     # We are minimizing loss as opposed to maximizing output as with the paper.
     # So, negative gradients here mean that they reduce loss, maximizing class probability.
