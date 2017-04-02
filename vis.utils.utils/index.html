@@ -261,8 +261,8 @@
 <p>Utility function to convert optimized image output into a valid image.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img</strong>:  3D numpy array with shape: <code>(channels, rows, cols)</code> if dim_ordering='th' or
-  <code>(rows, cols, channels)</code> if dim_ordering='tf'.</li>
+<li><strong>img</strong>:  3D numpy array with shape: <code>(channels, rows, cols)</code> if data_format='channels_first' or
+  <code>(rows, cols, channels)</code> if data_format='channels_last'.</li>
 </ul>
 <p><em>Returns:</em></p>
 <p>A valid image output.</p>
@@ -294,8 +294,8 @@
 <li><strong>cols</strong>:  image cols or width</li>
 </ul>
 <p><em>Returns:</em></p>
-<p>A numpy array of shape: <code>(channels, rows, cols)</code> if dim_ordering='th' or
-  <code>(rows, cols, channels)</code> if dim_ordering='tf'.</p>
+<p>A numpy array of shape: <code>(channels, rows, cols)</code> if data_format='channels_first' or
+  <code>(rows, cols, channels)</code> if data_format='channels_last'.</p>
 <hr />
 <h3 id="get_img_shape"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L127">get_img_shape</a></h3>
 <pre><code class="python">get_img_shape(img)
@@ -304,7 +304,7 @@
 <p>Returns image shape in a backend agnostic manner.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img</strong>:  The image tensor in 'th' or 'tf' dim ordering.</li>
+<li><strong>img</strong>:  The image tensor in 'channels_first' or 'channels_last' data format.</li>
 </ul>
 <p><em>Returns:</em></p>
 <p>Tuple containing image shape information in <code>(samples, channels, rows, cols)</code> order.</p>
@@ -313,7 +313,7 @@
 <pre><code class="python">get_img_indices()
 </code></pre>
 
-<p>Returns image indices in a backend agnostic manner.</p>
+<p>Returns image indices in <code>data_format</code> agnostic manner.</p>
 <p><em>Returns:</em></p>
 <p>A tuple representing indices for image in <code>(samples, channels, rows, cols)</code> order.</p>
 <hr />

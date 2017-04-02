@@ -219,7 +219,8 @@ There are several repositories out there to visualize: </p>
 <li>Any other guided image backprop</li>
 </ul>
 <p>This toolkit generalizes all of the above as energy minimization problems with a clean, easy to use, 
-and extendable interface. Compatible with both theano and tensorflow backends with 'th'/'tf' image dim orderings. </p>
+and extendable interface. Compatible with both theano and tensorflow backends with 'channels_first', 'channels_last' 
+data format.</p>
 <h2 id="quick-links">Quick links</h2>
 <ul>
 <li>Read the documentation at <a href="https://raghakot.github.io/keras-vis">https://raghakot.github.io/keras-vis</a>. </li>
@@ -262,7 +263,7 @@ opt_img, grads, _ = optimizer.minimize()
 <a href="https://github.com/raghakot/keras-vis/tree/master/examples">examples folder</a>.</p>
 <h2 id="installation">Installation</h2>
 <p>1) Install <a href="https://github.com/fchollet/keras/blob/master/README.md#installation">keras</a> 
-with theano or tensorflow backend</p>
+with theano or tensorflow backend. Note that the library is incompatible with keras &lt; 2.0</p>
 <p>2) Install OpenCV </p>
 <pre><code class="bash">sudo apt-get install python-opencv
 </code></pre>
@@ -394,5 +395,5 @@ opt.minimize(max_iter=500, verbose=True,
 
 <!--
 MkDocs version : 0.16.0
-Build Date UTC : 2016-12-26 02:19:57
+Build Date UTC : 2017-04-02 03:39:56
 -->
