@@ -124,6 +124,15 @@
         </ul>
     
 
+    <li class="toctree-l4"><a href="#arguments">Arguments</a></li>
+    
+
+    <li class="toctree-l4"><a href="#returns">Returns</a></li>
+    
+
+    <li class="toctree-l4"><a href="#raises">Raises</a></li>
+    
+
     </ul>
                 </li>
     </ul>
@@ -177,27 +186,26 @@
                 <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/vggnet.py#L0">vis/utils/vggnet.py#L0</a></p>
 <h2 id="global-variables"><strong>Global Variables</strong></h2>
 <ul>
-<li><strong>TH_WEIGHTS_PATH</strong></li>
-<li><strong>TF_WEIGHTS_PATH</strong></li>
-<li><strong>TH_WEIGHTS_PATH_NO_TOP</strong></li>
-<li><strong>TF_WEIGHTS_PATH_NO_TOP</strong></li>
+<li><strong>WEIGHTS_PATH_NO_TOP</strong></li>
+<li><strong>WEIGHTS_PATH</strong></li>
 </ul>
 <hr />
 <h3 id="vgg16"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/vggnet.py#L25">VGG16</a></h3>
-<pre><code class="python">VGG16(include_top=True, weights=&quot;imagenet&quot;, input_tensor=None)
+<pre><code class="python">VGG16(include_top=True, weights=&quot;imagenet&quot;, input_tensor=None, input_shape=None, pooling=None, \
+    classes=1000)
 </code></pre>
 
-<p>Instantiate the VGG16 architecture,
-optionally loading weights pre-trained
+<p>Instantiates the VGG16 architecture.</p>
+<p>Optionally loads weights pre-trained
 on ImageNet. Note that when using TensorFlow,
 for best performance you should set
-<code>image_dim_ordering="tf"</code> in your Keras config
+<code>image_data_format="channels_last"</code> in your Keras config
 at ~/.keras/keras.json.</p>
 <p>The model and the weights are compatible with both
-TensorFlow and Theano. The dimension ordering
+TensorFlow and Theano. The data format
 convention used by the model is the one
 specified in your Keras config file.</p>
-<p><em>Args:</em></p>
+<h1 id="arguments">Arguments</h1>
 <ul>
 <li><strong>include_top</strong>:  whether to include the 3 fully-connected
   layers at the top of the network.</li>
@@ -205,9 +213,35 @@ specified in your Keras config file.</p>
   or "imagenet" (pre-training on ImageNet).</li>
 <li><strong>input_tensor</strong>:  optional Keras tensor (i.e. output of <code>layers.Input()</code>)
   to use as image input for the model.</li>
+<li><strong>input_shape</strong>:  optional shape tuple, only to be specified
+  if <code>include_top</code> is False (otherwise the input shape
+  has to be <code>(224, 224, 3)</code> (with <code>channels_last</code> data format)
+  or <code>(3, 224, 244)</code> (with <code>channels_first</code> data format).
+  It should have exactly 3 inputs channels,
+  and width and height should be no smaller than 48.
+  E.g. <code>(200, 200, 3)</code> would be one valid value.</li>
+<li><strong>pooling</strong>:  Optional pooling mode for feature extraction
+  when <code>include_top</code> is <code>False</code>.</li>
+<li><code>None</code> means that the output of the model will be
+  the 4D tensor output of the
+  last convolutional layer.</li>
+<li><code>avg</code> means that global average pooling
+  will be applied to the output of the
+  last convolutional layer, and thus
+  the output of the model will be a 2D tensor.</li>
+<li><code>max</code> means that global max pooling will
+  be applied.</li>
+<li><strong>classes</strong>:  optional number of classes to classify images
+  into, only to be specified if <code>include_top</code> is True, and
+  if no <code>weights</code> argument is specified.</li>
 </ul>
-<p><em>Returns:</em></p>
+<h1 id="returns">Returns</h1>
 <p>A Keras model instance.</p>
+<h1 id="raises">Raises</h1>
+<ul>
+<li><strong>ValueError</strong>:  in case of invalid argument for <code>weights</code>,
+  or invalid input shape.</li>
+</ul>
               
             </div>
           </div>

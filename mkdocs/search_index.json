@@ -397,18 +397,33 @@
         }, 
         {
             "location": "/vis.utils.vggnet/", 
-            "text": "Source:\n \nvis/utils/vggnet.py#L0\n\n\nGlobal Variables\n\n\n\n\nTH_WEIGHTS_PATH\n\n\nTF_WEIGHTS_PATH\n\n\nTH_WEIGHTS_PATH_NO_TOP\n\n\nTF_WEIGHTS_PATH_NO_TOP\n\n\n\n\n\n\nVGG16\n\n\nVGG16(include_top=True, weights=\nimagenet\n, input_tensor=None)\n\n\n\n\nInstantiate the VGG16 architecture,\noptionally loading weights pre-trained\non ImageNet. Note that when using TensorFlow,\nfor best performance you should set\n\nimage_dim_ordering=\"tf\"\n in your Keras config\nat ~/.keras/keras.json.\n\n\nThe model and the weights are compatible with both\nTensorFlow and Theano. The dimension ordering\nconvention used by the model is the one\nspecified in your Keras config file.\n\n\nArgs:\n\n\n\n\ninclude_top\n:  whether to include the 3 fully-connected\n  layers at the top of the network.\n\n\nweights\n:  one of \nNone\n (random initialization)\n  or \"imagenet\" (pre-training on ImageNet).\n\n\ninput_tensor\n:  optional Keras tensor (i.e. output of \nlayers.Input()\n)\n  to use as image input for the model.\n\n\n\n\nReturns:\n\n\nA Keras model instance.", 
+            "text": "Source:\n \nvis/utils/vggnet.py#L0\n\n\nGlobal Variables\n\n\n\n\nWEIGHTS_PATH_NO_TOP\n\n\nWEIGHTS_PATH\n\n\n\n\n\n\nVGG16\n\n\nVGG16(include_top=True, weights=\nimagenet\n, input_tensor=None, input_shape=None, pooling=None, \\\n    classes=1000)\n\n\n\n\nInstantiates the VGG16 architecture.\n\n\nOptionally loads weights pre-trained\non ImageNet. Note that when using TensorFlow,\nfor best performance you should set\n\nimage_data_format=\"channels_last\"\n in your Keras config\nat ~/.keras/keras.json.\n\n\nThe model and the weights are compatible with both\nTensorFlow and Theano. The data format\nconvention used by the model is the one\nspecified in your Keras config file.\n\n\nArguments\n\n\n\n\ninclude_top\n:  whether to include the 3 fully-connected\n  layers at the top of the network.\n\n\nweights\n:  one of \nNone\n (random initialization)\n  or \"imagenet\" (pre-training on ImageNet).\n\n\ninput_tensor\n:  optional Keras tensor (i.e. output of \nlayers.Input()\n)\n  to use as image input for the model.\n\n\ninput_shape\n:  optional shape tuple, only to be specified\n  if \ninclude_top\n is False (otherwise the input shape\n  has to be \n(224, 224, 3)\n (with \nchannels_last\n data format)\n  or \n(3, 224, 244)\n (with \nchannels_first\n data format).\n  It should have exactly 3 inputs channels,\n  and width and height should be no smaller than 48.\n  E.g. \n(200, 200, 3)\n would be one valid value.\n\n\npooling\n:  Optional pooling mode for feature extraction\n  when \ninclude_top\n is \nFalse\n.\n\n\nNone\n means that the output of the model will be\n  the 4D tensor output of the\n  last convolutional layer.\n\n\navg\n means that global average pooling\n  will be applied to the output of the\n  last convolutional layer, and thus\n  the output of the model will be a 2D tensor.\n\n\nmax\n means that global max pooling will\n  be applied.\n\n\nclasses\n:  optional number of classes to classify images\n  into, only to be specified if \ninclude_top\n is True, and\n  if no \nweights\n argument is specified.\n\n\n\n\nReturns\n\n\nA Keras model instance.\n\n\nRaises\n\n\n\n\nValueError\n:  in case of invalid argument for \nweights\n,\n  or invalid input shape.", 
             "title": "vggnet"
         }, 
         {
             "location": "/vis.utils.vggnet/#global-variables", 
-            "text": "TH_WEIGHTS_PATH  TF_WEIGHTS_PATH  TH_WEIGHTS_PATH_NO_TOP  TF_WEIGHTS_PATH_NO_TOP", 
+            "text": "WEIGHTS_PATH_NO_TOP  WEIGHTS_PATH", 
             "title": "Global Variables"
         }, 
         {
             "location": "/vis.utils.vggnet/#vgg16", 
-            "text": "VGG16(include_top=True, weights= imagenet , input_tensor=None)  Instantiate the VGG16 architecture,\noptionally loading weights pre-trained\non ImageNet. Note that when using TensorFlow,\nfor best performance you should set image_dim_ordering=\"tf\"  in your Keras config\nat ~/.keras/keras.json.  The model and the weights are compatible with both\nTensorFlow and Theano. The dimension ordering\nconvention used by the model is the one\nspecified in your Keras config file.  Args:   include_top :  whether to include the 3 fully-connected\n  layers at the top of the network.  weights :  one of  None  (random initialization)\n  or \"imagenet\" (pre-training on ImageNet).  input_tensor :  optional Keras tensor (i.e. output of  layers.Input() )\n  to use as image input for the model.   Returns:  A Keras model instance.", 
+            "text": "VGG16(include_top=True, weights= imagenet , input_tensor=None, input_shape=None, pooling=None, \\\n    classes=1000)  Instantiates the VGG16 architecture.  Optionally loads weights pre-trained\non ImageNet. Note that when using TensorFlow,\nfor best performance you should set image_data_format=\"channels_last\"  in your Keras config\nat ~/.keras/keras.json.  The model and the weights are compatible with both\nTensorFlow and Theano. The data format\nconvention used by the model is the one\nspecified in your Keras config file.", 
             "title": "VGG16"
+        }, 
+        {
+            "location": "/vis.utils.vggnet/#arguments", 
+            "text": "include_top :  whether to include the 3 fully-connected\n  layers at the top of the network.  weights :  one of  None  (random initialization)\n  or \"imagenet\" (pre-training on ImageNet).  input_tensor :  optional Keras tensor (i.e. output of  layers.Input() )\n  to use as image input for the model.  input_shape :  optional shape tuple, only to be specified\n  if  include_top  is False (otherwise the input shape\n  has to be  (224, 224, 3)  (with  channels_last  data format)\n  or  (3, 224, 244)  (with  channels_first  data format).\n  It should have exactly 3 inputs channels,\n  and width and height should be no smaller than 48.\n  E.g.  (200, 200, 3)  would be one valid value.  pooling :  Optional pooling mode for feature extraction\n  when  include_top  is  False .  None  means that the output of the model will be\n  the 4D tensor output of the\n  last convolutional layer.  avg  means that global average pooling\n  will be applied to the output of the\n  last convolutional layer, and thus\n  the output of the model will be a 2D tensor.  max  means that global max pooling will\n  be applied.  classes :  optional number of classes to classify images\n  into, only to be specified if  include_top  is True, and\n  if no  weights  argument is specified.", 
+            "title": "Arguments"
+        }, 
+        {
+            "location": "/vis.utils.vggnet/#returns", 
+            "text": "A Keras model instance.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/vis.utils.vggnet/#raises", 
+            "text": "ValueError :  in case of invalid argument for  weights ,\n  or invalid input shape.", 
+            "title": "Raises"
         }
     ]
 }
