@@ -1,19 +1,43 @@
+from __future__ import absolute_import
 from __future__ import division
 
 import numpy as np
+import matplotlib.font_manager as fontman
+
 import os
 import math
 import json
-import cv2
 import itertools
 
-from skimage import io
+from skimage import io, transform
 from collections import Iterable
 from keras import backend as K
+
+import logging
+logger = logging.getLogger(__name__)
+
+try:
+    import PIL as pil
+    from PIL import ImageFont
+    from PIL import Image
+    from PIL import ImageDraw
+except ImportError:
+    pil = None
 
 
 # Globals
 _CLASS_INDEX = None
+
+
+def _check_pil():
+    if not pil:
+        raise ImportError('Failed to import PIL. You must install Pillow')
+
+
+def _find_font_file(query):
+    """Utility to find font file.
+    """
+    return filter(lambda path: query.lower() in os.path.basename(path).lower(), fontman.findSystemFonts())
 
 
 def set_random_seed(seed_value=1337):
@@ -50,6 +74,7 @@ def deprocess_image(img):
         A valid image output.
     """
     # normalize tensor: center on 0., ensure std is 0.1
+    img = img.copy()
     img -= img.mean()
     img /= (img.std() + 1e-5)
     img *= 0.1
@@ -98,8 +123,8 @@ def stitch_images(images, margin=5, cols=5):
             if img_idx >= len(images):
                 break
 
-            stitched_images[(h + margin) * row : (h + margin) * row + h,
-            (w + margin) * col : (w + margin) * col + w, :] = images[img_idx]
+            stitched_images[(h + margin) * row: (h + margin) * row + h,
+            (w + margin) * col: (w + margin) * col + w, :] = images[img_idx]
 
     return stitched_images
 
@@ -164,9 +189,8 @@ def load_img(path, grayscale=False, target_size=None):
         The loaded numpy image.
     """
     img = io.imread(path, grayscale)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     if target_size:
-        img = cv2.resize(img, (target_size[1], target_size[0]))
+        img = transform.resize(img, target_size, preserve_range=True).astype('uint8')
     return img
 
 
@@ -187,6 +211,46 @@ def get_imagenet_label(indices, join=', '):
 
     indices = listify(indices)
     return join.join([_CLASS_INDEX[str(idx)][1] for idx in indices])
+
+
+def draw_text(img, text, position=(10, 10), font='FreeSans.ttf', font_size=14, color=(0, 0, 0)):
+    """Draws text over the image. Requires PIL.
+    
+    Args:
+        img: The image to use.
+        text: The text string to overlay.
+        position: The text (x, y) position. (Default value = (10, 10)) 
+        font: The ttf or open type font to use. (Default value = 'FreeSans.ttf')
+        font_size: The text font size. (Default value = 12)
+        color: The (r, g, b) values for text color. (Default value = (0, 0, 0))
+
+    Returns: Image overlayed with text.
+    """
+    _check_pil()
+
+    font_files = _find_font_file(font)
+    if len(font_files) == 0:
+        logger.warn("Failed to lookup font '{}', falling back to default".format(font))
+        font = ImageFont.load_default()
+    else:
+        font = ImageFont.truetype(font_files[0], font_size)
+
+    # Don't mutate original image
+    img = Image.fromarray(img)
+    draw = ImageDraw.Draw(img)
+    draw.text(position, text, fill=color, font=font)
+    return np.asarray(img)
+
+
+def bgr2rgb(img):
+    """Converts an RGB image to BGR and vice versa
+    
+    Args:
+        img: Numpy array in RGB or BGR format
+
+    Returns: The converted image format
+    """
+    return img[..., ::-1]
 
 
 class _BackendAgnosticImageSlice(object):

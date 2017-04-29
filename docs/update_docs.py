@@ -3,6 +3,7 @@ import shutil
 from md_autogen import MarkdownAPIGenerator
 from md_autogen import to_md_file
 
+from vis import callbacks
 from vis import losses
 from vis import regularizers
 from vis import modifiers
@@ -15,10 +16,11 @@ from vis.utils import vggnet
 
 def generate_api_docs():
     modules = [
+        callbacks,
         losses,
-        regularizers,
         modifiers,
         optimizer,
+        regularizers,
         visualization,
         utils,
         vggnet

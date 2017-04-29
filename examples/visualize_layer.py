@@ -1,5 +1,5 @@
-import cv2
 import numpy as np
+from matplotlib import pyplot as plt
 
 from vis.utils import utils
 from vis.utils.vggnet import VGG16
@@ -30,8 +30,10 @@ def visualize_random(num_categories=10, show=True):
     # Easily stitch images via `utils.stitch_images`
     stitched = utils.stitch_images(images)
     if show:
-        cv2.imshow('Random imagenet categories', stitched)
-        cv2.waitKey(0)
+        plt.axis('off')
+        plt.imshow(stitched)
+        plt.title('Random imagenet categories')
+        plt.show()
 
 
 def visualize_multiple_same_filter(num_runs=3, show=True):
@@ -58,8 +60,10 @@ def visualize_multiple_same_filter(num_runs=3, show=True):
     # Easily stitch images via `utils.stitch_images`
     stitched = utils.stitch_images(images)
     if show:
-        cv2.imshow('Multiple runs of ouzel', stitched)
-        cv2.waitKey(0)
+        plt.axis('off')
+        plt.imshow(stitched)
+        plt.title('Multiple runs of ouzel')
+        plt.show()
 
 
 def visualize_multiple_categories(show=True):
@@ -83,8 +87,10 @@ def visualize_multiple_categories(show=True):
     # Easily stitch images via `utils.stitch_images`
     stitched = utils.stitch_images(images)
     if show:
-        cv2.imshow('Multiple category visualization', stitched)
-        cv2.waitKey(0)
+        plt.axis('off')
+        plt.imshow(stitched)
+        plt.title('Multiple category visualization')
+        plt.show()
 
 
 if __name__ == '__main__':

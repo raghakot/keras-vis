@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from __future__ import division
 
 import numpy as np
@@ -13,8 +14,8 @@ def normalize(img, value):
     uniform across various input image dimensions.
 
     Args:
-        img: 4D tensor with shape: `(samples, channels, rows, cols)` if dim_ordering='th' or
-                `(samples, rows, cols, channels)` if dim_ordering='tf'.
+        img: 4D tensor with shape: `(samples, channels, rows, cols)` if data_format='channels_first' or
+                `(samples, rows, cols, channels)` if data_format='channels_last'.
         value: The function to normalize
 
     Returns:
@@ -33,7 +34,7 @@ class TotalVariation(Loss):
 
         Args:
             img_input: 4D image input tensor to the model of shape: `(samples, channels, rows, cols)`
-                if dim_ordering='th' or `(samples, rows, cols, channels)` if dim_ordering='tf'.
+                if data_format='channels_first' or `(samples, rows, cols, channels)` if data_format='channels_last'.
             beta: Smaller values of beta give sharper but 'spikier' images.
                 Values \(\in [1.5, 2.0]\) are recommended as a reasonable compromise.
         """
@@ -63,7 +64,7 @@ class LPNorm(Loss):
 
         Args:
             img_input: 4D image input tensor to the model of shape: `(samples, channels, rows, cols)`
-                if dim_ordering='th' or `(samples, rows, cols, channels)` if dim_ordering='tf'.
+                if data_format='channels_first' or `(samples, rows, cols, channels)` if data_format='channels_last'.
             p: The pth norm to use. If p = float('inf'), infinity-norm will be used.
         """
         super(LPNorm, self).__init__()

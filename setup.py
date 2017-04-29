@@ -2,7 +2,7 @@ from setuptools import setup
 from setuptools import find_packages
 
 
-version = '0.2'
+version = '0.2.1'
 
 setup(name='keras-vis',
       version=version,
@@ -12,5 +12,13 @@ setup(name='keras-vis',
       url='https://github.com/raghakot/keras-vis',
       download_url='https://github.com/raghakot/keras-vis/tarball/{}'.format(version),
       license='MIT',
-      install_requires=['keras', 'imageio'],
+      install_requires=['keras', 'six', 'scikit-image'],
+      extras_require={
+            'vis_utils': ['Pillow', 'imageio'],
+            'tests': ['pytest',
+                      'pytest-pep8',
+                      'pytest-xdist',
+                      'pytest-cov'],
+      },
+      include_package_data=True,
       packages=find_packages())

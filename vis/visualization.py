@@ -1,5 +1,8 @@
+from __future__ import absolute_import
+
 import cv2
 import numpy as np
+import matplotlib.cm as cm
 import pprint
 
 from keras.layers.convolutional import Convolution2D
@@ -44,7 +47,7 @@ def visualize_activation(model, layer_idx, filter_indices=None,
 
     Args:
         model: The `keras.models.Model` instance. Model input is expected to be a 4D image input of shape:
-            `(samples, channels, rows, cols)` if dim_ordering='th' or `(samples, rows, cols, channels)` if dim_ordering='tf'.
+            `(samples, channels, rows, cols)` if data_format='channels_first' or `(samples, rows, cols, channels)` if data_format='channels_last'.
         layer_idx: The layer index within `model.layers` whose filters needs to be visualized.
         filter_indices: filter indices within the layer to be maximized.
             For `keras.layers.Dense` layer, `filter_idx` is interpreted as the output index.
@@ -104,22 +107,22 @@ def visualize_activation(model, layer_idx, filter_indices=None,
         (TotalVariation(model.input), tv_weight)
     ]
 
-    opt = Optimizer(model.input, losses)
+    opt = Optimizer(model.input, losses, norm_grads=False)
     img = opt.minimize(**optimizer_params)[0]
     if text:
-        cv2.putText(img, text, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 0), 2)
+        img = utils.draw_text(img, text)
     return img
 
 
 def visualize_saliency(model, layer_idx, filter_indices,
-                       seed_img, text=None, overlay=True):
+                       seed_img, alpha=0.5):
     """Generates an attention heatmap over the `seed_img` for maximizing `filter_indices` output in the given `layer`.
      For a full description of saliency, see the paper:
      [Deep Inside Convolutional Networks: Visualising Image Classification Models and Saliency Maps](https://arxiv.org/pdf/1312.6034v2.pdf)
 
     Args:
         model: The `keras.models.Model` instance. Model input is expected to be a 4D image input of shape:
-            `(samples, channels, rows, cols)` if dim_ordering='th' or `(samples, rows, cols, channels)` if dim_ordering='tf'.
+            `(samples, channels, rows, cols)` if data_format='channels_first' or `(samples, rows, cols, channels)` if data_format='channels_last'.
         layer_idx: The layer index within `model.layers` whose filters needs to be visualized.
         filter_indices: filter indices within the layer to be maximized.
             For `keras.layers.Dense` layer, `filter_idx` is interpreted as the output index.
@@ -129,8 +132,8 @@ def visualize_saliency(model, layer_idx, filter_indices,
             output can be maximized by minimizing scores for other classes.
 
         seed_img: The input image for which activation map needs to be visualized.
-        text: The text to overlay on top of the generated image. (Default Value = None)
-        overlay: If true, overlays the heatmap over the original image (Default value = True)
+        alpha: The alpha value of image as overlayed onto the heatmap. 
+            This value needs to be between [0, 1], with 0 being heatmap only to 1 being image only (Default value = 0.5)
 
     Example:
         If you wanted to visualize attention over 'bird' category, say output index 22 on the
@@ -140,9 +143,12 @@ def visualize_saliency(model, layer_idx, filter_indices,
         (hopefully) show attention map that corresponds to both 22, 23 output categories.
 
     Returns:
-        The heatmap image indicating image regions that, when changed, would contribute the most towards maximizing
-        a the filter output.
+        The heatmap image, overlayed with `seed_img` using `alpha`, indicating image regions that, when changed, 
+        would contribute the most towards maximizing the output of `filter_indices`.
     """
+    if alpha < 0. or alpha > 1.:
+        raise ValueError("`alpha` needs to be between [0, 1]")
+
     filter_indices = utils.listify(filter_indices)
     print("Working on filters: {}".format(pprint.pformat(filter_indices)))
 
@@ -157,26 +163,19 @@ def visualize_saliency(model, layer_idx, filter_indices,
     grads *= -1
 
     s, c, row, col = utils.get_img_indices()
-    grads = np.max(np.abs(grads), axis=c, keepdims=True)
+    grads = np.max(np.abs(grads), axis=c)
 
-    # Smoothen activation map
-    grads = utils.deprocess_image(grads[0])
+    # Normalize and zero out low probabilities for a cleaner output.
     grads /= np.max(grads)
+    heatmap = np.uint8(cm.jet(grads)[..., :3] * 255)
+    heatmap[np.where(grads < 0.2)] = 0
 
-    # Convert to heatmap and zero out low probabilities for a cleaner output.
-    heatmap = cv2.applyColorMap(cv2.GaussianBlur(grads * 255, (3, 3), 0), cv2.COLORMAP_JET)
-    heatmap[np.where(grads <= 0.2)] = 0
-
-    if overlay:
-        heatmap = cv2.addWeighted(seed_img, 0.5, heatmap, 1, 0)
-    if text:
-        cv2.putText(heatmap, text, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 0), 2)
-    return heatmap
+    heatmap = np.uint8(seed_img * alpha + heatmap * (1. - alpha))
+    return heatmap[0]
 
 
 def visualize_cam(model, layer_idx, filter_indices,
-                  seed_img, penultimate_layer_idx=None,
-                  text=None, overlay=True):
+                  seed_img, penultimate_layer_idx=None, alpha=0.5):
     """Generates a gradient based class activation map (CAM) as described in paper
     [Grad-CAM: Why did you say that? Visual Explanations from Deep Networks via Gradient-based Localization](https://arxiv.org/pdf/1610.02391v1.pdf).
     Unlike [class activation mapping](https://arxiv.org/pdf/1512.04150v1.pdf), which requires minor changes to
@@ -187,7 +186,7 @@ def visualize_cam(model, layer_idx, filter_indices,
 
     Args:
         model: The `keras.models.Model` instance. Model input is expected to be a 4D image input of shape:
-            `(samples, channels, rows, cols)` if dim_ordering='th' or `(samples, rows, cols, channels)` if dim_ordering='tf'.
+            `(samples, channels, rows, cols)` if data_format='channels_first' or `(samples, rows, cols, channels)` if data_format='channels_last'.
         layer_idx: The layer index within `model.layers` whose filters needs to be visualized.
         filter_indices: filter indices within the layer to be maximized.
             For `keras.layers.Dense` layer, `filter_idx` is interpreted as the output index.
@@ -199,8 +198,8 @@ def visualize_cam(model, layer_idx, filter_indices,
         seed_img: The input image for which activation map needs to be visualized.
         penultimate_layer_idx: The pre-layer to `layer_idx` whose feature maps should be used to compute gradients
             wrt filter output. If not provided, it is set to the nearest penultimate `Convolutional` or `Pooling` layer.
-        text: The text to overlay on top of the generated image. (Default Value = None)
-        overlay: If true, overlays the heatmap over the original image (Default value = True)
+        alpha: The alpha value of image as overlayed onto the heatmap. 
+            This value needs to be between [0, 1], with 0 being heatmap only to 1 being image only (Default value = 0.5)
 
      Example:
         If you wanted to visualize attention over 'bird' category, say output index 22 on the
@@ -214,9 +213,12 @@ def visualize_cam(model, layer_idx, filter_indices,
         as opposed inefficient sliding window approach.
 
     Returns:
-        The heatmap image indicating image regions that, when changed, would contribute the most towards maximizing
-        a the filter output.
+        The heatmap image, overlayed with `seed_img` using `alpha`, indicating image regions that, when changed, 
+        would contribute the most towards maximizing the output of `filter_indices`.
     """
+    if alpha < 0. or alpha > 1.:
+        raise ValueError("`alpha` needs to be between [0, 1]")
+
     filter_indices = utils.listify(filter_indices)
     print("Working on filters: {}".format(pprint.pformat(filter_indices)))
 
@@ -257,6 +259,9 @@ def visualize_cam(model, layer_idx, filter_indices,
 
     # The penultimate feature map size is definitely smaller than input image.
     s, ch, rows, cols = utils.get_img_shape(model.input)
+
+    # TODO: Figure out a way to get rid of open cv dependency.
+    # skimage doesn't deal with arbitrary floating point ranges.
     heatmap = cv2.resize(heatmap, (cols, rows), interpolation=cv2.INTER_CUBIC)
 
     # ReLU thresholding, normalize between (0, 1)
@@ -264,11 +269,8 @@ def visualize_cam(model, layer_idx, filter_indices,
     heatmap /= np.max(heatmap)
 
     # Convert to heatmap and zero out low probabilities for a cleaner output.
-    heatmap_colored = cv2.applyColorMap(np.uint8(255*heatmap), cv2.COLORMAP_JET)
-    heatmap_colored[np.where(heatmap <= 0.2)] = 0
+    heatmap_colored = np.uint8(cm.jet(heatmap)[..., :3] * 255)
+    heatmap_colored[np.where(heatmap < 0.2)] = 0
 
-    if overlay:
-        heatmap_colored = cv2.addWeighted(seed_img, 1, heatmap_colored, 0.5, 0)
-    if text:
-        cv2.putText(heatmap_colored, text, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 0), 2)
+    heatmap_colored = np.uint8(seed_img * alpha + heatmap_colored * (1. - alpha))
     return heatmap_colored

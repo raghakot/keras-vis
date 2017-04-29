@@ -66,7 +66,7 @@ Concrete examples of various visualizations can be found in
 ## Installation
 
 1) Install [keras](https://github.com/fchollet/keras/blob/master/README.md#installation) 
-with theano or tensorflow backend. Note that the library is incompatible with keras < 2.0
+with theano or tensorflow backend. Note that this library requires keras > 2.0
 
 2) Install OpenCV 
 ```bash
@@ -131,14 +131,17 @@ TODO
 <hr/>
 
 ### Generating animated gif of optimization progress
-It is possible to generate an animated gif of optimization progress. Below is an example for activation maximization
-of 'ouzel' class (output_index: 20). This example also shows how to use the optimizer directly.
+It is possible to generate an animated gif of optimization progress by leveraging 
+[callbacks](https://raghakot.github.io/keras-vis/vis.callbacks). Following example shows how to visualize the 
+activation maximization for 'ouzel' class (output_index: 20).
 
 ```python
-from vis.utils.vggnet import VGG16
-from vis.optimizer import Optimizer
 from vis.losses import ActivationMaximization
 from vis.regularizers import TotalVariation, LPNorm
+from vis.optimizer import Optimizer
+
+from vis.callbacks import GifGenerator
+from vis.utils.vggnet import VGG16
 
 # Build the VGG16 network with ImageNet weights
 model = VGG16(weights='imagenet', include_top=True)
@@ -156,9 +159,7 @@ losses = [
     (TotalVariation(model.input), 10)
 ]
 opt = Optimizer(model.input, losses)
-
-opt.minimize(max_iter=500, verbose=True,
-             progress_gif_path='opt_progress')
+opt.minimize(max_iter=500, verbose=True, callbacks=[GifGenerator('opt_progress')])
 
 ```
 

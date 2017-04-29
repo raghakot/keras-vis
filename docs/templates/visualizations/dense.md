@@ -9,11 +9,11 @@ One way to answer these questions is to pose the reverse question:
 Lets try this for 'ouzel' (imagenet output category: 20)
 
 ```python
-import cv2
+from matplotlib import pyplot as plt
 
-from vis.utils.utils import stitch_images
+from vis.utils import utils
 from vis.utils.vggnet import VGG16
-from vis.visualization import visualize_activation, get_num_filters
+from vis.visualization import visualize_activation
 
 
 # Build the VGG16 network with ImageNet weights
@@ -28,8 +28,11 @@ layer_idx = [idx for idx, layer in enumerate(model.layers) if layer.name == laye
 # Generate three different images of the same output index.
 vis_images = [visualize_activation(model, layer_idx, filter_indices=idx, text=str(idx), max_iter=500)
               for idx in [20, 20, 20]]
-cv2.imshow(layer_name, stitch_images(vis_images))
-cv2.waitKey(0)
+stitched = utils.stitch_images(vis_images)    
+plt.axis('off')
+plt.imshow(stitched)
+plt.title(layer_name)
+plt.show()
 
 ```
 

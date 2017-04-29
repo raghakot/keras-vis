@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import numpy as np
 from .utils import utils
 
@@ -44,8 +46,8 @@ class ImageModifier(object):
         image dim ordering differences.
 
         Args:
-            img: 4D numpy array with shape: `(samples, channels, rows, cols)` if dim_ordering='th' or
-                `(samples, rows, cols, channels)` if dim_ordering='tf'
+            img: 4D numpy array with shape: `(samples, channels, rows, cols)` if data_format='channels_first' or
+                `(samples, rows, cols, channels)` if data_format='channels_last'
 
         Returns:
             The modified pre image.
@@ -60,8 +62,8 @@ class ImageModifier(object):
         image dim ordering differences.
 
         Args:
-            img: 4D numpy array with shape: `(samples, channels, rows, cols)` if dim_ordering='th' or
-                `(samples, rows, cols, channels)` if dim_ordering='tf'
+            img: 4D numpy array with shape: `(samples, channels, rows, cols)` if data_format='channels_first' or
+                `(samples, rows, cols, channels)` if data_format='channels_last'
 
         Returns:
             The modified post image.
