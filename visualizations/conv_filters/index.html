@@ -184,10 +184,10 @@ their weights as it is operating over raw pixels.</p>
 some templates), so visualizing them directly is not very interpretable.</p>
 <p>One way of interpreting them is to generate an input image that maximizes the filter output. With keras-vis, setting
 this up is easy. Lets visualize the second conv layer of vggnet (named as 'block1_conv2').</p>
-<pre><code class="python">import cv2
-import numpy as np
+<pre><code class="python">import numpy as np
+from matplotlib import pyplot as plt
 
-from vis.utils.utils import stitch_images
+from vis.utils import utils
 from vis.utils.vggnet import VGG16
 from vis.visualization import visualize_activation, get_num_filters
 
@@ -207,9 +207,12 @@ filters = np.arange(get_num_filters(model.layers[layer_idx]))
 vis_images = [visualize_activation(model, layer_idx, filter_indices=idx, text=str(idx))
               for idx in filters]
 
-# Generate stitched image pallette with 10 cols.
-cv2.imshow(layer_name, stitch_images(vis_images, cols=8))
-cv2.waitKey(0)
+# Generate stitched image palette with 8 cols.
+stitched = utils.stitch_images(vis_images, cols=8)    
+plt.axis('off')
+plt.imshow(stitched)
+plt.title(layer_name)
+plt.show()
 
 </code></pre>
 
@@ -242,8 +245,11 @@ no_tv_seed_img = visualize_activation(model, layer_idx, filter_indices=[67],
                                       tv_weight=0, verbose=True)
 post_tv_img = visualize_activation(model, layer_idx, filter_indices=[67],
                                    tv_weight=1, seed_img=no_tv_seed_img, verbose=True, max_iter=300)
-cv2.imshow(layer_name, post_tv_img)
-cv2.waitKey(0)
+plt.axis('off')
+plt.imshow(post_tv_img)
+plt.title(layer_name)
+plt.show()
+
 </code></pre>
 
 <p>As expected, this generates a blobbier and smoother image:</p>
