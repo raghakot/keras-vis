@@ -46,128 +46,90 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
 	<ul class="current">
+	  
           
-            <li>
-    <li class="toctree-l1 ">
-        <a class="" href="../..">Home</a>
-        
-    </li>
-<li>
+            <li class="toctree-l1">
+		
+    <a class="" href="../..">Home</a>
+	    </li>
           
-            <li>
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Visualizations</span>
     <ul class="subnav">
-    <li><span>Visualizations</span></li>
+                <li class="">
+                    
+    <a class="" href="../conv_filters/">Convolutional Filters</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../dense/">Dense Layers</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Attention Maps</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#overview">Overview</a></li>
+    
 
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../conv_filters/">Convolutional Filters</a>
-        
-    </li>
+    <li class="toctree-l3"><a href="#saliency-maps">Saliency maps</a></li>
+    
 
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../dense/">Dense Layers</a>
-        
-    </li>
+    <li class="toctree-l3"><a href="#class-activation-maps">Class activation maps</a></li>
+    
 
-        
-            
-    <li class="toctree-l1 current">
-        <a class="current" href="./">Attention Maps</a>
-        
-            <ul>
-            
-                <li class="toctree-l3"><a href="#overview">Overview</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#saliency-maps">Saliency maps</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#class-activation-maps">Class activation maps</a></li>
-                
-            
-            </ul>
-        
-    </li>
-
-        
     </ul>
-<li>
+                </li>
+    </ul>
+	    </li>
           
-            <li>
+            <li class="toctree-l1">
+		
+    <span class="caption-text">API Docs</span>
     <ul class="subnav">
-    <li><span>API Docs</span></li>
-
-        
-            
+                <li class="">
+                    
+    <span class="caption-text">Core API</span>
     <ul class="subnav">
-    <li><span>Core API</span></li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../../vis.losses/">losses</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../../vis.regularizers/">regularizers</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../../vis.modifiers/">modifiers</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../../vis.optimizer/">optimizer</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../../vis.visualization/">visualization</a>
-        
-    </li>
-
-        
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.losses/">losses</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.regularizers/">regularizers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.modifiers/">modifiers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.optimizer/">optimizer</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.visualization/">visualization</a>
+                </li>
     </ul>
-
-        
-            
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Utils</span>
     <ul class="subnav">
-    <li><span>Utils</span></li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../../vis.utils.utils/">utils</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../../vis.utils.vggnet/">vggnet</a>
-        
-    </li>
-
-        
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.utils.utils/">utils</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.utils.vggnet/">vggnet</a>
+                </li>
     </ul>
-
-        
+                </li>
     </ul>
-<li>
+	    </li>
           
         </ul>
       </div>
@@ -223,14 +185,15 @@ Hence, visualizing these gradients, which are the same shape as the image should
 <p>keras-vis abstracts all of this under the hood with <a href="../../vis.visualization/#visualize_saliency">visualize_saliency</a>. Lets
 try to visualize attention over images with: <em>tiger, penguin, dumbbell, speedboat, spider</em>. Note there is no guarantee
 that these image urls haven't expired. Update them as needed.</p>
-<pre><code class="python">import cv2
-import numpy as np
+<pre><code class="python">import numpy as np
+from matplotlib import pyplot as plt
 
 from keras.preprocessing.image import img_to_array
+from keras.applications.imagenet_utils import preprocess_input
+
 from vis.utils import utils
 from vis.utils.vggnet import VGG16
 from vis.visualization import visualize_saliency
-
 
 # Build the VGG16 network with ImageNet weights
 model = VGG16(weights='imagenet', include_top=True)
@@ -252,16 +215,19 @@ image_paths = [
 
 heatmaps = []
 for path in image_paths:
-    # Predict the corresponding class for use in `visualize_saliency`.
     seed_img = utils.load_img(path, target_size=(224, 224))
-    pred_class = np.argmax(model.predict(np.array([img_to_array(seed_img)])))
+    x = np.expand_dims(img_to_array(seed_img), axis=0)
+    x = preprocess_input(x)
+    pred_class = np.argmax(model.predict(x))
 
     # Here we are asking it to show attention such that prob of `pred_class` is maximized.
-    heatmap = visualize_saliency(model, layer_idx, [pred_class], seed_img, text=utils.get_imagenet_label(pred_class))
+    heatmap = visualize_saliency(model, layer_idx, [pred_class], seed_img)
     heatmaps.append(heatmap)
 
-cv2.imshow(&quot;Saliency map&quot;, utils.stitch_images(heatmaps))
-cv2.waitKey(0)
+plt.axis('off')
+plt.imshow(utils.stitch_images(heatmaps))
+plt.title('Saliency map')
+plt.show()
 
 </code></pre>
 
@@ -320,7 +286,7 @@ is more helpful in diagnosing issues with conv-nets, especially for Kaggle compe
   <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
-          <a href="http://github.com/raghakot/keras-vis" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+          <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
         <span><a href="../dense/" style="color: #fcfcfc;">&laquo; Previous</a></span>

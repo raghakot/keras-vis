@@ -46,131 +46,93 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
 	<ul class="current">
+	  
           
-            <li>
-    <li class="toctree-l1 ">
-        <a class="" href="..">Home</a>
-        
-    </li>
-<li>
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
           
-            <li>
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Visualizations</span>
     <ul class="subnav">
-    <li><span>Visualizations</span></li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../visualizations/conv_filters/">Convolutional Filters</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../visualizations/dense/">Dense Layers</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../visualizations/attention/">Attention Maps</a>
-        
-    </li>
-
-        
+                <li class="">
+                    
+    <a class="" href="../visualizations/conv_filters/">Convolutional Filters</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../visualizations/dense/">Dense Layers</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../visualizations/attention/">Attention Maps</a>
+                </li>
     </ul>
-<li>
+	    </li>
           
-            <li>
+            <li class="toctree-l1">
+		
+    <span class="caption-text">API Docs</span>
     <ul class="subnav">
-    <li><span>API Docs</span></li>
-
-        
-            
+                <li class=" current">
+                    
+    <span class="caption-text">Core API</span>
     <ul class="subnav">
-    <li><span>Core API</span></li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../vis.losses/">losses</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../vis.regularizers/">regularizers</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../vis.modifiers/">modifiers</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../vis.optimizer/">optimizer</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 current">
-        <a class="current" href="./">visualization</a>
-        
-            <ul>
-            
-                <li class="toctree-l3"><a href="#get_num_filters">get_num_filters</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#visualize_activation">visualize_activation</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#visualize_saliency">visualize_saliency</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#visualize_cam">visualize_cam</a></li>
-                
-            
-            </ul>
-        
-    </li>
-
-        
-    </ul>
-
-        
-            
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.losses/">losses</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.regularizers/">regularizers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.modifiers/">modifiers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.optimizer/">optimizer</a>
+                </li>
+                <li class="toctree-l3 current">
+                    
+    <a class="current" href="./">visualization</a>
     <ul class="subnav">
-    <li><span>Utils</span></li>
-
-        
             
-    <li class="toctree-l1 ">
-        <a class="" href="../vis.utils.utils/">utils</a>
-        
-    </li>
+    <li class="toctree-l4"><a href="#get_num_filters">get_num_filters</a></li>
+    
 
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../vis.utils.vggnet/">vggnet</a>
-        
-    </li>
+    <li class="toctree-l4"><a href="#visualize_activation">visualize_activation</a></li>
+    
 
-        
+    <li class="toctree-l4"><a href="#visualize_saliency">visualize_saliency</a></li>
+    
+
+    <li class="toctree-l4"><a href="#visualize_cam">visualize_cam</a></li>
+    
+
     </ul>
-
-        
+                </li>
     </ul>
-<li>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Utils</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.utils.utils/">utils</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.utils.vggnet/">vggnet</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+	    </li>
           
         </ul>
       </div>
@@ -217,14 +179,14 @@
               
                 <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L0">vis/visualization.py#L0</a></p>
 <hr />
-<h3 id="get_num_filters"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L21">get_num_filters</a></h3>
+<h3 id="get_num_filters"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L24">get_num_filters</a></h3>
 <pre><code class="python">get_num_filters(layer)
 </code></pre>
 
 <p><em>Returns: Total number of filters within <code>layer</code>.</em></p>
 <p>For <code>keras.layers.Dense</code> layer, this is the total number of outputs.</p>
 <hr />
-<h3 id="visualize_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L38">visualize_activation</a></h3>
+<h3 id="visualize_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L41">visualize_activation</a></h3>
 <pre><code class="python">visualize_activation(model, layer_idx, filter_indices=None, seed_img=None, text=None, \
     act_max_weight=1, lp_norm_weight=10, tv_weight=10, **optimizer_params)
 </code></pre>
@@ -234,7 +196,7 @@ the filter output activation.</p>
 <p><em>Args:</em></p>
 <ul>
 <li><strong>model</strong>:  The <code>keras.models.Model</code> instance. Model input is expected to be a 4D image input of shape:
-  <code>(samples, channels, rows, cols)</code> if dim_ordering='th' or <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
+  <code>(samples, channels, rows, cols)</code> if data_format='channels_first' or <code>(samples, rows, cols, channels)</code> if data_format='channels_last'.</li>
 <li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
 <li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
   For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</li>
@@ -269,8 +231,8 @@ final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</
 <p><em>Returns:</em></p>
 <p>Stitched image output visualizing input images that maximize the filter output(s). (Default value = 10)</p>
 <hr />
-<h3 id="visualize_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L114">visualize_saliency</a></h3>
-<pre><code class="python">visualize_saliency(model, layer_idx, filter_indices, seed_img, text=None, overlay=True)
+<h3 id="visualize_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L117">visualize_saliency</a></h3>
+<pre><code class="python">visualize_saliency(model, layer_idx, filter_indices, seed_img, alpha=0.5)
 </code></pre>
 
 <p>Generates an attention heatmap over the <code>seed_img</code> for maximizing <code>filter_indices</code> output in the given <code>layer</code>.
@@ -279,7 +241,7 @@ For a full description of saliency, see the paper:
 <p><em>Args:</em></p>
 <ul>
 <li><strong>model</strong>:  The <code>keras.models.Model</code> instance. Model input is expected to be a 4D image input of shape:
-  <code>(samples, channels, rows, cols)</code> if dim_ordering='th' or <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
+  <code>(samples, channels, rows, cols)</code> if data_format='channels_first' or <code>(samples, rows, cols, channels)</code> if data_format='channels_last'.</li>
 <li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
 <li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
   For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</li>
@@ -289,8 +251,8 @@ For a full description of saliency, see the paper:
   output can be maximized by minimizing scores for other classes.</p>
 <ul>
 <li><strong>seed_img</strong>:  The input image for which activation map needs to be visualized.</li>
-<li><strong>text</strong>:  The text to overlay on top of the generated image. (Default Value = None)</li>
-<li><strong>overlay</strong>:  If true, overlays the heatmap over the original image (Default value = True)</li>
+<li><strong>alpha</strong>:  The alpha value of image as overlayed onto the heatmap. 
+  This value needs to be between [0, 1], with 0 being heatmap only to 1 being image only (Default value = 0.5)</li>
 </ul>
 <p><em>Example:</em></p>
 <p>If you wanted to visualize attention over 'bird' category, say output index 22 on the
@@ -298,12 +260,11 @@ final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</
 <p>One could also set filter indices to more than one value. For example, <code>filter_indices = [22, 23]</code> should
 (hopefully) show attention map that corresponds to both 22, 23 output categories.</p>
 <p><em>Returns:</em></p>
-<p>The heatmap image indicating image regions that, when changed, would contribute the most towards maximizing
-a the filter output.</p>
+<p>The heatmap image, overlayed with <code>seed_img</code> using <code>alpha</code>, indicating image regions that, when changed, 
+would contribute the most towards maximizing the output of <code>filter_indices</code>.</p>
 <hr />
 <h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L177">visualize_cam</a></h3>
-<pre><code class="python">visualize_cam(model, layer_idx, filter_indices, seed_img, penultimate_layer_idx=None, text=None, \
-    overlay=True)
+<pre><code class="python">visualize_cam(model, layer_idx, filter_indices, seed_img, penultimate_layer_idx=None, alpha=0.5)
 </code></pre>
 
 <p>Generates a gradient based class activation map (CAM) as described in paper
@@ -315,7 +276,7 @@ cat regions and not the 'dog' region and vice-versa.</p>
 <p><em>Args:</em></p>
 <ul>
 <li><strong>model</strong>:  The <code>keras.models.Model</code> instance. Model input is expected to be a 4D image input of shape:
-  <code>(samples, channels, rows, cols)</code> if dim_ordering='th' or <code>(samples, rows, cols, channels)</code> if dim_ordering='tf'.</li>
+  <code>(samples, channels, rows, cols)</code> if data_format='channels_first' or <code>(samples, rows, cols, channels)</code> if data_format='channels_last'.</li>
 <li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
 <li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
   For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</li>
@@ -327,8 +288,8 @@ cat regions and not the 'dog' region and vice-versa.</p>
 <li><strong>seed_img</strong>:  The input image for which activation map needs to be visualized.</li>
 <li><strong>penultimate_layer_idx</strong>:  The pre-layer to <code>layer_idx</code> whose feature maps should be used to compute gradients
   wrt filter output. If not provided, it is set to the nearest penultimate <code>Convolutional</code> or <code>Pooling</code> layer.</li>
-<li><strong>text</strong>:  The text to overlay on top of the generated image. (Default Value = None)</li>
-<li><strong>overlay</strong>:  If true, overlays the heatmap over the original image (Default value = True)</li>
+<li><strong>alpha</strong>:  The alpha value of image as overlayed onto the heatmap. 
+  This value needs to be between [0, 1], with 0 being heatmap only to 1 being image only (Default value = 0.5)</li>
 </ul>
 <p><em>Example:</em></p>
 <p>If you wanted to visualize attention over 'bird' category, say output index 22 on the
@@ -339,8 +300,8 @@ final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</
 <p>This technique deprecates occlusion maps as it gives similar results, but with one-pass gradient computation
 as opposed inefficient sliding window approach.</p>
 <p><em>Returns:</em></p>
-<p>The heatmap image indicating image regions that, when changed, would contribute the most towards maximizing
-a the filter output.</p>
+<p>The heatmap image, overlayed with <code>seed_img</code> using <code>alpha</code>, indicating image regions that, when changed, 
+would contribute the most towards maximizing the output of <code>filter_indices</code>.</p>
               
             </div>
           </div>
@@ -376,7 +337,7 @@ a the filter output.</p>
   <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
-          <a href="http://github.com/raghakot/keras-vis" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+          <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
         <span><a href="../vis.optimizer/" style="color: #fcfcfc;">&laquo; Previous</a></span>

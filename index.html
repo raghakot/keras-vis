@@ -46,130 +46,96 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
 	<ul class="current">
+	  
           
-            <li>
-    <li class="toctree-l1 current">
-        <a class="current" href=".">Home</a>
-        
-            <ul>
+            <li class="toctree-l1 current">
+		
+    <a class="current" href=".">Home</a>
+    <ul class="subnav">
             
-                <li class="toctree-l3"><a href="#keras-visualization-toolkit">Keras Visualization Toolkit</a></li>
-                
-                    <li><a class="toctree-l4" href="#quick-links">Quick links</a></li>
-                
-                    <li><a class="toctree-l4" href="#getting-started">Getting Started</a></li>
-                
-                    <li><a class="toctree-l4" href="#installation">Installation</a></li>
-                
-                    <li><a class="toctree-l4" href="#visualizations">Visualizations</a></li>
-                
-            
-            </ul>
+    <li class="toctree-l2"><a href="#keras-visualization-toolkit">Keras Visualization Toolkit</a></li>
+    
+        <ul>
         
-    </li>
-<li>
+            <li><a class="toctree-l3" href="#quick-links">Quick links</a></li>
+        
+            <li><a class="toctree-l3" href="#getting-started">Getting Started</a></li>
+        
+            <li><a class="toctree-l3" href="#installation">Installation</a></li>
+        
+            <li><a class="toctree-l3" href="#visualizations">Visualizations</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
           
-            <li>
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Visualizations</span>
     <ul class="subnav">
-    <li><span>Visualizations</span></li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="visualizations/conv_filters/">Convolutional Filters</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="visualizations/dense/">Dense Layers</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="visualizations/attention/">Attention Maps</a>
-        
-    </li>
-
-        
+                <li class="">
+                    
+    <a class="" href="visualizations/conv_filters/">Convolutional Filters</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="visualizations/dense/">Dense Layers</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="visualizations/attention/">Attention Maps</a>
+                </li>
     </ul>
-<li>
+	    </li>
           
-            <li>
+            <li class="toctree-l1">
+		
+    <span class="caption-text">API Docs</span>
     <ul class="subnav">
-    <li><span>API Docs</span></li>
-
-        
-            
+                <li class="">
+                    
+    <span class="caption-text">Core API</span>
     <ul class="subnav">
-    <li><span>Core API</span></li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="vis.losses/">losses</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="vis.regularizers/">regularizers</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="vis.modifiers/">modifiers</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="vis.optimizer/">optimizer</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="vis.visualization/">visualization</a>
-        
-    </li>
-
-        
+                <li class="toctree-l3">
+                    
+    <a class="" href="vis.losses/">losses</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="vis.regularizers/">regularizers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="vis.modifiers/">modifiers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="vis.optimizer/">optimizer</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="vis.visualization/">visualization</a>
+                </li>
     </ul>
-
-        
-            
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Utils</span>
     <ul class="subnav">
-    <li><span>Utils</span></li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="vis.utils.utils/">utils</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="vis.utils.vggnet/">vggnet</a>
-        
-    </li>
-
-        
+                <li class="toctree-l3">
+                    
+    <a class="" href="vis.utils.utils/">utils</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="vis.utils.vggnet/">vggnet</a>
+                </li>
     </ul>
-
-        
+                </li>
     </ul>
-<li>
+	    </li>
           
         </ul>
       </div>
@@ -264,7 +230,7 @@ opt_img, grads, _ = optimizer.minimize()
 <a href="https://github.com/raghakot/keras-vis/tree/master/examples">examples folder</a>.</p>
 <h2 id="installation">Installation</h2>
 <p>1) Install <a href="https://github.com/fchollet/keras/blob/master/README.md#installation">keras</a> 
-with theano or tensorflow backend. Note that the library is incompatible with keras &lt; 2.0</p>
+with theano or tensorflow backend. Note that this library requires keras &gt; 2.0</p>
 <p>2) Install OpenCV </p>
 <pre><code class="bash">sudo apt-get install python-opencv
 </code></pre>
@@ -316,12 +282,15 @@ pattern is found in the input image. Visualize those templates via Activation Ma
 <hr/>
 
 <h3 id="generating-animated-gif-of-optimization-progress">Generating animated gif of optimization progress</h3>
-<p>It is possible to generate an animated gif of optimization progress. Below is an example for activation maximization
-of 'ouzel' class (output_index: 20). This example also shows how to use the optimizer directly.</p>
-<pre><code class="python">from vis.utils.vggnet import VGG16
-from vis.optimizer import Optimizer
-from vis.losses import ActivationMaximization
+<p>It is possible to generate an animated gif of optimization progress by leveraging 
+<a href="https://raghakot.github.io/keras-vis/vis.callbacks">callbacks</a>. Following example shows how to visualize the 
+activation maximization for 'ouzel' class (output_index: 20).</p>
+<pre><code class="python">from vis.losses import ActivationMaximization
 from vis.regularizers import TotalVariation, LPNorm
+from vis.optimizer import Optimizer
+
+from vis.callbacks import GifGenerator
+from vis.utils.vggnet import VGG16
 
 # Build the VGG16 network with ImageNet weights
 model = VGG16(weights='imagenet', include_top=True)
@@ -339,9 +308,7 @@ losses = [
     (TotalVariation(model.input), 10)
 ]
 opt = Optimizer(model.input, losses)
-
-opt.minimize(max_iter=500, verbose=True,
-             progress_gif_path='opt_progress')
+opt.minimize(max_iter=500, verbose=True, callbacks=[GifGenerator('opt_progress')])
 
 </code></pre>
 
@@ -380,7 +347,7 @@ opt.minimize(max_iter=500, verbose=True,
   <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
-          <a href="http://github.com/raghakot/keras-vis" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+          <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
       
@@ -395,6 +362,6 @@ opt.minimize(max_iter=500, verbose=True,
 </html>
 
 <!--
-MkDocs version : 0.16.0
-Build Date UTC : 2017-04-02 04:04:52
+MkDocs version : 0.16.3
+Build Date UTC : 2017-04-29 20:26:43
 -->
