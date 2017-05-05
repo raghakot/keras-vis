@@ -37,7 +37,7 @@ def _check_pil():
 def _find_font_file(query):
     """Utility to find font file.
     """
-    return filter(lambda path: query.lower() in os.path.basename(path).lower(), fontman.findSystemFonts())
+    return list(filter(lambda path: query.lower() in os.path.basename(path).lower(), fontman.findSystemFonts()))
 
 
 def set_random_seed(seed_value=1337):
@@ -56,7 +56,7 @@ def reverse_enumerate(iterable):
 
 
 def listify(value):
-    """Ensures that the value is a list. If it is not a list, it creates a new list with `value` as an item within it.
+    """Ensures that the value is a list. If it is not a list, it creates a new list with `value` as an item.
     """
     if not isinstance(value, Iterable):
         value = [value]
