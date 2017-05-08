@@ -103,8 +103,6 @@
         
             <li><a class="toctree-l5" href="#optimizer__init__">Optimizer.__init__</a></li>
         
-            <li><a class="toctree-l5" href="#optimizerget_seed_img">Optimizer.get_seed_img</a></li>
-        
             <li><a class="toctree-l5" href="#optimizerminimize">Optimizer.minimize</a></li>
         
         </ul>
@@ -189,8 +187,8 @@
 <p>Creates an optimizer that minimizes weighted loss function.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img_input</strong>:  4D image input tensor to the model of shape: <code>(samples, channels, rows, cols)</code>
-  if data_format='channels_first' or <code>(samples, rows, cols, channels)</code> if data_format='channels_last'.</li>
+<li><strong>img_input</strong>:  An image input tensor of shape: <code>(samples, channels, image_dims...)</code> if 
+  data_format='channels_first' or <code>(samples, image_dims..., channels)</code> if data_format='channels_last'.</li>
 <li><strong>losses</strong>:  List of (<a href="../vis.losses#Loss">Loss</a>, weight) tuples.</li>
 <li><strong>wrt</strong>:  Short for, with respect to. This instructs the optimizer that the aggregate loss from <code>losses</code>
   should be minimized with respect to <code>wrt</code>. <code>wrt</code> can be any tensor that is part of the model graph.
@@ -199,21 +197,15 @@
   a smooth gradient gradient descent process. If you want the actual gradient, set this to false.</li>
 </ul>
 <hr />
-<h3 id="optimizerget_seed_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L69">Optimizer.get_seed_img</a></h3>
-<pre><code class="python">get_seed_img(self, seed_img)
-</code></pre>
-
-<p>Creates the seed_img, along with other sanity checks.</p>
-<hr />
-<h3 id="optimizerminimize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L83">Optimizer.minimize</a></h3>
+<h3 id="optimizerminimize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L87">Optimizer.minimize</a></h3>
 <pre><code class="python">minimize(self, seed_img=None, max_iter=200, image_modifiers=None, callbacks=None, verbose=True)
 </code></pre>
 
 <p>Performs gradient descent on the input image with respect to defined losses.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>seed_img</strong>:  3D numpy array with shape: <code>(channels, rows, cols)</code> if data_format='channels_first' or
-  <code>(rows, cols, channels)</code> if data_format='channels_last'.
+<li><strong>seed_img</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> 
+  if data_format='channels_first' or <code>(samples, image_dims..., channels)</code> if data_format='channels_last'. 
   Seeded with random noise if set to None. (Default value = None)</li>
 <li><strong>max_iter</strong>:  The maximum number of gradient descent iterations. (Default value = 200)</li>
 <li><strong>image_modifiers</strong>:  A list of <a href="../ImageModifier">../vis/modifiers/#ImageModifier</a> instances specifying <code>pre</code> and

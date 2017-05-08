@@ -121,15 +121,13 @@
         
             <li><a class="toctree-l5" href="#listify">listify</a></li>
         
+            <li><a class="toctree-l5" href="#random_array">random_array</a></li>
+        
             <li><a class="toctree-l5" href="#deprocess_image">deprocess_image</a></li>
         
             <li><a class="toctree-l5" href="#stitch_images">stitch_images</a></li>
         
-            <li><a class="toctree-l5" href="#generate_rand_img">generate_rand_img</a></li>
-        
             <li><a class="toctree-l5" href="#get_img_shape">get_img_shape</a></li>
-        
-            <li><a class="toctree-l5" href="#get_img_indices">get_img_indices</a></li>
         
             <li><a class="toctree-l5" href="#load_img">load_img</a></li>
         
@@ -222,29 +220,42 @@
 <pre><code class="python">listify(value)
 </code></pre>
 
-<p>Ensures that the value is a list. If it is not a list, it creates a new list with <code>value</code> as an item within it.</p>
+<p>Ensures that the value is a list. If it is not a list, it creates a new list with <code>value</code> as an item.</p>
 <hr />
-<h3 id="deprocess_image"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L66">deprocess_image</a></h3>
+<h3 id="random_array"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L66">random_array</a></h3>
+<pre><code class="python">random_array(shape, mean=128.0, std=20.0)
+</code></pre>
+
+<p>Creates a uniformly distributed random array with the given mean and std.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>shape</strong>:  The desired shape</li>
+<li><strong>mean</strong>:  The desired mean (Default value = 128)</li>
+<li><strong>std</strong>:  The desired std (Default value = 20)</li>
+</ul>
+<p><em>Returns: Random numpy array of given <code>shape</code> uniformly distributed with desired <code>mean</code> and <code>std</code>.</em></p>
+<hr />
+<h3 id="deprocess_image"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L84">deprocess_image</a></h3>
 <pre><code class="python">deprocess_image(img)
 </code></pre>
 
 <p>Utility function to convert optimized image output into a valid image.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img</strong>:  3D numpy array with shape: <code>(channels, rows, cols)</code> if data_format='channels_first' or
-  <code>(rows, cols, channels)</code> if data_format='channels_last'.</li>
+<li><strong>img</strong>:  N dim numpy image array with shape: <code>(channels, image_dims...)</code> if data_format='channels_first' or
+  <code>(image_dims..., channels)</code> if data_format='channels_last'.</li>
 </ul>
 <p><em>Returns:</em></p>
 <p>A valid image output.</p>
 <hr />
-<h3 id="stitch_images"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L97">stitch_images</a></h3>
+<h3 id="stitch_images"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L109">stitch_images</a></h3>
 <pre><code class="python">stitch_images(images, margin=5, cols=5)
 </code></pre>
 
 <p>Utility function to stitch images together with a <code>margin</code>.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>images</strong>:  The array of images to stitch.</li>
+<li><strong>images</strong>:  The array of 2D images to stitch.</li>
 <li><strong>margin</strong>:  The black border margin size between images (Default value = 5)</li>
 <li><strong>cols</strong>:  Max number of image cols. New row is created when number of images exceed the column size.
   (Default value = 5)</li>
@@ -252,42 +263,20 @@
 <p><em>Returns:</em></p>
 <p>A single numpy image array comprising of input images.</p>
 <hr />
-<h3 id="generate_rand_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L132">generate_rand_img</a></h3>
-<pre><code class="python">generate_rand_img(ch, rows, cols)
-</code></pre>
-
-<p>Generates a random image.</p>
-<p><em>Args:</em></p>
-<ul>
-<li><strong>ch</strong>:  image channels</li>
-<li><strong>rows</strong>:  image rows or height</li>
-<li><strong>cols</strong>:  image cols or width</li>
-</ul>
-<p><em>Returns:</em></p>
-<p>A numpy array of shape: <code>(channels, rows, cols)</code> if data_format='channels_first' or
-  <code>(rows, cols, channels)</code> if data_format='channels_last'.</p>
-<hr />
-<h3 id="get_img_shape"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L152">get_img_shape</a></h3>
+<h3 id="get_img_shape"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L144">get_img_shape</a></h3>
 <pre><code class="python">get_img_shape(img)
 </code></pre>
 
 <p>Returns image shape in a backend agnostic manner.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img</strong>:  The image tensor in 'channels_first' or 'channels_last' data format.</li>
+<li><strong>img</strong>:  An image tensor of shape: <code>(channels, image_dims...)</code> if data_format='channels_first' or
+  <code>(image_dims..., channels)</code> if data_format='channels_last'.</li>
 </ul>
 <p><em>Returns:</em></p>
-<p>Tuple containing image shape information in <code>(samples, channels, rows, cols)</code> order.</p>
+<p>Tuple containing image shape information in <code>(samples, channels, image_dims...)</code> order.</p>
 <hr />
-<h3 id="get_img_indices"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L168">get_img_indices</a></h3>
-<pre><code class="python">get_img_indices()
-</code></pre>
-
-<p>Returns image indices in <code>data_format</code> agnostic manner.</p>
-<p><em>Returns:</em></p>
-<p>A tuple representing indices for image in <code>(samples, channels, rows, cols)</code> order.</p>
-<hr />
-<h3 id="load_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L180">load_img</a></h3>
+<h3 id="load_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L166">load_img</a></h3>
 <pre><code class="python">load_img(path, grayscale=False, target_size=None)
 </code></pre>
 
@@ -301,7 +290,7 @@
 <p><em>Returns:</em></p>
 <p>The loaded numpy image.</p>
 <hr />
-<h3 id="get_imagenet_label"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L197">get_imagenet_label</a></h3>
+<h3 id="get_imagenet_label"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L183">get_imagenet_label</a></h3>
 <pre><code class="python">get_imagenet_label(indices, join=&quot;, &quot;)
 </code></pre>
 
@@ -314,7 +303,7 @@
 <p><em>Returns:</em></p>
 <p>Image net label corresponding to the image category.</p>
 <hr />
-<h3 id="draw_text"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L216">draw_text</a></h3>
+<h3 id="draw_text"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L202">draw_text</a></h3>
 <pre><code class="python">draw_text(img, text, position=(10, 10), font=&quot;FreeSans.ttf&quot;, font_size=14, color=(0, 0, 0))
 </code></pre>
 
@@ -330,7 +319,7 @@
 </ul>
 <p><em>Returns: Image overlayed with text.</em></p>
 <hr />
-<h3 id="bgr2rgb"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L245">bgr2rgb</a></h3>
+<h3 id="bgr2rgb"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L231">bgr2rgb</a></h3>
 <pre><code class="python">bgr2rgb(img)
 </code></pre>
 

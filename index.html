@@ -176,16 +176,16 @@
 <p><a href="https://travis-ci.org/raghakot/keras-vis"><img alt="Build Status" src="https://travis-ci.org/raghakot/keras-vis.svg?branch=master" /></a>
 <a href="https://github.com/raghakot/keras-vis/blob/master/LICENSE"><img alt="license" src="https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000" /></a>
 <a href="https://keras-vis.herokuapp.com/"><img alt="Slack" src="https://img.shields.io/badge/slack-discussion-E01563.svg" /></a></p>
-<p>keras-vis is a high-level toolkit for visualizing input images via guided backprop. 
-There are several repositories out there to visualize: </p>
+<p>keras-vis is a high-level toolkit for visualizing and debugging your trained keras neural net models. Currently
+supported visualizations include:</p>
 <ul>
 <li>Activation maximization</li>
-<li>Saliency and class activation maps</li>
-<li>Caricaturization (deep dream)</li>
-<li>Texture/Artistic style transfer</li>
-<li>Any other guided image backprop</li>
+<li>Saliency maps</li>
+<li>Class activation maps</li>
 </ul>
-<p>This toolkit generalizes all of the above as energy minimization problems with a clean, easy to use, 
+<p>All visualizations by default support N-dimensional image inputs. i.e., it generalizes to N-dim image inputs 
+to your model.</p>
+<p>The toolkit generalizes all of the above as energy minimization problems with a clean, easy to use, 
 and extendable interface. Compatible with both theano and tensorflow backends with 'channels_first', 'channels_last' 
 data format.</p>
 <h2 id="quick-links">Quick links</h2>
@@ -226,7 +226,7 @@ optimizer = Optimizer(model.input, losses)
 opt_img, grads, _ = optimizer.minimize()
 </code></pre>
 
-<p>Concrete examples of various visualizations can be found in 
+<p>Concrete examples of various supported visualizations can be found in 
 <a href="https://github.com/raghakot/keras-vis/tree/master/examples">examples folder</a>.</p>
 <h2 id="installation">Installation</h2>
 <p>1) Install <a href="https://github.com/fchollet/keras/blob/master/README.md#installation">keras</a> 
@@ -273,20 +273,13 @@ pattern is found in the input image. Visualize those templates via Activation Ma
 <p><em>How can we assess whether a network is attending to correct parts of the image in order to generate a decision?</em></p>
 <hr/>
 
-<h3 id="caricaturization-deep-dream">Caricaturization (deep dream)</h3>
-<p>TODO</p>
-<hr/>
-
-<h3 id="neural-style-transfer">Neural Style Transfer</h3>
-<p>TODO</p>
-<hr/>
-
 <h3 id="generating-animated-gif-of-optimization-progress">Generating animated gif of optimization progress</h3>
 <p>It is possible to generate an animated gif of optimization progress by leveraging 
 <a href="https://raghakot.github.io/keras-vis/vis.callbacks">callbacks</a>. Following example shows how to visualize the 
 activation maximization for 'ouzel' class (output_index: 20).</p>
 <pre><code class="python">from vis.losses import ActivationMaximization
 from vis.regularizers import TotalVariation, LPNorm
+from vis.modifiers import Jitter
 from vis.optimizer import Optimizer
 
 from vis.callbacks import GifGenerator
@@ -308,10 +301,17 @@ losses = [
     (TotalVariation(model.input), 10)
 ]
 opt = Optimizer(model.input, losses)
-opt.minimize(max_iter=500, verbose=True, callbacks=[GifGenerator('opt_progress')])
+opt.minimize(max_iter=500, verbose=True, image_modifiers=[Jitter()], callbacks=[GifGenerator('opt_progress')])
 
 </code></pre>
 
+<p>Notice how the output jitters around? This is because we used <a href="https://raghakot.github.io/keras-vis/vis.modifiers/#jitter">Jitter</a>, 
+a kind of <a href="https://raghakot.github.io/keras-vis/vis.modifiers/#imagemodifier">ImageModifier</a> that is known to produce 
+crisper activation maximization images. As an exercise, try:</p>
+<ul>
+<li>Without Jitter</li>
+<li>Varying various loss weights</li>
+</ul>
 <p><img alt="opt_progress" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/opt_progress.gif?raw=true" title="Optimization progress" /></p>
 <hr/>
               
@@ -363,5 +363,5 @@ opt.minimize(max_iter=500, verbose=True, callbacks=[GifGenerator('opt_progress')
 
 <!--
 MkDocs version : 0.16.3
-Build Date UTC : 2017-04-29 21:58:11
+Build Date UTC : 2017-05-08 04:05:06
 -->

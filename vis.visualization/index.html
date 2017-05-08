@@ -195,8 +195,8 @@
 the filter output activation.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. Model input is expected to be a 4D image input of shape:
-  <code>(samples, channels, rows, cols)</code> if data_format='channels_first' or <code>(samples, rows, cols, channels)</code> if data_format='channels_last'.</li>
+<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. The model input shape must be: <code>(samples, channels, image_dims...)</code> 
+  if data_format='channels_first' or <code>(samples, image_dims..., channels)</code> if data_format='channels_last'.</li>
 <li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
 <li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
   For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</li>
@@ -240,8 +240,8 @@ For a full description of saliency, see the paper:
 <a href="https://arxiv.org/pdf/1312.6034v2.pdf">Deep Inside Convolutional Networks: Visualising Image Classification Models and Saliency Maps</a></p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. Model input is expected to be a 4D image input of shape:
-  <code>(samples, channels, rows, cols)</code> if data_format='channels_first' or <code>(samples, rows, cols, channels)</code> if data_format='channels_last'.</li>
+<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. The model input shape must be: <code>(samples, channels, image_dims...)</code> 
+  if data_format='channels_first' or <code>(samples, image_dims..., channels)</code> if data_format='channels_last'.</li>
 <li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
 <li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
   For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</li>
@@ -275,8 +275,8 @@ network architecture in some instances, grad-CAM has a more general applicabilit
 cat regions and not the 'dog' region and vice-versa.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. Model input is expected to be a 4D image input of shape:
-  <code>(samples, channels, rows, cols)</code> if data_format='channels_first' or <code>(samples, rows, cols, channels)</code> if data_format='channels_last'.</li>
+<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. The model input shape must be: <code>(samples, channels, image_dims...)</code> 
+  if data_format='channels_first' or <code>(samples, image_dims..., channels)</code> if data_format='channels_last'.</li>
 <li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
 <li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
   For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</li>

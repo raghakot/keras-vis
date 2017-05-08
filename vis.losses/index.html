@@ -204,19 +204,19 @@ Defaults to 'Unnamed Loss' if not overridden.</p>
 <pre><code class="python">build_loss(self)
 </code></pre>
 
-<p>Implement this function to build the loss function expression.
+<p>Implement this function to build the loss function expression. 
 Any additional arguments required to build this loss function may be passed in via <code>__init__</code>.</p>
 <p>Ideally, the function expression must be compatible with both theano/tensorflow backends with
 'th' or 'tf' image dim ordering. <code>utils.slicer</code> can be used to define backend agnostic slices
 (just define it for theano, it will automatically shuffle indices for tensorflow).</p>
 <pre><code class="python"># theano slice
-conv_layer[:, filter_idx, :, :]
+conv_layer[:, filter_idx, ...]
 
 # TF slice
-conv_layer[:, :, :, filter_idx]
+conv_layer[..., filter_idx]
 
 # Backend agnostic slice
-conv_layer[utils.slicer[:, filter_idx, :, :]]
+conv_layer[utils.slicer[:, filter_idx, ...]]
 </code></pre>
 
 <p><a href="../vis.utils.utils/#get_img_shape">utils.get_img_shape</a> and

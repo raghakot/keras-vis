@@ -97,14 +97,6 @@
     
         <ul>
         
-            <li><a class="toctree-l5" href="#imagemodifierchannel_idx">ImageModifier.channel_idx</a></li>
-        
-            <li><a class="toctree-l5" href="#imagemodifiercol_idx">ImageModifier.col_idx</a></li>
-        
-            <li><a class="toctree-l5" href="#imagemodifierrow_idx">ImageModifier.row_idx</a></li>
-        
-            <li><a class="toctree-l5" href="#imagemodifier__init__">ImageModifier.__init__</a></li>
-        
             <li><a class="toctree-l5" href="#imagemodifierpost">ImageModifier.post</a></li>
         
             <li><a class="toctree-l5" href="#imagemodifierpre">ImageModifier.pre</a></li>
@@ -115,12 +107,6 @@
     <li class="toctree-l4"><a href="#jitter">Jitter</a></li>
     
         <ul>
-        
-            <li><a class="toctree-l5" href="#jitterchannel_idx">Jitter.channel_idx</a></li>
-        
-            <li><a class="toctree-l5" href="#jittercol_idx">Jitter.col_idx</a></li>
-        
-            <li><a class="toctree-l5" href="#jitterrow_idx">Jitter.row_idx</a></li>
         
             <li><a class="toctree-l5" href="#jitter__init__">Jitter.__init__</a></li>
         
@@ -205,7 +191,7 @@
               
                 <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L0">vis/modifiers.py#L0</a></p>
 <hr />
-<h2 id="imagemodifier"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L7">ImageModifier</a></h2>
+<h2 id="imagemodifier"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L8">ImageModifier</a></h2>
 <p>Abstract class for defining an image modifier. An image modifier can be used with the
 <a href="../vis.optimizer/#optimizerminimize">Optimizer.minimize</a> to make <code>pre</code> and <code>post</code> image changes with the
 gradient descent update step.</p>
@@ -214,59 +200,38 @@ gradient descent update step.</p>
 modifier.post(img)
 </code></pre>
 
-<h4 id="imagemodifierchannel_idx">ImageModifier.channel_idx</h4>
-<p>Returns the proper channel index based on image dim ordering.</p>
-<h4 id="imagemodifiercol_idx">ImageModifier.col_idx</h4>
-<p>Returns the proper col index based on image dim ordering.</p>
-<h4 id="imagemodifierrow_idx">ImageModifier.row_idx</h4>
-<p>Returns the proper row index based on image dim ordering.</p>
 <hr />
-<h3 id="imagemodifier__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L19">ImageModifier.<code>__init__</code></a></h3>
-<pre><code class="python">__init__(self)
-</code></pre>
-
-<hr />
-<h3 id="imagemodifierpost"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L57">ImageModifier.post</a></h3>
+<h3 id="imagemodifierpost"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L33">ImageModifier.post</a></h3>
 <pre><code class="python">post(self, img)
 </code></pre>
 
 <p>Implement post gradient descent update modification to the image. If post-processing is not desired,
 simply ignore the implementation. It returns the unmodified <code>img</code> by default.</p>
-<p>Properties <code>self.channel_idx</code>, <code>self.row_idx</code>, <code>self.col_idx</code> can be used to handle 'th'/'tf'
-image dim ordering differences.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img</strong>:  4D numpy array with shape: <code>(samples, channels, rows, cols)</code> if data_format='channels_first' or
-  <code>(samples, rows, cols, channels)</code> if data_format='channels_last'</li>
+<li><strong>img</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> if data_format='channels_first' or
+  <code>(samples, image_dims..., channels)</code> if data_format='channels_last'.</li>
 </ul>
 <p><em>Returns:</em></p>
 <p>The modified post image.</p>
 <hr />
-<h3 id="imagemodifierpre"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L41">ImageModifier.pre</a></h3>
+<h3 id="imagemodifierpre"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L20">ImageModifier.pre</a></h3>
 <pre><code class="python">pre(self, img)
 </code></pre>
 
 <p>Implement pre gradient descent update modification to the image. If pre-processing is not desired,
 simply ignore the implementation. It returns the unmodified <code>img</code> by default.</p>
-<p>Properties <code>self.channel_idx</code>, <code>self.row_idx</code>, <code>self.col_idx</code> can be used to handle 'th'/'tf'
-image dim ordering differences.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img</strong>:  4D numpy array with shape: <code>(samples, channels, rows, cols)</code> if data_format='channels_first' or
-  <code>(samples, rows, cols, channels)</code> if data_format='channels_last'</li>
+<li><strong>img</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> if data_format='channels_first' or
+  <code>(samples, image_dims..., channels)</code> if data_format='channels_last'.</li>
 </ul>
 <p><em>Returns:</em></p>
 <p>The modified pre image.</p>
 <hr />
-<h2 id="jitter"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L74">Jitter</a></h2>
-<h4 id="jitterchannel_idx">Jitter.channel_idx</h4>
-<p>Returns the proper channel index based on image dim ordering.</p>
-<h4 id="jittercol_idx">Jitter.col_idx</h4>
-<p>Returns the proper col index based on image dim ordering.</p>
-<h4 id="jitterrow_idx">Jitter.row_idx</h4>
-<p>Returns the proper row index based on image dim ordering.</p>
+<h2 id="jitter"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L47">Jitter</a></h2>
 <hr />
-<h3 id="jitter__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L76">Jitter.<code>__init__</code></a></h3>
+<h3 id="jitter__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L49">Jitter.<code>__init__</code></a></h3>
 <pre><code class="python">__init__(self, jitter=16)
 </code></pre>
 
@@ -277,12 +242,21 @@ Jitter has been shown to produce crisper activation maximization images.</p>
 <li><strong>jitter</strong>:  Number of pixels to jitter in rows and cols dimensions.</li>
 </ul>
 <hr />
-<h3 id="jitterpost"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L92">Jitter.post</a></h3>
+<h3 id="jitterpost"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L33">Jitter.post</a></h3>
 <pre><code class="python">post(self, img)
 </code></pre>
 
+<p>Implement post gradient descent update modification to the image. If post-processing is not desired,
+simply ignore the implementation. It returns the unmodified <code>img</code> by default.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>img</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> if data_format='channels_first' or
+  <code>(samples, image_dims..., channels)</code> if data_format='channels_last'.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The modified post image.</p>
 <hr />
-<h3 id="jitterpre"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L88">Jitter.pre</a></h3>
+<h3 id="jitterpre"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L59">Jitter.pre</a></h3>
 <pre><code class="python">pre(self, img)
 </code></pre>
               
