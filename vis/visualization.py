@@ -38,8 +38,7 @@ def get_num_filters(layer):
             return K.int_shape(layer.output)[3]
 
 
-def visualize_activation(model, layer_idx, filter_indices=None,
-                         seed_img=None, text=None,
+def visualize_activation(model, layer_idx, filter_indices=None, seed_img=None,
                          act_max_weight=1, lp_norm_weight=10, tv_weight=10,
                          **optimizer_params):
     """Generates stitched input image(s) over all `filter_indices` in the given `layer` that maximize
@@ -72,7 +71,6 @@ def visualize_activation(model, layer_idx, filter_indices=None,
 
         seed_img: Seeds the optimization with a starting image. Initialized with a random value when set to None.
             (Default value = None)
-        text: The text to overlay on top of the generated image. (Default Value = None)
         act_max_weight: The weight param for `ActivationMaximization` loss. Not used if 0 or None. (Default value = 1)
         lp_norm_weight: The weight param for `LPNorm` regularization loss. Not used if 0 or None. (Default value = 10)
         tv_weight: The weight param for `TotalVariation` regularization loss. Not used if 0 or None. (Default value = 10)
@@ -107,10 +105,8 @@ def visualize_activation(model, layer_idx, filter_indices=None,
         (TotalVariation(model.input), tv_weight)
     ]
 
-    opt = Optimizer(model.input, losses, norm_grads=False)
+    opt = Optimizer(model.input, losses)
     img = opt.minimize(**optimizer_params)[0]
-    if text:
-        img = utils.draw_text(img, text)
     return img
 
 

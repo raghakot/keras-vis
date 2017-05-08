@@ -23,9 +23,11 @@ def visualize_random(num_categories=10, show=True):
 
     # Visualize couple random categories from imagenet.
     indices = np.random.permutation(1000)[:num_categories]
-    images = [visualize_activation(model, layer_idx, filter_indices=idx,
-                                   text=utils.get_imagenet_label(idx),
-                                   max_iter=500) for idx in indices]
+    images = []
+    for idx in indices:
+        img = visualize_activation(model, layer_idx, filter_indices=idx, max_iter=500)
+        img = utils.draw_text(img, utils.get_imagenet_label(idx))
+        images.append(img)
 
     # Easily stitch images via `utils.stitch_images`
     stitched = utils.stitch_images(images)
@@ -53,9 +55,11 @@ def visualize_multiple_same_filter(num_runs=3, show=True):
 
     # 20 is the imagenet category for 'ouzel'
     indices = [20] * num_runs
-    images = [visualize_activation(model, layer_idx, filter_indices=idx,
-                                   text=utils.get_imagenet_label(idx),
-                                   max_iter=500) for idx in indices]
+    images = []
+    for idx in indices:
+        img = visualize_activation(model, layer_idx, filter_indices=idx, max_iter=500)
+        img = utils.draw_text(img, utils.get_imagenet_label(idx))
+        images.append(img)
 
     # Easily stitch images via `utils.stitch_images`
     stitched = utils.stitch_images(images)
@@ -80,9 +84,11 @@ def visualize_multiple_categories(show=True):
 
     # Visualize [20] (ouzel) and [20, 71] (An ouzel-scorpion :D)
     indices = [20, [20, 71]]
-    images = [visualize_activation(model, layer_idx, filter_indices=idx,
-                                   text=utils.get_imagenet_label(idx),
-                                   max_iter=500) for idx in indices]
+    images = []
+    for idx in indices:
+        img = visualize_activation(model, layer_idx, filter_indices=idx, max_iter=500)
+        img = utils.draw_text(img, utils.get_imagenet_label(idx))
+        images.append(img)
 
     # Easily stitch images via `utils.stitch_images`
     stitched = utils.stitch_images(images)
