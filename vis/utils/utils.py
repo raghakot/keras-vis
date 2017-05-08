@@ -63,12 +63,30 @@ def listify(value):
     return value
 
 
+def random_array(shape, mean=128., std=20.):
+    """Creates a uniformly distributed random array with the given mean and std.
+    
+    Args:
+        shape: The desired shape
+        mean: The desired mean (Default value = 128)
+        std: The desired std (Default value = 20)
+
+    Returns: Random numpy array of given `shape` uniformly distributed with desired `mean` and `std`.
+    """
+    x = np.random.random(shape)
+    # normalize around mean=0, std=1
+    x = (x - np.mean(x)) / np.std(x)
+    # and then around the desired mean/std
+    x = (x * std) + mean
+    return x
+
+
 def deprocess_image(img):
     """Utility function to convert optimized image output into a valid image.
 
     Args:
-        img: 3D numpy array with shape: `(channels, rows, cols)` if data_format='channels_first' or
-            `(rows, cols, channels)` if data_format='channels_last'.
+        img: N dim numpy image array with shape: `(channels, image_dims...)` if data_format='channels_first' or
+            `(image_dims..., channels)` if data_format='channels_last'.
 
     Returns:
         A valid image output.
@@ -85,20 +103,14 @@ def deprocess_image(img):
 
     # convert to RGB array
     img *= 255
-
-    # TF image format if channels = (1 or 3) towards the last rank.
-    if img.shape[-1] != 3 and img.shape[-1] != 1:
-        img = img.transpose((1, 2, 0))
-
-    img = np.clip(img, 0, 255).astype('uint8')
-    return img
+    return np.clip(img, 0, 255).astype('uint8')
 
 
 def stitch_images(images, margin=5, cols=5):
     """Utility function to stitch images together with a `margin`.
 
     Args:
-        images: The array of images to stitch.
+        images: The array of 2D images to stitch.
         margin: The black border margin size between images (Default value = 5)
         cols: Max number of image cols. New row is created when number of images exceed the column size.
             (Default value = 5)
@@ -129,52 +141,26 @@ def stitch_images(images, margin=5, cols=5):
     return stitched_images
 
 
-def generate_rand_img(ch, rows, cols):
-    """Generates a random image.
-
-    Args:
-      ch: image channels
-      rows: image rows or height
-      cols: image cols or width
-
-    Returns:
-        A numpy array of shape: `(channels, rows, cols)` if data_format='channels_first' or
-            `(rows, cols, channels)` if data_format='channels_last'.
-    """
-    if K.image_data_format() == 'channels_first':
-        x = np.random.random((ch, rows, cols))
-    else:
-        x = np.random.random((rows, cols, ch))
-    x = (x - 0.5) * 20 + 128
-    return x
-
-
 def get_img_shape(img):
     """Returns image shape in a backend agnostic manner.
 
     Args:
-        img: The image tensor in 'channels_first' or 'channels_last' data format.
+        img: An image tensor of shape: `(channels, image_dims...)` if data_format='channels_first' or
+            `(image_dims..., channels)` if data_format='channels_last'.
 
     Returns:
-        Tuple containing image shape information in `(samples, channels, rows, cols)` order.
+        Tuple containing image shape information in `(samples, channels, image_dims...)` order.
     """
-    if K.image_data_format() == 'channels_first':
-        return K.int_shape(img)
+    if isinstance(img, np.ndarray):
+        shape = img.shape
     else:
-        samples, rows, cols, ch = K.int_shape(img)
-        return samples, ch, rows, cols
+        shape = K.int_shape(img)
 
-
-def get_img_indices():
-    """Returns image indices in `data_format` agnostic manner.
-
-    Returns:
-        A tuple representing indices for image in `(samples, channels, rows, cols)` order.
-    """
-    if K.image_data_format() == 'channels_first':
-        return 0, 1, 2, 3
-    else:
-        return 0, 3, 1, 2
+    if K.image_data_format() == 'channels_last':
+        shape = list(shape)
+        shape.insert(1, shape[-1])
+        shape = tuple(shape[:-1])
+    return shape
 
 
 def load_img(path, grayscale=False, target_size=None):
@@ -258,13 +244,16 @@ class _BackendAgnosticImageSlice(object):
     """
 
     def __getitem__(self, item_slice):
-        """Assuming a slice for shape `(samples, channels, width, height)`
+        """Assuming a slice for shape `(samples, channels, image_dims...)`
         """
         assert len(item_slice) == 4
         if K.image_data_format() == 'channels_first':
             return item_slice
         else:
-            return tuple([item_slice[0], item_slice[2], item_slice[3], item_slice[1]])
+            # Move channel index to last position.
+            item_slice = list(item_slice)
+            item_slice.append(item_slice.pop(1))
+            return tuple(item_slice)
 
 
 """Slice utility to make image slicing uniform across various `data_format`.

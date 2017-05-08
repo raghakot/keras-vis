@@ -46,8 +46,8 @@ def visualize_activation(model, layer_idx, filter_indices=None,
     the filter output activation.
 
     Args:
-        model: The `keras.models.Model` instance. Model input is expected to be a 4D image input of shape:
-            `(samples, channels, rows, cols)` if data_format='channels_first' or `(samples, rows, cols, channels)` if data_format='channels_last'.
+        model: The `keras.models.Model` instance. The model input shape must be: `(samples, channels, image_dims...)` 
+            if data_format='channels_first' or `(samples, image_dims..., channels)` if data_format='channels_last'.
         layer_idx: The layer index within `model.layers` whose filters needs to be visualized.
         filter_indices: filter indices within the layer to be maximized.
             For `keras.layers.Dense` layer, `filter_idx` is interpreted as the output index.
@@ -121,8 +121,8 @@ def visualize_saliency(model, layer_idx, filter_indices,
      [Deep Inside Convolutional Networks: Visualising Image Classification Models and Saliency Maps](https://arxiv.org/pdf/1312.6034v2.pdf)
 
     Args:
-        model: The `keras.models.Model` instance. Model input is expected to be a 4D image input of shape:
-            `(samples, channels, rows, cols)` if data_format='channels_first' or `(samples, rows, cols, channels)` if data_format='channels_last'.
+        model: The `keras.models.Model` instance. The model input shape must be: `(samples, channels, image_dims...)` 
+            if data_format='channels_first' or `(samples, image_dims..., channels)` if data_format='channels_last'.
         layer_idx: The layer index within `model.layers` whose filters needs to be visualized.
         filter_indices: filter indices within the layer to be maximized.
             For `keras.layers.Dense` layer, `filter_idx` is interpreted as the output index.
@@ -162,8 +162,8 @@ def visualize_saliency(model, layer_idx, filter_indices,
     # So, negative gradients here mean that they reduce loss, maximizing class probability.
     grads *= -1
 
-    s, c, row, col = utils.get_img_indices()
-    grads = np.max(np.abs(grads), axis=c)
+    channel_idx = 1 if K.image_data_format() == 'channels_first' else -1
+    grads = np.max(np.abs(grads), axis=channel_idx)
 
     # Normalize and zero out low probabilities for a cleaner output.
     grads /= np.max(grads)
@@ -185,8 +185,8 @@ def visualize_cam(model, layer_idx, filter_indices,
     cat regions and not the 'dog' region and vice-versa.
 
     Args:
-        model: The `keras.models.Model` instance. Model input is expected to be a 4D image input of shape:
-            `(samples, channels, rows, cols)` if data_format='channels_first' or `(samples, rows, cols, channels)` if data_format='channels_last'.
+        model: The `keras.models.Model` instance. The model input shape must be: `(samples, channels, image_dims...)` 
+            if data_format='channels_first' or `(samples, image_dims..., channels)` if data_format='channels_last'.
         layer_idx: The layer index within `model.layers` whose filters needs to be visualized.
         filter_indices: filter indices within the layer to be maximized.
             For `keras.layers.Dense` layer, `filter_idx` is interpreted as the output index.
@@ -248,21 +248,25 @@ def visualize_cam(model, layer_idx, filter_indices,
 
     # Average pooling across all feature maps.
     # This captures the importance of feature map (channel) idx to the output
-    s_idx, c_idx, row_idx, col_idx = utils.get_img_indices()
-    weights = np.mean(grads, axis=(s_idx, row_idx, col_idx))
+    channel_idx = 1 if K.image_data_format() == 'channels_first' else -1
+    other_axis = np.delete(np.arange(len(grads.shape)), channel_idx)
+    weights = np.mean(grads, axis=tuple(other_axis))
 
     # Generate heatmap by computing weight * output over feature maps
-    s, ch, rows, cols = utils.get_img_shape(penultimate_output)
-    heatmap = np.ones(shape=(rows, cols), dtype=np.float32)
+    output_dims = utils.get_img_shape(penultimate_output)[2:]
+    heatmap = np.ones(shape=output_dims, dtype=K.floatx())
     for i, w in enumerate(weights):
-        heatmap += w * penultimate_output_value[utils.slicer[0, i, :, :]]
+        if channel_idx == -1:
+            heatmap += w * penultimate_output_value[0, ..., i]
+        else:
+            heatmap += w * penultimate_output_value[0, i, ...]
 
     # The penultimate feature map size is definitely smaller than input image.
-    s, ch, rows, cols = utils.get_img_shape(model.input)
+    input_dims = utils.get_img_shape(model.input)[2:]
 
     # TODO: Figure out a way to get rid of open cv dependency.
     # skimage doesn't deal with arbitrary floating point ranges.
-    heatmap = cv2.resize(heatmap, (cols, rows), interpolation=cv2.INTER_CUBIC)
+    heatmap = cv2.resize(heatmap, input_dims, interpolation=cv2.INTER_CUBIC)
 
     # ReLU thresholding, normalize between (0, 1)
     heatmap = np.maximum(heatmap, 0)

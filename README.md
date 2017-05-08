@@ -3,16 +3,17 @@
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/raghakot/keras-vis/blob/master/LICENSE)
 [![Slack](https://img.shields.io/badge/slack-discussion-E01563.svg)](https://keras-vis.herokuapp.com/)
 
-keras-vis is a high-level toolkit for visualizing input images via guided backprop. 
-There are several repositories out there to visualize: 
+keras-vis is a high-level toolkit for visualizing and debugging your trained keras neural net models. Currently
+supported visualizations include:
 
 - Activation maximization
-- Saliency and class activation maps
-- Caricaturization (deep dream)
-- Texture/Artistic style transfer
-- Any other guided image backprop
+- Saliency maps
+- Class activation maps
 
-This toolkit generalizes all of the above as energy minimization problems with a clean, easy to use, 
+All visualizations by default support N-dimensional image inputs. i.e., it generalizes to N-dim image inputs 
+to your model.
+
+The toolkit generalizes all of the above as energy minimization problems with a clean, easy to use, 
 and extendable interface. Compatible with both theano and tensorflow backends with 'channels_first', 'channels_last' 
 data format.
 
@@ -60,7 +61,7 @@ optimizer = Optimizer(model.input, losses)
 opt_img, grads, _ = optimizer.minimize()
 ```
 
-Concrete examples of various visualizations can be found in 
+Concrete examples of various supported visualizations can be found in 
 [examples folder](https://github.com/raghakot/keras-vis/tree/master/examples).
 
 ## Installation
@@ -120,16 +121,6 @@ pattern is found in the input image. Visualize those templates via Activation Ma
 
 <hr/>
 
-### Caricaturization (deep dream)
-TODO
-
-<hr/>
-
-### Neural Style Transfer
-TODO
-
-<hr/>
-
 ### Generating animated gif of optimization progress
 It is possible to generate an animated gif of optimization progress by leveraging 
 [callbacks](https://raghakot.github.io/keras-vis/vis.callbacks). Following example shows how to visualize the 
@@ -138,6 +129,7 @@ activation maximization for 'ouzel' class (output_index: 20).
 ```python
 from vis.losses import ActivationMaximization
 from vis.regularizers import TotalVariation, LPNorm
+from vis.modifiers import Jitter
 from vis.optimizer import Optimizer
 
 from vis.callbacks import GifGenerator
@@ -159,9 +151,16 @@ losses = [
     (TotalVariation(model.input), 10)
 ]
 opt = Optimizer(model.input, losses)
-opt.minimize(max_iter=500, verbose=True, callbacks=[GifGenerator('opt_progress')])
+opt.minimize(max_iter=500, verbose=True, image_modifiers=[Jitter()], callbacks=[GifGenerator('opt_progress')])
 
 ```
+
+Notice how the output jitters around? This is because we used [Jitter](https://raghakot.github.io/keras-vis/vis.modifiers/#jitter), 
+a kind of [ImageModifier](https://raghakot.github.io/keras-vis/vis.modifiers/#imagemodifier) that is known to produce 
+crisper activation maximization images. As an exercise, try:
+
+- Without Jitter
+- Varying various loss weights
 
 ![opt_progress](https://raw.githubusercontent.com/raghakot/keras-vis/master/images/opt_progress.gif?raw=true "Optimization progress")
 

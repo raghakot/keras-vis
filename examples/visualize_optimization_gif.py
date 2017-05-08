@@ -1,5 +1,6 @@
 from vis.losses import ActivationMaximization
 from vis.regularizers import TotalVariation, LPNorm
+from vis.modifiers import Jitter
 from vis.optimizer import Optimizer
 
 from vis.callbacks import GifGenerator
@@ -26,7 +27,7 @@ def generate_opt_gif():
         (TotalVariation(model.input), 10)
     ]
     opt = Optimizer(model.input, losses)
-    opt.minimize(max_iter=500, verbose=True, callbacks=[GifGenerator('opt_progress')])
+    opt.minimize(max_iter=500, verbose=True, image_modifiers=[Jitter()], callbacks=[GifGenerator('opt_progress')])
 
 
 if __name__ == '__main__':

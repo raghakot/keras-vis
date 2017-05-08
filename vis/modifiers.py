@@ -1,7 +1,8 @@
 from __future__ import absolute_import
 
 import numpy as np
-from .utils import utils
+from scipy.ndimage.interpolation import shift
+from keras import backend as K
 
 
 class ImageModifier(object):
@@ -16,38 +17,13 @@ class ImageModifier(object):
     ```
     """
 
-    def __init__(self):
-        # These indices are required to handle difference in 'th'/'tf' dim orderings.
-        self._ch_idx, self._row_idx, self._col_idx = utils.get_img_indices()[1:]
-
-    @property
-    def channel_idx(self):
-        """Returns the proper channel index based on image dim ordering.
-        """
-        return self._ch_idx
-
-    @property
-    def row_idx(self):
-        """Returns the proper row index based on image dim ordering.
-        """
-        return self._row_idx
-
-    @property
-    def col_idx(self):
-        """Returns the proper col index based on image dim ordering.
-        """
-        return self._col_idx
-
     def pre(self, img):
         """Implement pre gradient descent update modification to the image. If pre-processing is not desired,
         simply ignore the implementation. It returns the unmodified `img` by default.
 
-        Properties `self.channel_idx`, `self.row_idx`, `self.col_idx` can be used to handle 'th'/'tf'
-        image dim ordering differences.
-
         Args:
-            img: 4D numpy array with shape: `(samples, channels, rows, cols)` if data_format='channels_first' or
-                `(samples, rows, cols, channels)` if data_format='channels_last'
+            img: An N-dim numpy array of shape: `(samples, channels, image_dims...)` if data_format='channels_first' or
+                `(samples, image_dims..., channels)` if data_format='channels_last'.
 
         Returns:
             The modified pre image.
@@ -58,12 +34,9 @@ class ImageModifier(object):
         """Implement post gradient descent update modification to the image. If post-processing is not desired,
         simply ignore the implementation. It returns the unmodified `img` by default.
 
-        Properties `self.channel_idx`, `self.row_idx`, `self.col_idx` can be used to handle 'th'/'tf'
-        image dim ordering differences.
-
         Args:
-            img: 4D numpy array with shape: `(samples, channels, rows, cols)` if data_format='channels_first' or
-                `(samples, rows, cols, channels)` if data_format='channels_last'
+            img: An N-dim numpy array of shape: `(samples, channels, image_dims...)` if data_format='channels_first' or
+                `(samples, image_dims..., channels)` if data_format='channels_last'.
 
         Returns:
             The modified post image.
@@ -82,13 +55,14 @@ class Jitter(ImageModifier):
         """
         super(Jitter, self).__init__()
         self.jitter = jitter
-        self.jx = 0
-        self.jy = 0
 
     def pre(self, img):
-        self.jx, self.jy = np.random.randint(-self.jitter, self.jitter+1, 2)
-        return np.roll(np.roll(img, self.jx, self.row_idx), self.jy, self.col_idx)
+        image_dims = len(img.shape) - 2
+        dim_offsets = np.random.randint(-self.jitter, self.jitter+1, image_dims).tolist()
 
-    def post(self, img):
-        # Un-shift the jitter.
-        return np.roll(np.roll(img, -self.jx, self.row_idx), -self.jy, self.col_idx)
+        if K.image_data_format() == 'channels_first':
+            shift_vector = np.array([0, 0] + dim_offsets)
+        else:
+            shift_vector = np.array([0] + dim_offsets + [0])
+
+        return shift(img, shift_vector, mode='wrap', order=0)

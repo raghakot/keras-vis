@@ -14,8 +14,8 @@ class Optimizer(object):
         """Creates an optimizer that minimizes weighted loss function.
 
         Args:
-            img_input: 4D image input tensor to the model of shape: `(samples, channels, rows, cols)`
-                if data_format='channels_first' or `(samples, rows, cols, channels)` if data_format='channels_last'.
+            img_input: An image input tensor of shape: `(samples, channels, image_dims...)` if 
+                data_format='channels_first' or `(samples, image_dims..., channels)` if data_format='channels_last'.
             losses: List of ([Loss](vis.losses#Loss), weight) tuples.
             wrt: Short for, with respect to. This instructs the optimizer that the aggregate loss from `losses`
                 should be minimized with respect to `wrt`. `wrt` can be any tensor that is part of the model graph.
@@ -66,26 +66,30 @@ class Optimizer(object):
         step = -grads / np.sqrt(cache + K.epsilon())
         return step, cache
 
-    def get_seed_img(self, seed_img):
-        """Creates the seed_img, along with other sanity checks.
+    def _get_seed_img(self, seed_img):
+        """Creates a random seed_img if None. Otherwise:
+            - Ensures batch_size dim on provided `seed_img`.
+            - Shuffle axis according to expected `data_format`.  
         """
-        samples, ch, rows, cols = utils.get_img_shape(self.img)
+        desired_shape = (1, ) + K.int_shape(self.img)[1:]
         if seed_img is None:
-            seed_img = utils.generate_rand_img(ch, rows, cols)
-        else:
-            if K.image_data_format() == 'channels_first':
-                seed_img = seed_img.transpose(2, 0, 1)
+            return utils.random_array(desired_shape)
 
-        # Convert to image tensor containing samples.
-        seed_img = np.array([seed_img], dtype=np.float32)
-        return seed_img
+        # Add batch dim if needed.
+        if len(seed_img.shape) != len(desired_shape):
+            seed_img = np.expand_dims(seed_img, 0)
+
+        # Only possible if channel idx is out of place.
+        if seed_img.shape != desired_shape:
+            seed_img = np.moveaxis(seed_img, -1, 1)
+        return seed_img.astype(K.floatx())
 
     def minimize(self, seed_img=None, max_iter=200, image_modifiers=None, callbacks=None, verbose=True):
         """Performs gradient descent on the input image with respect to defined losses.
 
         Args:
-            seed_img: 3D numpy array with shape: `(channels, rows, cols)` if data_format='channels_first' or
-                `(rows, cols, channels)` if data_format='channels_last'.
+            seed_img: An N-dim numpy array of shape: `(samples, channels, image_dims...)` 
+                if data_format='channels_first' or `(samples, image_dims..., channels)` if data_format='channels_last'. 
                 Seeded with random noise if set to None. (Default value = None)
             max_iter: The maximum number of gradient descent iterations. (Default value = 200)
             image_modifiers: A list of [../vis/modifiers/#ImageModifier](ImageModifier) instances specifying `pre` and
@@ -99,7 +103,7 @@ class Optimizer(object):
         Returns:
             The tuple of `(optimized_image, grads with respect to wrt, wrt_value)` after gradient descent iterations.
         """
-        seed_img = self.get_seed_img(seed_img)
+        seed_img = self._get_seed_img(seed_img)
         if image_modifiers is None:
             image_modifiers = []
 

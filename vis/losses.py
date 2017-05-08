@@ -18,7 +18,7 @@ class Loss(object):
         return self.name
 
     def build_loss(self):
-        """Implement this function to build the loss function expression.
+        """Implement this function to build the loss function expression. 
         Any additional arguments required to build this loss function may be passed in via `__init__`.
 
         Ideally, the function expression must be compatible with both theano/tensorflow backends with
@@ -27,13 +27,13 @@ class Loss(object):
 
         ```python
         # theano slice
-        conv_layer[:, filter_idx, :, :]
+        conv_layer[:, filter_idx, ...]
 
         # TF slice
-        conv_layer[:, :, :, filter_idx]
+        conv_layer[..., filter_idx]
 
         # Backend agnostic slice
-        conv_layer[utils.slicer[:, filter_idx, :, :]]
+        conv_layer[utils.slicer[:, filter_idx, ...]]
         ```
 
         [utils.get_img_shape](vis.utils.utils.md#get_img_shape) and
@@ -84,6 +84,6 @@ class ActivationMaximization(Loss):
                 loss += -K.mean(layer_output[:, idx])
             else:
                 # slicer is used to deal with theano/tensorflow without the ugly conditional statements.
-                loss += -K.mean(layer_output[utils.slicer[:, idx, :, :]])
+                loss += -K.mean(layer_output[utils.slicer[:, idx, ...]])
 
         return loss
