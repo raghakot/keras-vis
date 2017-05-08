@@ -151,8 +151,8 @@ def visualize_saliency(model, layer_idx, filter_indices,
     losses = [
         (ActivationMaximization(model.layers[layer_idx], filter_indices), 1)
     ]
-    opt = Optimizer(model.input, losses)
-    grads = opt.minimize(max_iter=1, verbose=False, seed_img=seed_img)[1]
+    opt = Optimizer(model.input, losses, norm_grads=False)
+    grads = opt.minimize(max_iter=1, verbose=False, seed_img=seed_img, )[1]
 
     # We are minimizing loss as opposed to maximizing output as with the paper.
     # So, negative gradients here mean that they reduce loss, maximizing class probability.
@@ -235,7 +235,7 @@ def visualize_cam(model, layer_idx, filter_indices,
     ]
 
     penultimate_output = model.layers[penultimate_layer_idx].output
-    opt = Optimizer(model.input, losses, wrt=penultimate_output)
+    opt = Optimizer(model.input, losses, wrt=penultimate_output, norm_grads=False)
     _, grads, penultimate_output_value = opt.minimize(seed_img, max_iter=1, verbose=False)
 
     # We are minimizing loss as opposed to maximizing output as with the paper.
