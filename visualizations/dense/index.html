@@ -193,8 +193,12 @@ layer_name = 'predictions'
 layer_idx = [idx for idx, layer in enumerate(model.layers) if layer.name == layer_name][0]
 
 # Generate three different images of the same output index.
-vis_images = [visualize_activation(model, layer_idx, filter_indices=idx, text=str(idx), max_iter=500)
-              for idx in [20, 20, 20]]
+vis_images = []
+for idx in [20, 20, 20]:
+    img = visualize_activation(model, layer_idx, filter_indices=idx, max_iter=500)
+    img = utils.draw_text(img, str(idx))
+    vis_images.append(img)
+
 stitched = utils.stitch_images(vis_images)    
 plt.axis('off')
 plt.imshow(stitched)
