@@ -246,7 +246,6 @@ class _BackendAgnosticImageSlice(object):
     def __getitem__(self, item_slice):
         """Assuming a slice for shape `(samples, channels, image_dims...)`
         """
-        assert len(item_slice) == 4
         if K.image_data_format() == 'channels_first':
             return item_slice
         else:
