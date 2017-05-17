@@ -152,7 +152,7 @@ def visualize_saliency(model, layer_idx, filter_indices,
         (ActivationMaximization(model.layers[layer_idx], filter_indices), 1)
     ]
     opt = Optimizer(model.input, losses, norm_grads=False)
-    grads = opt.minimize(max_iter=1, verbose=False, seed_img=seed_img, )[1]
+    grads = opt.minimize(max_iter=1, verbose=False, seed_img=seed_img)[1]
 
     # We are minimizing loss as opposed to maximizing output as with the paper.
     # So, negative gradients here mean that they reduce loss, maximizing class probability.
@@ -163,9 +163,9 @@ def visualize_saliency(model, layer_idx, filter_indices,
 
     # Normalize and zero out low probabilities for a cleaner output.
     grads /= np.max(grads)
-    heatmap = np.uint8(cm.jet(grads)[..., :3] * 255)
-    heatmap[np.where(grads < 0.2)] = 0
 
+    # Create jet heatmap.
+    heatmap = np.uint8(cm.jet(grads)[..., :3] * 255)
     heatmap = np.uint8(seed_img * alpha + heatmap * (1. - alpha))
     return heatmap[0]
 
@@ -242,6 +242,10 @@ def visualize_cam(model, layer_idx, filter_indices,
     # So, negative gradients here mean that they reduce loss, maximizing class probability.
     grads *= -1
 
+    # For numerical stability. Very small grad values along with small penultimate_output_value can cause
+    # w * penultimate_output_value to zero out, even for reasonable fp precision of float32.
+    grads /= np.max(grads)
+
     # Average pooling across all feature maps.
     # This captures the importance of feature map (channel) idx to the output
     channel_idx = 1 if K.image_data_format() == 'channels_first' else -1
@@ -268,9 +272,7 @@ def visualize_cam(model, layer_idx, filter_indices,
     heatmap = np.maximum(heatmap, 0)
     heatmap /= np.max(heatmap)
 
-    # Convert to heatmap and zero out low probabilities for a cleaner output.
+    # Create jet heatmap.
     heatmap_colored = np.uint8(cm.jet(heatmap)[..., :3] * 255)
-    heatmap_colored[np.where(heatmap < 0.2)] = 0
-
     heatmap_colored = np.uint8(seed_img * alpha + heatmap_colored * (1. - alpha))
     return heatmap_colored
