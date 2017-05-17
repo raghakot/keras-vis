@@ -5,8 +5,8 @@ import numpy as np
 import matplotlib.cm as cm
 import pprint
 
-from keras.layers.convolutional import Convolution2D
-from keras.layers.pooling import _Pooling2D
+from keras.layers.convolutional import _Conv
+from keras.layers.pooling import _Pooling1D, _Pooling2D, _Pooling3D
 from keras import backend as K
 
 from .losses import ActivationMaximization
@@ -221,12 +221,12 @@ def visualize_cam(model, layer_idx, filter_indices,
     # Search for the nearest penultimate `Convolutional` or `Pooling` layer.
     if penultimate_layer_idx is None:
         for idx, layer in utils.reverse_enumerate(model.layers[:layer_idx-1]):
-            if isinstance(layer, (Convolution2D, _Pooling2D)):
+            if isinstance(layer, (_Conv, _Pooling1D, _Pooling2D, _Pooling3D)):
                 penultimate_layer_idx = idx
                 break
 
     if penultimate_layer_idx is None:
-        raise ValueError('Unable to determine penultimate `Convolution2D` or `Pooling2D` '
+        raise ValueError('Unable to determine penultimate `Convolution` or `Pooling` '
                          'layer for layer_idx: {}'.format(layer_idx))
     assert penultimate_layer_idx < layer_idx
 
