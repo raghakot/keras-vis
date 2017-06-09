@@ -67,14 +67,9 @@ Concrete examples of various supported visualizations can be found in
 ## Installation
 
 1) Install [keras](https://github.com/fchollet/keras/blob/master/README.md#installation) 
-with theano or tensorflow backend. Note that this library requires keras > 2.0
+with theano or tensorflow backend. Note that this library requires Keras > 2.0
 
-2) Install OpenCV 
-```bash
-sudo apt-get install python-opencv
-```
-
-3) Install keras-vis
+2) Install keras-vis
 > From sources
 ```bash
 sudo python setup.py install
