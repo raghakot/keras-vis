@@ -1,10 +1,10 @@
 from __future__ import absolute_import
 
-import cv2
 import numpy as np
 import matplotlib.cm as cm
 import pprint
 
+from scipy.misc import imresize
 from keras.layers.convolutional import _Conv
 from keras.layers.pooling import _Pooling1D, _Pooling2D, _Pooling3D
 from keras import backend as K
@@ -161,10 +161,8 @@ def visualize_saliency(model, layer_idx, filter_indices,
     channel_idx = 1 if K.image_data_format() == 'channels_first' else -1
     grads = np.max(np.abs(grads), axis=channel_idx)
 
-    # Normalize and zero out low probabilities for a cleaner output.
-    grads /= np.max(grads)
-
-    # Create jet heatmap.
+    # Normalize and create heatmap
+    grads = utils.normalize(grads)
     heatmap = np.uint8(cm.jet(grads)[..., :3] * 255)
     heatmap = np.uint8(seed_img * alpha + heatmap * (1. - alpha))
     return heatmap[0]
@@ -244,7 +242,7 @@ def visualize_cam(model, layer_idx, filter_indices,
 
     # For numerical stability. Very small grad values along with small penultimate_output_value can cause
     # w * penultimate_output_value to zero out, even for reasonable fp precision of float32.
-    grads /= np.max(grads)
+    grads = utils.normalize(grads)
 
     # Average pooling across all feature maps.
     # This captures the importance of feature map (channel) idx to the output
@@ -254,7 +252,7 @@ def visualize_cam(model, layer_idx, filter_indices,
 
     # Generate heatmap by computing weight * output over feature maps
     output_dims = utils.get_img_shape(penultimate_output)[2:]
-    heatmap = np.ones(shape=output_dims, dtype=K.floatx())
+    heatmap = np.zeros(shape=output_dims, dtype=K.floatx())
     for i, w in enumerate(weights):
         if channel_idx == -1:
             heatmap += w * penultimate_output_value[0, ..., i]
@@ -263,10 +261,7 @@ def visualize_cam(model, layer_idx, filter_indices,
 
     # The penultimate feature map size is definitely smaller than input image.
     input_dims = utils.get_img_shape(model.input)[2:]
-
-    # TODO: Figure out a way to get rid of open cv dependency.
-    # skimage doesn't deal with arbitrary floating point ranges.
-    heatmap = cv2.resize(heatmap, input_dims, interpolation=cv2.INTER_CUBIC)
+    heatmap = imresize(heatmap, input_dims, interp='bicubic', mode='F')
 
     # ReLU thresholding, normalize between (0, 1)
     heatmap = np.maximum(heatmap, 0)

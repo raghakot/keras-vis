@@ -239,6 +239,23 @@ def bgr2rgb(img):
     return img[..., ::-1]
 
 
+def normalize(array, min_value=0., max_value=1.):
+    """Normalizes the numpy array to (min_value, max_value)
+
+    Args:
+        array: The numpy array
+        min_value: The min value in normalized array (Default value = 0)
+        max_value: The max value in normalized array (Default value = 1)
+
+    Returns:
+        The array normalized to range between (min_value, max_value)
+    """
+    arr_min = np.min(array)
+    arr_max = np.max(array)
+    normalized = (array - arr_min) / (arr_max - arr_min)
+    return (max_value - min_value) * normalized + min_value
+
+
 class _BackendAgnosticImageSlice(object):
     """Utility class to make image slicing uniform across various `data_format`.
     """
