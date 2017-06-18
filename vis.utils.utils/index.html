@@ -137,6 +137,8 @@
         
             <li><a class="toctree-l5" href="#bgr2rgb">bgr2rgb</a></li>
         
+            <li><a class="toctree-l5" href="#normalize">normalize</a></li>
+        
         </ul>
     
 
@@ -200,7 +202,7 @@
 <li><strong>slicer</strong></li>
 </ul>
 <hr />
-<h3 id="set_random_seed"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L43">set_random_seed</a></h3>
+<h3 id="set_random_seed"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L42">set_random_seed</a></h3>
 <pre><code class="python">set_random_seed(seed_value=1337)
 </code></pre>
 
@@ -210,19 +212,19 @@
 <li><strong>seed_value</strong>:  The seed value to use. (Default Value = infamous 1337)</li>
 </ul>
 <hr />
-<h3 id="reverse_enumerate"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L52">reverse_enumerate</a></h3>
+<h3 id="reverse_enumerate"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L51">reverse_enumerate</a></h3>
 <pre><code class="python">reverse_enumerate(iterable)
 </code></pre>
 
 <p>Enumerate over an iterable in reverse order while retaining proper indexes, without creating any copies.</p>
 <hr />
-<h3 id="listify"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L58">listify</a></h3>
+<h3 id="listify"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L57">listify</a></h3>
 <pre><code class="python">listify(value)
 </code></pre>
 
 <p>Ensures that the value is a list. If it is not a list, it creates a new list with <code>value</code> as an item.</p>
 <hr />
-<h3 id="random_array"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L66">random_array</a></h3>
+<h3 id="random_array"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L65">random_array</a></h3>
 <pre><code class="python">random_array(shape, mean=128.0, std=20.0)
 </code></pre>
 
@@ -235,7 +237,7 @@
 </ul>
 <p><em>Returns: Random numpy array of given <code>shape</code> uniformly distributed with desired <code>mean</code> and <code>std</code>.</em></p>
 <hr />
-<h3 id="deprocess_image"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L84">deprocess_image</a></h3>
+<h3 id="deprocess_image"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L83">deprocess_image</a></h3>
 <pre><code class="python">deprocess_image(img)
 </code></pre>
 
@@ -248,7 +250,7 @@
 <p><em>Returns:</em></p>
 <p>A valid image output.</p>
 <hr />
-<h3 id="stitch_images"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L109">stitch_images</a></h3>
+<h3 id="stitch_images"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L108">stitch_images</a></h3>
 <pre><code class="python">stitch_images(images, margin=5, cols=5)
 </code></pre>
 
@@ -263,7 +265,7 @@
 <p><em>Returns:</em></p>
 <p>A single numpy image array comprising of input images.</p>
 <hr />
-<h3 id="get_img_shape"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L144">get_img_shape</a></h3>
+<h3 id="get_img_shape"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L143">get_img_shape</a></h3>
 <pre><code class="python">get_img_shape(img)
 </code></pre>
 
@@ -276,7 +278,7 @@
 <p><em>Returns:</em></p>
 <p>Tuple containing image shape information in <code>(samples, channels, image_dims...)</code> order.</p>
 <hr />
-<h3 id="load_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L166">load_img</a></h3>
+<h3 id="load_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L165">load_img</a></h3>
 <pre><code class="python">load_img(path, grayscale=False, target_size=None)
 </code></pre>
 
@@ -290,7 +292,7 @@
 <p><em>Returns:</em></p>
 <p>The loaded numpy image.</p>
 <hr />
-<h3 id="get_imagenet_label"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L183">get_imagenet_label</a></h3>
+<h3 id="get_imagenet_label"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L182">get_imagenet_label</a></h3>
 <pre><code class="python">get_imagenet_label(indices, join=&quot;, &quot;)
 </code></pre>
 
@@ -303,7 +305,7 @@
 <p><em>Returns:</em></p>
 <p>Image net label corresponding to the image category.</p>
 <hr />
-<h3 id="draw_text"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L202">draw_text</a></h3>
+<h3 id="draw_text"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L201">draw_text</a></h3>
 <pre><code class="python">draw_text(img, text, position=(10, 10), font=&quot;FreeSans.ttf&quot;, font_size=14, color=(0, 0, 0))
 </code></pre>
 
@@ -319,7 +321,7 @@
 </ul>
 <p><em>Returns: Image overlayed with text.</em></p>
 <hr />
-<h3 id="bgr2rgb"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L231">bgr2rgb</a></h3>
+<h3 id="bgr2rgb"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L230">bgr2rgb</a></h3>
 <pre><code class="python">bgr2rgb(img)
 </code></pre>
 
@@ -329,6 +331,20 @@
 <li><strong>img</strong>:  Numpy array in RGB or BGR format</li>
 </ul>
 <p><em>Returns: The converted image format</em></p>
+<hr />
+<h3 id="normalize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L241">normalize</a></h3>
+<pre><code class="python">normalize(array, min_value=0.0, max_value=1.0)
+</code></pre>
+
+<p>Normalizes the numpy array to (min_value, max_value)</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>array</strong>:  The numpy array</li>
+<li><strong>min_value</strong>:  The min value in normalized array (Default value = 0)</li>
+<li><strong>max_value</strong>:  The max value in normalized array (Default value = 1)</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The array normalized to range between (min_value, max_value)</p>
               
             </div>
           </div>

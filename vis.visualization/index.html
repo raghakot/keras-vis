@@ -186,7 +186,7 @@
 <p><em>Returns: Total number of filters within <code>layer</code>.</em></p>
 <p>For <code>keras.layers.Dense</code> layer, this is the total number of outputs.</p>
 <hr />
-<h3 id="visualize_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L41">visualize_activation</a></h3>
+<h3 id="visualize_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L37">visualize_activation</a></h3>
 <pre><code class="python">visualize_activation(model, layer_idx, filter_indices=None, seed_img=None, act_max_weight=1, \
     lp_norm_weight=10, tv_weight=10, **optimizer_params)
 </code></pre>
@@ -230,7 +230,7 @@ final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</
 <p><em>Returns:</em></p>
 <p>Stitched image output visualizing input images that maximize the filter output(s). (Default value = 10)</p>
 <hr />
-<h3 id="visualize_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L113">visualize_saliency</a></h3>
+<h3 id="visualize_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L109">visualize_saliency</a></h3>
 <pre><code class="python">visualize_saliency(model, layer_idx, filter_indices, seed_img, alpha=0.5)
 </code></pre>
 
@@ -262,7 +262,7 @@ final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</
 <p>The heatmap image, overlayed with <code>seed_img</code> using <code>alpha</code>, indicating image regions that, when changed, 
 would contribute the most towards maximizing the output of <code>filter_indices</code>.</p>
 <hr />
-<h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L173">visualize_cam</a></h3>
+<h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L167">visualize_cam</a></h3>
 <pre><code class="python">visualize_cam(model, layer_idx, filter_indices, seed_img, penultimate_layer_idx=None, alpha=0.5)
 </code></pre>
 
