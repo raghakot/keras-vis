@@ -26,16 +26,12 @@ def get_num_filters(layer):
     Returns: Total number of filters within `layer`.
         For `keras.layers.Dense` layer, this is the total number of outputs.
     """
-    # For all other layers it is 4
-    isDense = K.ndim(layer.output) == 2
+    # Handle layers with no channels.
+    if K.ndim(layer.output) == 2:
+        return K.int_shape(layer.output)[-1]
 
-    if isDense:
-        return layer.output.shape[1]
-    else:
-        if K.image_data_format() == 'channels_first':
-            return K.int_shape(layer.output)[1]
-        else:
-            return K.int_shape(layer.output)[3]
+    channel_idx = 1 if K.image_data_format() == 'channels_first' else -1
+    return K.int_shape(layer.output)[channel_idx]
 
 
 def visualize_activation(model, layer_idx, filter_indices=None, seed_img=None,
