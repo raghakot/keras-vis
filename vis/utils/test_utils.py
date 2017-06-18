@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import six
+import tensorflow as tf
 from keras import backend as K
 
 
@@ -20,4 +21,5 @@ def across_data_formats(func):
             func(*args, **kwargs)
             if K.backend() == 'tensorflow':
                 K.clear_session()
+                tf.reset_default_graph()
     return wrapper

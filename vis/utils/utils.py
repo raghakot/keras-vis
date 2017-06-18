@@ -7,7 +7,6 @@ import matplotlib.font_manager as fontman
 import os
 import math
 import json
-import itertools
 
 from skimage import io, transform
 from collections import Iterable
@@ -52,7 +51,7 @@ def set_random_seed(seed_value=1337):
 def reverse_enumerate(iterable):
     """Enumerate over an iterable in reverse order while retaining proper indexes, without creating any copies.
     """
-    return itertools.izip(reversed(range(len(iterable))), reversed(iterable))
+    return zip(reversed(range(len(iterable))), reversed(iterable))
 
 
 def listify(value):
