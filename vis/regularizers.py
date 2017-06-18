@@ -69,9 +69,7 @@ class TotalVariation(Loss):
             start_slice = np.roll(start_slice, 1).tolist()
             end_slice = np.roll(end_slice, 1).tolist()
 
-        # Sum over all axis except batch dim to compute total variation for each image.
-        sum_axis = tuple(np.arange(1, K.ndim(self.img)))
-        tv = K.sum(K.pow(tv, self.beta / 2.), axis=sum_axis)
+        tv = K.sum(K.pow(tv, self.beta / 2.))
         return normalize(self.img, tv)
 
 
