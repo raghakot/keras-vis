@@ -130,8 +130,8 @@ class Optimizer(object):
             overall_loss, grads, wrt_value = computed_values[len(self.loss_names):]
 
             # TODO: theano grads shape in inconsistent for some reason. Patch for now and investigate later.
-            if grads.shape != seed_img.shape:
-                grads = np.reshape(grads, seed_img.shape if self.wrt == self.img else wrt_value.shape)
+            if grads.shape != wrt_value.shape:
+                grads = np.reshape(grads, wrt_value.shape)
 
             # Trigger callbacks
             for c in callbacks:
