@@ -129,7 +129,7 @@ class Optimizer(object):
             named_losses = zip(self.loss_names, losses)
             overall_loss, grads, wrt_value = computed_values[len(self.loss_names):]
 
-            # TODO: theano grads shape in inconsistent for some reason. Patch for now and investigate later.
+            # TODO: theano grads shape is inconsistent for some reason. Patch for now and investigate later.
             if grads.shape != wrt_value.shape:
                 grads = np.reshape(grads, wrt_value.shape)
 
