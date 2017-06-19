@@ -261,7 +261,7 @@ def visualize_cam(model, layer_idx, filter_indices,
 
     # ReLU thresholding, normalize between (0, 1)
     heatmap = np.maximum(heatmap, 0)
-    heatmap /= np.max(heatmap)
+    heatmap = utils.normalize(heatmap)
 
     # Create jet heatmap.
     heatmap_colored = np.uint8(cm.jet(heatmap)[..., :3] * 255)
