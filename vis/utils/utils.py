@@ -251,7 +251,7 @@ def normalize(array, min_value=0., max_value=1.):
     """
     arr_min = np.min(array)
     arr_max = np.max(array)
-    normalized = (array - arr_min) / (arr_max - arr_min)
+    normalized = (array - arr_min) / (arr_max - arr_min + K.epsilon())
     return (max_value - min_value) * normalized + min_value
 
 
