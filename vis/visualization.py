@@ -165,7 +165,7 @@ def visualize_saliency(model, layer_idx, filter_indices,
 
 
 def visualize_cam(model, layer_idx, filter_indices,
-                  seed_img, penultimate_layer_idx=None, alpha=0.5):
+                  seed_img, penultimate_layer_idx=None, alpha=0.5, input_data_rnn=None):
     """Generates a gradient based class activation map (CAM) as described in paper
     [Grad-CAM: Why did you say that? Visual Explanations from Deep Networks via Gradient-based Localization](https://arxiv.org/pdf/1610.02391v1.pdf).
     Unlike [class activation mapping](https://arxiv.org/pdf/1512.04150v1.pdf), which requires minor changes to
@@ -190,6 +190,7 @@ def visualize_cam(model, layer_idx, filter_indices,
             wrt filter output. If not provided, it is set to the nearest penultimate `Convolutional` or `Pooling` layer.
         alpha: The alpha value of image as overlayed onto the heatmap. 
             This value needs to be between [0, 1], with 0 being heatmap only to 1 being image only (Default value = 0.5)
+        input_data_rnn: np.array of for CNN-RNN
 
      Example:
         If you wanted to visualize attention over 'bird' category, say output index 22 on the
@@ -215,7 +216,10 @@ def visualize_cam(model, layer_idx, filter_indices,
     # Search for the nearest penultimate `Convolutional` or `Pooling` layer.
     if penultimate_layer_idx is None:
         for idx, layer in utils.reverse_enumerate(model.layers[:layer_idx-1]):
-            if isinstance(layer, (_Conv, _Pooling1D, _Pooling2D, _Pooling3D)):
+            layer_each = layer
+            if 'layer' in vars(layer):
+                layer_each = layer.layer
+            if isinstance(layer_each, (_Conv, _Pooling1D, _Pooling2D, _Pooling3D)):
                 penultimate_layer_idx = idx
                 break
 
@@ -228,9 +232,16 @@ def visualize_cam(model, layer_idx, filter_indices,
         (ActivationMaximization(model.layers[layer_idx], filter_indices), 1)
     ]
 
+    layer_final = model.layers[penultimate_layer_idx]
+    if not isinstance(layer_final, (_Conv, _Pooling1D, _Pooling2D, _Pooling3D)):
+        layer_final = model.layers[penultimate_layer_idx].layer
+
     penultimate_output = model.layers[penultimate_layer_idx].output
     opt = Optimizer(model.input, losses, wrt=penultimate_output, norm_grads=False)
-    _, grads, penultimate_output_value = opt.minimize(seed_img, max_iter=1, verbose=False)
+
+    if input_data_rnn is None:
+        input_data_rnn = seed_img
+    _, grads, penultimate_output_value = opt.minimize(input_data_rnn, max_iter=1, verbose=False)
 
     # We are minimizing loss as opposed to maximizing output as with the paper.
     # So, negative gradients here mean that they reduce loss, maximizing class probability.
@@ -256,7 +267,11 @@ def visualize_cam(model, layer_idx, filter_indices,
             heatmap += w * penultimate_output_value[0, i, ...]
 
     # The penultimate feature map size is definitely smaller than input image.
-    input_dims = utils.get_img_shape(model.input)[2:]
+    model_input = model.input
+    if not input_data_rnn is None:
+        model_input = input_data_rnn[-1]
+        heatmap = heatmap[-1]
+    input_dims = utils.get_img_shape(model_input)[2:]
     heatmap = imresize(heatmap, input_dims, interp='bicubic', mode='F')
 
     # ReLU thresholding, normalize between (0, 1)
