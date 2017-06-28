@@ -12,7 +12,7 @@ setup(name='keras-vis',
       url='https://github.com/raghakot/keras-vis',
       download_url='https://github.com/raghakot/keras-vis/tarball/{}'.format(version),
       license='MIT',
-      install_requires=['keras', 'six', 'scikit-image'],
+      install_requires=['keras', 'six', 'scikit-image', 'matplotlib'],
       extras_require={
           'vis_utils': ['Pillow', 'imageio'],
           'tests': ['pytest',
