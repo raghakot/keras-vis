@@ -52,10 +52,8 @@ script:
   # set up keras backend
   - sed -i -e 's/"backend":[[:space:]]*"[^"]*/"backend":\ "'$KERAS_BACKEND'/g' ~/.keras/keras.json;
   - echo -e "Running tests with the following config:\n$(cat ~/.keras/keras.json)"
-
-  if [[ "$TEST_MODE" == "PEP8" ]]; then
-    PYTHONPATH=$PWD:$PYTHONPATH py.test --pep8 -m pep8 -n0;
-  else
-    PYTHONPATH=$PWD:$PYTHONPATH/tests py.test
-after_success:
-  - coveralls
+  - if [[ "$TEST_MODE" == "PEP8" ]]; then
+      PYTHONPATH=$PWD:$PYTHONPATH py.test --pep8 -m pep8 -n0;
+    else
+      PYTHONPATH=$PWD:$PYTHONPATH/tests py.test
+    fi
