@@ -47,6 +47,13 @@ def set_random_seed(seed_value=1337):
     """
     np.random.seed(seed_value)
 
+    # Set tensorflow seed if available.
+    try:
+        import tensorflow as tf
+        tf.set_random_seed(seed_value)
+    except ImportError:
+        pass
+
 
 def reverse_enumerate(iterable):
     """Enumerate over an iterable in reverse order while retaining proper indexes, without creating any copies.
@@ -63,8 +70,8 @@ def listify(value):
 
 
 def random_array(shape, mean=128., std=20.):
-    """Creates a uniformly distributed random array with the given mean and std.
-    
+    """Creates a uniformly distributed random array with the given `mean` and `std`.
+
     Args:
         shape: The desired shape
         mean: The desired mean (Default value = 128)
@@ -74,35 +81,34 @@ def random_array(shape, mean=128., std=20.):
     """
     x = np.random.random(shape)
     # normalize around mean=0, std=1
-    x = (x - np.mean(x)) / np.std(x)
+    x = (x - np.mean(x)) / (np.std(x) + K.epsilon())
     # and then around the desired mean/std
     x = (x * std) + mean
     return x
 
 
-def deprocess_image(img):
-    """Utility function to convert optimized image output into a valid image.
+def deprocess_input(input_array, input_range=(0, 255)):
+    """Utility function to scale the `input_array` to `input_range` throwing away high frequency artifacts.
 
     Args:
-        img: N dim numpy image array with shape: `(channels, image_dims...)` if data_format='channels_first' or
-            `(image_dims..., channels)` if data_format='channels_last'.
+        input_array: An N-dim numpy array.
+        input_range: Specifies the input range as a `(min, max)` tuple to rescale the `input_array`.
 
     Returns:
-        A valid image output.
+        The rescaled `input_array`.
     """
     # normalize tensor: center on 0., ensure std is 0.1
-    img = img.copy()
-    img -= img.mean()
-    img /= (img.std() + 1e-5)
-    img *= 0.1
+    input_array = input_array.copy()
+    input_array -= input_array.mean()
+    input_array /= (input_array.std() + K.epsilon())
+    input_array *= 0.1
 
     # clip to [0, 1]
-    img += 0.5
-    img = np.clip(img, 0, 1)
+    input_array += 0.5
+    input_array = np.clip(input_array, 0, 1)
 
-    # convert to RGB array
-    img *= 255
-    return np.clip(img, 0, 255).astype('uint8')
+    # Convert to `input_range`
+    return (input_range[1] - input_range[0]) * input_array + input_range[0]
 
 
 def stitch_images(images, margin=5, cols=5):
@@ -135,7 +141,7 @@ def stitch_images(images, margin=5, cols=5):
                 break
 
             stitched_images[(h + margin) * row: (h + margin) * row + h,
-            (w + margin) * col: (w + margin) * col + w, :] = images[img_idx]
+                            (w + margin) * col: (w + margin) * col + w, :] = images[img_idx]
 
     return stitched_images
 
@@ -200,11 +206,11 @@ def get_imagenet_label(indices, join=', '):
 
 def draw_text(img, text, position=(10, 10), font='FreeSans.ttf', font_size=14, color=(0, 0, 0)):
     """Draws text over the image. Requires PIL.
-    
+
     Args:
         img: The image to use.
         text: The text string to overlay.
-        position: The text (x, y) position. (Default value = (10, 10)) 
+        position: The text (x, y) position. (Default value = (10, 10))
         font: The ttf or open type font to use. (Default value = 'FreeSans.ttf')
         font_size: The text font size. (Default value = 12)
         color: The (r, g, b) values for text color. (Default value = (0, 0, 0))
@@ -229,7 +235,7 @@ def draw_text(img, text, position=(10, 10), font='FreeSans.ttf', font_size=14, c
 
 def bgr2rgb(img):
     """Converts an RGB image to BGR and vice versa
-    
+
     Args:
         img: Numpy array in RGB or BGR format
 
@@ -256,7 +262,7 @@ def normalize(array, min_value=0., max_value=1.):
 
 
 class _BackendAgnosticImageSlice(object):
-    """Utility class to make image slicing uniform across various `data_format`.
+    """Utility class to make image slicing uniform across various `image_data_format`.
     """
 
     def __getitem__(self, item_slice):
@@ -271,9 +277,9 @@ class _BackendAgnosticImageSlice(object):
             return tuple(item_slice)
 
 
-"""Slice utility to make image slicing uniform across various `data_format`.
+"""Slice utility to make image slicing uniform across various `image_data_format`.
 Example:
-    conv_layer[utils.slicer[:, filter_idx, :, :]] will work for both `channels_first` and `channels_last` data formats
-    even though, in tensorflow, slice should be conv_layer[utils.slicer[:, :, :, filter_idx]]
+    conv_layer[utils.slicer[:, filter_idx, :, :]] will work for both `channels_first` and `channels_last` image
+    data formats even though, in tensorflow, slice should be conv_layer[utils.slicer[:, :, :, filter_idx]]
 """
 slicer = _BackendAgnosticImageSlice()

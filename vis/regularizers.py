@@ -8,21 +8,20 @@ from .losses import Loss
 from .utils import utils
 
 
-def normalize(img, tensor):
-    """
-    Normalizes the tensor with respect to image dimensions. This makes regularizer weight factor more or less
-    uniform across various input image dimensions.
+def normalize(input_tensor, output_tensor):
+    """Normalizes the `output_tensor` with respect to `input_tensor` dimensions.
+    This makes regularizer weight factor more or less uniform across various input image dimensions.
 
     Args:
-        img: An tensor of shape: `(samples, channels, image_dims...)` if data_format='channels_first' or
-            `(samples, image_dims..., channels)` if data_format='channels_last'.
-        tensor: The tensor to normalize
+        input_tensor: An tensor of shape: `(samples, channels, image_dims...)` if `image_data_format=
+                channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
+        output_tensor: The tensor to normalize.
 
     Returns:
         The normalized tensor.
     """
-    image_dims = utils.get_img_shape(img)[1:]
-    return tensor / np.prod(image_dims)
+    image_dims = utils.get_img_shape(input_tensor)[1:]
+    return output_tensor / np.prod(image_dims)
 
 
 class TotalVariation(Loss):
@@ -34,8 +33,8 @@ class TotalVariation(Loss):
         for details.
 
         Args:
-            img_input: An image tensor of shape: `(samples, channels, image_dims...)` if data_format='channels_first' or
-                `(samples, image_dims..., channels)` if data_format='channels_last'.
+            img_input: An image tensor of shape: `(samples, channels, image_dims...)` if `image_data_format=`channels_first`
+                or `(samples, image_dims..., channels)` if `image_data_format=channels_last`
             beta: Smaller values of beta give sharper but 'spikier' images.
                 Values \(\in [1.5, 3.0]\) are recommended as a reasonable compromise. (Default value = 2.)
         """

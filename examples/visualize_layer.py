@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 
 from vis.utils import utils
 from vis.utils.vggnet import VGG16
-from vis.visualization import visualize_activation
+from vis.visualization import visualize_class_activation
 
 
 def visualize_random(num_categories=10, show=True):
@@ -11,6 +11,7 @@ def visualize_random(num_categories=10, show=True):
 
     Args:
         num_categories: The number of random categories to visualize. (Default Value = 5)
+        show: True to show output.
     """
     # Build the VGG16 network with ImageNet weights
     model = VGG16(weights='imagenet', include_top=True)
@@ -25,7 +26,7 @@ def visualize_random(num_categories=10, show=True):
     indices = np.random.permutation(1000)[:num_categories]
     images = []
     for idx in indices:
-        img = visualize_activation(model, layer_idx, filter_indices=idx, max_iter=500)
+        img = visualize_class_activation(model, layer_idx, filter_indices=idx, max_iter=500)
         img = utils.draw_text(img, utils.get_imagenet_label(idx))
         images.append(img)
 
@@ -43,6 +44,7 @@ def visualize_multiple_same_filter(num_runs=3, show=True):
 
     Args:
         num_runs: The number of times the same filter is visualized
+        show: True to show output.
     """
     # Build the VGG16 network with ImageNet weights
     model = VGG16(weights='imagenet', include_top=True)
@@ -57,7 +59,7 @@ def visualize_multiple_same_filter(num_runs=3, show=True):
     indices = [20] * num_runs
     images = []
     for idx in indices:
-        img = visualize_activation(model, layer_idx, filter_indices=idx, max_iter=500)
+        img = visualize_class_activation(model, layer_idx, filter_indices=idx, max_iter=500)
         img = utils.draw_text(img, utils.get_imagenet_label(idx))
         images.append(img)
 
@@ -86,7 +88,7 @@ def visualize_multiple_categories(show=True):
     indices = [20, [20, 71]]
     images = []
     for idx in indices:
-        img = visualize_activation(model, layer_idx, filter_indices=idx, max_iter=500)
+        img = visualize_class_activation(model, layer_idx, filter_indices=idx, max_iter=500)
         img = utils.draw_text(img, utils.get_imagenet_label(idx))
         images.append(img)
 

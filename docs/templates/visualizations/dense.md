@@ -13,7 +13,7 @@ from matplotlib import pyplot as plt
 
 from vis.utils import utils
 from vis.utils.vggnet import VGG16
-from vis.visualization import visualize_activation
+from vis.visualization import visualize_class_activation
 
 
 # Build the VGG16 network with ImageNet weights
@@ -28,7 +28,7 @@ layer_idx = [idx for idx, layer in enumerate(model.layers) if layer.name == laye
 # Generate three different images of the same output index.
 vis_images = []
 for idx in [20, 20, 20]:
-    img = visualize_activation(model, layer_idx, filter_indices=idx, max_iter=500)
+    img = visualize_class_activation(model, layer_idx, filter_indices=idx, max_iter=500)
     img = utils.draw_text(img, str(idx))
     vis_images.append(img)
 
@@ -62,7 +62,7 @@ of using [ActivationMaximization](vis.losses#ActivationMaximization) loss. Multi
 all over the image would certainly maximize the output value.
 
 If we want more natural looking images, we need a better *natural image prior*. A natural image prior is something that
-captures the degree of naturalness. By default [visualize_activation](vis.visualization#visualize_activation) uses:
+captures the degree of naturalness. By default [visualize_class_activation](vis.visualization#visualize_class_activation) uses:
 
 * [TotalVariation](vis.regularizers#TotalVariation) regularizer to Prefer blobbier images. i.e., not bobby images emit higher loss values.
 * [LPNorm](vis.regularizers#LPNorm) regularizer to limit the color range.
@@ -78,3 +78,11 @@ input image is real/fake. To learn more about GANs in general, read: [Unsupervis
 Generative Adversarial Networks](https://arxiv.org/abs/1511.06434)
 
 *I am currently in the process of building a GAN regularizer. Stay tuned!*
+
+## Advanced use cases
+
+Internally, `visualize_class_activation` uses [visualize_activation](../vis.visualization/#visualize_activation) method 
+that is capable of using custom loss. For example, if the output of your model is not a class but a regression output 
+(for example, predicting the age), then a different loss function needs to be used. This is precisely what 
+[visualize_regression_activation](../vis.visualization/#visualize_regression_activation) does. 
+Details on regression visualizations will be covered in a separate section.

@@ -5,8 +5,7 @@ from keras.preprocessing.image import img_to_array
 
 from vis.utils import utils
 from vis.utils.vggnet import VGG16
-from vis.visualization import visualize_saliency
-from vis.visualization import visualize_cam
+from vis.visualization import visualize_class_saliency, visualize_class_cam, overlay
 
 
 def generate_saliceny_map(show=True):
@@ -31,7 +30,8 @@ def generate_saliceny_map(show=True):
         img_input = np.expand_dims(img_to_array(bgr_img), axis=0)
         pred_class = np.argmax(model.predict(img_input))
 
-        heatmap = visualize_saliency(model, layer_idx, [pred_class], seed_img)
+        heatmap = visualize_class_saliency(model, layer_idx, [pred_class], bgr_img)
+        heatmap = overlay(seed_img, heatmap)
         if show:
             plt.axis('off')
             plt.imshow(heatmap)
@@ -60,7 +60,8 @@ def generate_cam(show=True):
         img_input = np.expand_dims(img_to_array(bgr_img), axis=0)
         pred_class = np.argmax(model.predict(img_input))
 
-        heatmap = visualize_cam(model, layer_idx, [pred_class], seed_img)
+        heatmap = visualize_class_cam(model, layer_idx, [pred_class], bgr_img)
+        heatmap = overlay(seed_img, heatmap)
         if show:
             plt.axis('off')
             plt.imshow(heatmap)

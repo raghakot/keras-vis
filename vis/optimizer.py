@@ -10,23 +10,27 @@ _PRINT_CALLBACK = Print()
 
 class Optimizer(object):
 
-    def __init__(self, img_input, losses, wrt=None, norm_grads=True):
+    def __init__(self, input_tensor, losses, input_range=(0, 255), wrt_tensor=None, norm_grads=True):
         """Creates an optimizer that minimizes weighted loss function.
 
         Args:
-            img_input: An image input tensor of shape: `(samples, channels, image_dims...)` if 
-                data_format='channels_first' or `(samples, image_dims..., channels)` if data_format='channels_last'.
+            input_tensor: An input tensor of shape: `(samples, channels, image_dims...)` if `image_data_format=
+                channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
             losses: List of ([Loss](vis.losses#Loss), weight) tuples.
-            wrt: Short for, with respect to. This instructs the optimizer that the aggregate loss from `losses`
+            input_range: Specifies the input range as a `(min, max)` tuple. This is used to rescale the
+                final optimized input to the given range. (Default value=(0, 255))
+            wrt_tensor: Short for, with respect to. This instructs the optimizer that the aggregate loss from `losses`
                 should be minimized with respect to `wrt`. `wrt` can be any tensor that is part of the model graph.
-                Default value is set to None which means that loss will simply be minimized with respect to `img_input`.
-            norm_grads: True to normalize gradients. Normalization avoids very small or large gradients and ensures 
-                a smooth gradient gradient descent process. If you want the actual gradient, set this to false.
+                Default value is set to None which means that loss will simply be minimized with respect to `input_tensor`.
+            norm_grads: True to normalize gradients. Normalization avoids very small or large gradients and ensures
+                a smooth gradient gradient descent process. If you want the actual gradient
+                (for example, visualizing attention), set this to false.
         """
-        self.img = img_input
+        self.input_tensor = input_tensor
+        self.input_range = input_range
         self.loss_names = []
         self.loss_functions = []
-        self.wrt = self.img if wrt is None else wrt
+        self.wrt_tensor = self.input_tensor if wrt_tensor is None else wrt_tensor
 
         overall_loss = None
         for loss, weight in losses:
@@ -38,13 +42,13 @@ class Optimizer(object):
                 self.loss_functions.append(loss_fn)
 
         # Compute gradient of overall with respect to `wrt` tensor.
-        grads = K.gradients(overall_loss, self.wrt)[0]
+        grads = K.gradients(overall_loss, self.wrt_tensor)[0]
         if norm_grads:
             grads = grads / (K.sqrt(K.mean(K.square(grads))) + K.epsilon())
 
         # The main function to compute various quantities in optimization loop.
-        self.compute_fn = K.function([self.img, K.learning_phase()],
-                                     self.loss_functions + [overall_loss, grads, self.wrt])
+        self.compute_fn = K.function([self.input_tensor, K.learning_phase()],
+                                     self.loss_functions + [overall_loss, grads, self.wrt_tensor])
 
     def _rmsprop(self, grads, cache=None, decay_rate=0.95):
         """Uses RMSProp to compute step from gradients.
@@ -66,30 +70,31 @@ class Optimizer(object):
         step = -grads / np.sqrt(cache + K.epsilon())
         return step, cache
 
-    def _get_seed_img(self, seed_img):
-        """Creates a random seed_img if None. Otherwise:
-            - Ensures batch_size dim on provided `seed_img`.
-            - Shuffle axis according to expected `data_format`.  
+    def _get_seed_input(self, seed_input):
+        """Creates a random `seed_input` if None. Otherwise:
+            - Ensures batch_size dim on provided `seed_input`.
+            - Shuffle axis according to expected `image_data_format`.
         """
-        desired_shape = (1, ) + K.int_shape(self.img)[1:]
-        if seed_img is None:
-            return utils.random_array(desired_shape)
+        desired_shape = (1, ) + K.int_shape(self.input_tensor)[1:]
+        if seed_input is None:
+            return utils.random_array(desired_shape, mean=np.mean(self.input_range),
+                                      std=0.05 * (self.input_range[1] - self.input_range[0]))
 
         # Add batch dim if needed.
-        if len(seed_img.shape) != len(desired_shape):
-            seed_img = np.expand_dims(seed_img, 0)
+        if len(seed_input.shape) != len(desired_shape):
+            seed_input = np.expand_dims(seed_input, 0)
 
         # Only possible if channel idx is out of place.
-        if seed_img.shape != desired_shape:
-            seed_img = np.moveaxis(seed_img, -1, 1)
-        return seed_img.astype(K.floatx())
+        if seed_input.shape != desired_shape:
+            seed_input = np.moveaxis(seed_input, -1, 1)
+        return seed_input.astype(K.floatx())
 
-    def minimize(self, seed_img=None, max_iter=200, image_modifiers=None, callbacks=None, verbose=True):
+    def minimize(self, seed_input=None, max_iter=200, image_modifiers=None, callbacks=None, verbose=True):
         """Performs gradient descent on the input image with respect to defined losses.
 
         Args:
-            seed_img: An N-dim numpy array of shape: `(samples, channels, image_dims...)` 
-                if data_format='channels_first' or `(samples, image_dims..., channels)` if data_format='channels_last'. 
+            seed_input: An N-dim numpy array of shape: `(samples, channels, image_dims...)` if `image_data_format=
+                channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
                 Seeded with random noise if set to None. (Default value = None)
             max_iter: The maximum number of gradient descent iterations. (Default value = 200)
             image_modifiers: A list of [../vis/modifiers/#ImageModifier](ImageModifier) instances specifying `pre` and
@@ -98,12 +103,12 @@ class Optimizer(object):
                 `pre_img = g(f(img))` and `post_img = f(g(img))`
             callbacks: A list of [../vis/callbacks/#OptimizerCallback](OptimizerCallback) to trigger during optimization.
             verbose: Logs individual losses at the end of every gradient descent iteration.
-                Very useful to estimate loss weight factor. (Default value = True)
+                Very useful to estimate loss weight factor(s). (Default value = True)
 
         Returns:
-            The tuple of `(optimized_image, grads with respect to wrt, wrt_value)` after gradient descent iterations.
+            The tuple of `(optimized input, grads with respect to wrt, wrt_value)` after gradient descent iterations.
         """
-        seed_img = self._get_seed_img(seed_img)
+        seed_input = self._get_seed_input(seed_input)
         if image_modifiers is None:
             image_modifiers = []
 
@@ -113,7 +118,7 @@ class Optimizer(object):
 
         cache = None
         best_loss = float('inf')
-        best_img = None
+        best_input = None
 
         grads = None
         wrt_value = None
@@ -121,10 +126,10 @@ class Optimizer(object):
         for i in range(max_iter):
             # Apply modifiers `pre` step
             for modifier in image_modifiers:
-                seed_img = modifier.pre(seed_img)
+                seed_input = modifier.pre(seed_input)
 
             # 0 learning phase for 'test'
-            computed_values = self.compute_fn([seed_img, 0])
+            computed_values = self.compute_fn([seed_input, 0])
             losses = computed_values[:len(self.loss_names)]
             named_losses = zip(self.loss_names, losses)
             overall_loss, grads, wrt_value = computed_values[len(self.loss_names):]
@@ -138,21 +143,21 @@ class Optimizer(object):
                 c.callback(i, named_losses, overall_loss, grads, wrt_value)
 
             # Gradient descent update.
-            # It only makes sense to do this if wrt is image. Otherwise shapes wont match for the update.
-            if self.wrt is self.img:
+            # It only makes sense to do this if wrt_tensor is input_tensor. Otherwise shapes wont match for the update.
+            if self.wrt_tensor is self.input_tensor:
                 step, cache = self._rmsprop(grads, cache)
-                seed_img += step
+                seed_input += step
 
             # Apply modifiers `post` step
             for modifier in reversed(image_modifiers):
-                seed_img = modifier.post(seed_img)
+                seed_input = modifier.post(seed_input)
 
             if overall_loss < best_loss:
                 best_loss = overall_loss.copy()
-                best_img = seed_img.copy()
+                best_input = seed_input.copy()
 
         # Trigger on_end
         for c in callbacks:
             c.on_end()
 
-        return utils.deprocess_image(best_img[0]), grads, wrt_value
+        return utils.deprocess_input(best_input[0]), grads, wrt_value

@@ -18,12 +18,13 @@ class Loss(object):
         return self.name
 
     def build_loss(self):
-        """Implement this function to build the loss function expression. 
+        """Implement this function to build the loss function expression.
         Any additional arguments required to build this loss function may be passed in via `__init__`.
 
-        Ideally, the function expression must be compatible with both theano/tensorflow backends with
-        'th' or 'tf' image dim ordering. `utils.slicer` can be used to define backend agnostic slices
-        (just define it for theano, it will automatically shuffle indices for tensorflow).
+        Ideally, the function expression must be compatible with all keras backends and `channels_first` or
+        `channels_last` image_data_format(s). `utils.slicer` can be used to define data format agnostic slices.
+        (just define it in `channels_first` format, it will automatically shuffle indices for tensorflow
+        which uses `channels_last` format).
 
         ```python
         # theano slice
@@ -83,7 +84,96 @@ class ActivationMaximization(Loss):
             if is_dense:
                 loss += -K.mean(layer_output[:, idx])
             else:
-                # slicer is used to deal with theano/tensorflow without the ugly conditional statements.
+                # slicer is used to deal with `channels_first` or `channels_last` image data formats
+                # without the ugly conditional statements.
                 loss += -K.mean(layer_output[utils.slicer[:, idx, ...]])
 
         return loss
+
+
+class RegressionTarget(Loss):
+    """A loss function that drives regression outputs to targets.
+
+    Unlike classification, we cannot simply maximize the class output as it only serves to increase the regression
+    node output. We might want to visualize change in input that would cause the output to:
+
+    - Increase
+    - Decrease
+    - Remain the same
+
+    For example, with self driving car steering angle output, we might want to see what causes it to turn more right
+    than predicted (increase output), more left (decrease output), or maintain its prediction (same).
+    """
+    def __init__(self, layer, output_indices, targets, threshold=0.05):
+        """
+        Args:
+            layer: The keras layer whose regression outputs needs to be visualized. This can be any layer with output
+                of shape `(batch_size, outputs)`.
+            output_indices: Output indices within the layer.
+            targets: The desired regression output targets corresponding to `output_indices` outputs.
+                To visualize input where output is same as the target, a value of `None` can be passed. This saves
+                additional computation of predicting the actual output and then passing it as the target.
+            threshold: The threshold within which output should be considered the same as target.
+                ie., |output - target| < threshold means that regression output should not be changed.
+        """
+        super(RegressionTarget, self).__init__()
+        self.name = "RegressionTarget Loss"
+
+        self.layer = layer
+        self.output_indices = utils.listify(output_indices)
+        self.targets = utils.listify(targets)
+        self.threshold = K.variable(threshold)
+
+        if K.ndim(layer.output) != 2:
+            raise ValueError('`layer` output should have shape `(batch_size, num_outputs)`. Found output '
+                             'dim of shape {}'.format(K.int_shape(layer.output)))
+        if len(self.output_indices) != len(self.targets):
+            raise ValueError('There should be targets corresponding to each `output_indices`')
+
+    def build_loss(self):
+        """The rationale for this loss is as follows:
+
+        - When we consider the gradient of input pixel with respect to output, a positive gradient indicates the
+        direction that would cause the output to increase. Hence we try to increase the output when `target > output`.
+
+        - To decrease the value we need to consider negative gradients. So if we step in negative of that direction,
+        the output will decrease.
+
+        - To maintain the same output, we want to focus on the gradients that are small. Hence we consider inverse of
+        output to highlight gradients that would be small.
+
+        Basically, we want positive gradient to indicate the direction that achieves the increase, decrease or
+        remains same cases so that the optimization code can be uniform.
+
+        Returns:
+            The loss expression.
+        """
+        overall_loss = None
+        for i, idx in enumerate(self.output_indices):
+            output = self.layer.output[0, idx]
+            target = self.targets[idx]
+            if target is None:
+                target = output
+            else:
+                target = K.variable(target)
+
+            diff = target - output
+            is_greater = K.greater(diff, self.threshold)
+            is_lesser = K.less(diff, -self.threshold)
+
+            # Rationale is as follows:
+            # if diff > th:
+            #   return output (since positive gradients here indicate how to increase output)
+            # elif diff < -th:
+            #   return -output (since positive gradients here indicate how to decrease output)
+            # else:
+            #   return sign(output) / output (since positive gradients here highlight output gradients that are small
+            #                                 and hence keep the output unchanged)
+            #
+            # Negative sign to overall expression since reduction in loss should get us closer to our goal of
+            # driving outputs closer to targets.
+            loss = -K.switch(is_greater, output,
+                             K.switch(is_lesser, -output, K.sign(diff + K.epsilon()) / (output + K.epsilon())))
+            overall_loss = loss if overall_loss is None else overall_loss + loss
+
+        return overall_loss

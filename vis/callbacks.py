@@ -19,7 +19,7 @@ class OptimizerCallback(object):
 
     def callback(self, i, named_losses, overall_loss, grads, wrt_value):
         """This function will be called within [optimizer.minimize](vis.optimizer.md#minimize).
-        
+
         Args:
             i: The optimizer iteration.
             named_losses: List of `(loss_name, loss_value)` tuples.
@@ -37,19 +37,20 @@ class OptimizerCallback(object):
 
 
 class Print(OptimizerCallback):
-    """Callback to print values during optimization    
+    """Callback to print values during optimization.
     """
     def callback(self, i, named_losses, overall_loss, grads, wrt_value):
-        print('Iteration: {}, named_losses: {}, overall loss: {}'.format(i+1, pprint.pformat(named_losses), overall_loss))
+        print('Iteration: {}, named_losses: {}, overall loss: {}'
+              .format(i + 1, pprint.pformat(named_losses), overall_loss))
 
 
 class GifGenerator(OptimizerCallback):
     """Callback to construct gif of optimized image.
     """
     def __init__(self, path):
-        """        
+        """
         Args:
-            path: The file path to save gif. 
+            path: The file path to save gif.
         """
         _check_imageio()
         if not path.endswith('.gif'):
@@ -57,7 +58,7 @@ class GifGenerator(OptimizerCallback):
         self.writer = imageio.get_writer(path, mode='I', loop=1)
 
     def callback(self, i, named_losses, overall_loss, grads, wrt_value):
-        img = utils.deprocess_image(wrt_value[0])
+        img = utils.deprocess_input(wrt_value[0])
         img = utils.draw_text(img, "Step {}".format(i + 1))
         self.writer.append_data(img)
 

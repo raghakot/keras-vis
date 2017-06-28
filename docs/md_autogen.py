@@ -21,8 +21,7 @@ _RE_EXCSTART = re.compile(r"(\w*?):(.*)", re.IGNORECASE)
 # String templates
 #
 
-FUNC_TEMPLATE = \
-"""-------------------
+FUNC_TEMPLATE = """-------------------
 
 {section} [{header}]({path})
 
@@ -34,8 +33,7 @@ FUNC_TEMPLATE = \
 
 """
 
-CLASS_TEMPLATE = \
-"""-------------------
+CLASS_TEMPLATE = """-------------------
 
 {section} [{header}]({path})
 
@@ -51,8 +49,7 @@ CLASS_TEMPLATE = \
 
 """
 
-MODULE_TEMPLATE = \
-"""
+MODULE_TEMPLATE = """
 **Source:** {path}
 
 {global_vars}
@@ -119,7 +116,7 @@ class MarkdownAPIGenerator(object):
         """Creates a src path string with line info for use as markdown link.
         """
         path = getsourcefile(obj)
-        if not self.src_root in path:
+        if self.src_root not in path:
             # this can happen with e.g.
             # inlinefunc-wrapped functions
             if hasattr(obj, "__module__"):

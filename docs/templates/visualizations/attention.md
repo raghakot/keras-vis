@@ -14,8 +14,8 @@ how output category value changes with respect to a small change in input image 
 in the gradients tell us that a small change to that pixel will increase the output value. 
 Hence, visualizing these gradients, which are the same shape as the image should provide some intuition of attention.
 
-keras-vis abstracts all of this under the hood with [visualize_saliency](../vis.visualization/#visualize_saliency). Lets
-try to visualize attention over images with: *tiger, penguin, dumbbell, speedboat, spider*. Note there is no guarantee
+keras-vis abstracts all of this under the hood with [visualize_class_saliency](../vis.visualization/#visualize_class_saliency). 
+Lets try to visualize attention over images with: *tiger, penguin, dumbbell, speedboat, spider*. Note there is no guarantee
 that these image urls haven't expired. Update them as needed.
  
 ```python
@@ -27,7 +27,7 @@ from keras.applications.imagenet_utils import preprocess_input
 
 from vis.utils import utils
 from vis.utils.vggnet import VGG16
-from vis.visualization import visualize_saliency
+from vis.visualization import visualize_class_saliency, overlay
 
 # Build the VGG16 network with ImageNet weights
 model = VGG16(weights='imagenet', include_top=True)
@@ -55,8 +55,10 @@ for path in image_paths:
     pred_class = np.argmax(model.predict(x))
 
     # Here we are asking it to show attention such that prob of `pred_class` is maximized.
-    heatmap = visualize_saliency(model, layer_idx, [pred_class], seed_img)
-    heatmaps.append(heatmap)
+    heatmap = visualize_class_saliency(model, layer_idx, [pred_class], seed_img)
+
+    # Overlay heatmap onto the image with alpha blend.
+    heatmaps.append(overlay(seed_img, heatmap))
 
 plt.axis('off')
 plt.imshow(utils.stitch_images(heatmaps))
@@ -84,10 +86,21 @@ is some overlap in heatmaps between, say the 'dog' and 'cat' class. Notable meth
 In keras-vis, we however adopt the [grad-CAM](https://arxiv.org/pdf/1610.02391v1.pdf) method as it solves the inefficiency
 problem with occlusion maps and architectural constraint problem with CAM.
 
-Generating grad-CAM visualization is simple, just replace `visualize_saliency` with 
-[visualize_cam](../vis.visualization/#visualize_cam) in the above code. This generates the following:
+Generating grad-CAM visualization is simple, just replace `visualize_class_saliency` with 
+[visualize_class_cam](../vis.visualization/#visualize_class_cam) in the above code. This generates the following:
 
 ![grad-cam](https://raw.githubusercontent.com/raghakot/keras-vis/master/images/attention_vis/grad-cam.png?raw=true "grad cam")
 
 Compared to saliency, notice how this excludes the spider the in `spider_web` prediction. I personally feel that grad-CAM 
 is more helpful in diagnosing issues with conv-nets, especially for Kaggle competitions. 
+
+## Advanced use cases
+
+Internally, `visualize_class_saliency` and `visualize_class_cam` use 
+[visualize_saliency](../vis.visualization/#visualize_saliency) and [visualize_cam](../vis.visualization/#visualize_cam) 
+respectively with [ActivationMaximization](vis.losses#ActivationMaximization) loss. These methods allow custom loss 
+functions to be used. For example, if the output of your model is not a class but a regression output (for example, 
+predicting the age), then a different loss function needs to be used. This is precisely what 
+[visualize_regression_saliency](../vis.visualization/#visualize_regression_saliency) and 
+[visualize_regression_cam](../vis.visualization/#visualize_cam) do. 
+Details on regression visualizations will be covered in a separate section.

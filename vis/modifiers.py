@@ -22,8 +22,8 @@ class ImageModifier(object):
         simply ignore the implementation. It returns the unmodified `img` by default.
 
         Args:
-            img: An N-dim numpy array of shape: `(samples, channels, image_dims...)` if data_format='channels_first' or
-                `(samples, image_dims..., channels)` if data_format='channels_last'.
+            img: An N-dim numpy array of shape: `(samples, channels, image_dims...)` if `image_data_format=
+                channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
 
         Returns:
             The modified pre image.
@@ -35,8 +35,8 @@ class ImageModifier(object):
         simply ignore the implementation. It returns the unmodified `img` by default.
 
         Args:
-            img: An N-dim numpy array of shape: `(samples, channels, image_dims...)` if data_format='channels_first' or
-                `(samples, image_dims..., channels)` if data_format='channels_last'.
+            img: An N-dim numpy array of shape: `(samples, channels, image_dims...)` if `image_data_format=
+                channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
 
         Returns:
             The modified post image.
@@ -58,7 +58,7 @@ class Jitter(ImageModifier):
 
     def pre(self, img):
         image_dims = len(img.shape) - 2
-        dim_offsets = np.random.randint(-self.jitter, self.jitter+1, image_dims).tolist()
+        dim_offsets = np.random.randint(-self.jitter, self.jitter + 1, image_dims).tolist()
 
         if K.image_data_format() == 'channels_first':
             shift_vector = np.array([0, 0] + dim_offsets)
