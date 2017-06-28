@@ -104,13 +104,34 @@
     <li class="toctree-l4"><a href="#get_num_filters">get_num_filters</a></li>
     
 
+    <li class="toctree-l4"><a href="#overlay">overlay</a></li>
+    
+
     <li class="toctree-l4"><a href="#visualize_activation">visualize_activation</a></li>
+    
+
+    <li class="toctree-l4"><a href="#visualize_class_activation">visualize_class_activation</a></li>
+    
+
+    <li class="toctree-l4"><a href="#visualize_regression_activation">visualize_regression_activation</a></li>
     
 
     <li class="toctree-l4"><a href="#visualize_saliency">visualize_saliency</a></li>
     
 
+    <li class="toctree-l4"><a href="#visualize_class_saliency">visualize_class_saliency</a></li>
+    
+
+    <li class="toctree-l4"><a href="#visualize_regression_saliency">visualize_regression_saliency</a></li>
+    
+
     <li class="toctree-l4"><a href="#visualize_cam">visualize_cam</a></li>
+    
+
+    <li class="toctree-l4"><a href="#visualize_class_cam">visualize_class_cam</a></li>
+    
+
+    <li class="toctree-l4"><a href="#visualize_regression_cam">visualize_regression_cam</a></li>
     
 
     </ul>
@@ -179,44 +200,77 @@
               
                 <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L0">vis/visualization.py#L0</a></p>
 <hr />
-<h3 id="get_num_filters"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L24">get_num_filters</a></h3>
+<h3 id="get_num_filters"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L55">get_num_filters</a></h3>
 <pre><code class="python">get_num_filters(layer)
 </code></pre>
 
-<p><em>Returns: Total number of filters within <code>layer</code>.</em></p>
-<p>For <code>keras.layers.Dense</code> layer, this is the total number of outputs.</p>
+<p>Determines the number of filters within the give <code>layer</code>.</p>
+<p><em>Returns:</em></p>
+<p>Total number of filters within <code>layer</code>.
+  For <code>keras.layers.Dense</code> layer, this is the total number of outputs.</p>
 <hr />
-<h3 id="visualize_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L37">visualize_activation</a></h3>
-<pre><code class="python">visualize_activation(model, layer_idx, filter_indices=None, seed_img=None, act_max_weight=1, \
-    lp_norm_weight=10, tv_weight=10, **optimizer_params)
+<h3 id="overlay"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L70">overlay</a></h3>
+<pre><code class="python">overlay(array1, array2, alpha=0.5)
 </code></pre>
 
-<p>Generates stitched input image(s) over all <code>filter_indices</code> in the given <code>layer</code> that maximize
-the filter output activation.</p>
+<p>Overlays <code>array1</code> onto <code>array2</code> with <code>alpha</code> blending.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. The model input shape must be: <code>(samples, channels, image_dims...)</code> 
-  if data_format='channels_first' or <code>(samples, image_dims..., channels)</code> if data_format='channels_last'.</li>
+<li><strong>array1</strong>:  The first numpy array.</li>
+<li><strong>array2</strong>:  The second numpy array.</li>
+<li><strong>alpha</strong>:  The alpha value of <code>array1</code> as overlayed onto <code>array2</code>. This value needs to be between [0, 1],
+  with 0 being <code>array2</code> only to 1 being <code>array1</code> only (Default value = 0.5).</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The <code>array1</code>, overlayed with <code>array2</code> using <code>alpha</code> blending.</p>
+<hr />
+<h3 id="visualize_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L90">visualize_activation</a></h3>
+<pre><code class="python">visualize_activation(input_tensor, losses, seed_input=None, input_range=(0, 255), \
+    **optimizer_params)
+</code></pre>
+
+<p>Generates the <code>input_tensor</code> that minimizes the weighted <code>losses</code>.</p>
+<p>This function is intended for advanced use cases where a custom loss is desired. For common use cases,
+refer to <code>visualize_class_activation</code> or <code>visualize_regression_activation</code>.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>input_tensor</strong>:  An input tensor of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
+  channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
+<li><strong>losses</strong>:  List of (<a href="../vis.losses#Loss">Loss</a>, weight) tuples.</li>
+<li><strong>seed_input</strong>:  Seeds the optimization with a starting image. Initialized with a random value when set to None.
+  (Default value = None)</li>
+<li><strong>input_range</strong>:  Specifies the input range as a <code>(min, max)</code> tuple. This is used to rescale the
+  final optimized input to the given range. (Default value=(0, 255))</li>
+<li><strong>optimizer_params</strong>:  The **kwargs for optimizer <a href="../vis.optimizer/##optimizerminimize">params</a>. Will default to
+  reasonable values when required keys are not found.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The model input that minimizes the weighted <code>losses</code>.</p>
+<hr />
+<h3 id="visualize_class_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L132">visualize_class_activation</a></h3>
+<pre><code class="python">visualize_class_activation(model, layer_idx, filter_indices=None, seed_input=None, input_range=(0, \
+    255), act_max_weight=1, lp_norm_weight=10, tv_weight=10, **optimizer_params)
+</code></pre>
+
+<p>Generates the model input that maximizes the output of all <code>filter_indices</code> in the given <code>layer_idx</code>.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. The model input shape must be: <code>(samples, channels, image_dims...)</code>
+  if <code>image_data_format=channels_first</code> or <code>(samples, image_dims..., channels)</code> if
+  <code>image_data_format=channels_last</code>.</li>
 <li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
 <li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
-  For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</li>
+  If None, all filters are visualized. (Default value = None)</li>
 </ul>
-<p>If you are visualizing final <code>keras.layers.Dense</code> layer, you tend to get
-  better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
-  output can be maximized by minimizing scores for other classes.</p>
-<p>filter indices within the layer to be maximized.
-  If None, all filters are visualized. (Default value = None)</p>
-<p>An input image is generated for each entry in <code>filter_indices</code>. The entry can also be an array.
-  For example, <code>filter_indices = [[1, 2], 3, [4, 5, 6]]</code> would generate three input images. The first one
-  would maximize output of filters 1, 2, 3 jointly. A fun use of this might be to generate a dog-fish
-  image by maximizing 'dog' and 'fish' output in final <code>Dense</code> layer.</p>
-<p>For <code>keras.layers.Dense</code> layers, <code>filter_idx</code> is interpreted as the output index.</p>
+<p>For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</p>
 <p>If you are visualizing final <code>keras.layers.Dense</code> layer, you tend to get
   better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
   output can be maximized by minimizing scores for other classes.</p>
 <ul>
-<li><strong>seed_img</strong>:  Seeds the optimization with a starting image. Initialized with a random value when set to None.
+<li><strong>seed_input</strong>:  Seeds the optimization with a starting input. Initialized with a random value when set to None.
   (Default value = None)</li>
+<li><strong>input_range</strong>:  Specifies the input range as a <code>(min, max)</code> tuple. This is used to rescale the
+  final optimized input to the given range. (Default value=(0, 255))</li>
 <li><strong>act_max_weight</strong>:  The weight param for <code>ActivationMaximization</code> loss. Not used if 0 or None. (Default value = 1)</li>
 <li><strong>lp_norm_weight</strong>:  The weight param for <code>LPNorm</code> regularization loss. Not used if 0 or None. (Default value = 10)</li>
 <li><strong>tv_weight</strong>:  The weight param for <code>TotalVariation</code> regularization loss. Not used if 0 or None. (Default value = 10)</li>
@@ -225,22 +279,82 @@ the filter output activation.</p>
 </ul>
 <p><em>Example:</em></p>
 <p>If you wanted to visualize the input image that would maximize the output index 22, say on
-final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</code>, <code>layer = dense_layer</code>.</p>
+final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</code>, <code>layer_idx = dense_layer_idx</code>.</p>
 <p>If <code>filter_indices = [22, 23]</code>, then it should generate an input image that shows features of both classes.</p>
 <p><em>Returns:</em></p>
-<p>Stitched image output visualizing input images that maximize the filter output(s). (Default value = 10)</p>
+<p>The model input that maximizes the output of <code>filter_indices</code> in the given <code>layer_idx</code>.</p>
 <hr />
-<h3 id="visualize_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L109">visualize_saliency</a></h3>
-<pre><code class="python">visualize_saliency(model, layer_idx, filter_indices, seed_img, alpha=0.5)
+<h3 id="visualize_regression_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L182">visualize_regression_activation</a></h3>
+<pre><code class="python">visualize_regression_activation(model, layer_idx, output_indices, targets, seed_img=None, \
+    input_range=(0, 255), reg_target_weight=1.0, lp_norm_weight=0.001, tv_weight=0.001, \
+    **optimizer_params)
 </code></pre>
 
-<p>Generates an attention heatmap over the <code>seed_img</code> for maximizing <code>filter_indices</code> output in the given <code>layer</code>.
-For a full description of saliency, see the paper:
+<p>Generates a model input that drives the outputs of <code>output_indices</code> in the given <code>layer_idx</code> to the
+corresponding regression <code>targets</code>.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. The model input shape must be: <code>(samples, channels, image_dims...)</code>
+  if <code>image_data_format=channels_first</code> or <code>(samples, image_dims..., channels)</code> if
+  <code>image_data_format=channels_last</code>.</li>
+<li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose output indices needs to be considered.</li>
+<li><strong>output_indices</strong>:  Output indices within the layer for the corresponding regression <code>targets</code>.</li>
+<li><strong>targets</strong>:  The regression targets for the corresponding <code>output_indices</code>.</li>
+<li><strong>seed_img</strong>:  Seeds the optimization with a starting image. Initialized with a random value when set to None.
+  (Default value = None)</li>
+<li><strong>input_range</strong>:  Specifies the input range as a <code>(min, max)</code> tuple. This is used to rescale the
+  final optimized input to the given range. (Default value=(0, 255))</li>
+<li><strong>reg_target_weight</strong>:  The weight param for <code>RegressionTarget</code> loss. Not used if 0 or None.
+  (Default value = 1)</li>
+<li><strong>lp_norm_weight</strong>:  The weight param for <code>LPNorm</code> regularization loss. Not used if 0 or None.
+  (Default value = 1e-3)</li>
+<li><strong>tv_weight</strong>:  The weight param for <code>TotalVariation</code> regularization loss. Not used if 0 or None.
+  (Default value = 1e-3)</li>
+<li><strong>optimizer_params</strong>:  The **kwargs for optimizer <a href="../vis.optimizer/##optimizerminimize">params</a>. Will default to
+  reasonable values when required keys are not found.</li>
+</ul>
+<p><em>Example:</em></p>
+<p>Consider a model with continuous regression output such as the self driving car.</p>
+<p>If you wanted to visualize the input image that would cause the final <code>Dense</code> layer output_index 0 to output
+45 degrees, then you would set <code>output_indices = 0</code>, <code>layer_idx = dense_layer_idx</code> and <code>targets = 45</code></p>
+<p>Suppose this model has two regression outputs, one for the steering angle and another for acceleration.
+Setting <code>output_indices = [0, 1]</code>, <code>layer_idx = dense_layer_idx</code> and <code>targets = [45, -5]</code> would generate
+the model input that would cause the steering angle to increase but the acceleration to decrease.</p>
+<p><em>Returns:</em></p>
+<p>The model input that causes regression <code>output_indices</code> outputs to approach their corresponding <code>targets</code>.</p>
+<hr />
+<h3 id="visualize_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L233">visualize_saliency</a></h3>
+<pre><code class="python">visualize_saliency(input_tensor, losses, seed_input)
+</code></pre>
+
+<p>Generates an attention heatmap over the <code>seed_input</code> by using positive gradients of <code>input_tensor</code>
+with respect to weighted <code>losses</code>.</p>
+<p>This function is intended for advanced use cases where a custom loss is desired. For common use cases,
+refer to <code>visualize_class_saliency</code> or <code>visualize_regression_saliency</code>.</p>
+<p>For a full description of saliency, see the paper:
 <a href="https://arxiv.org/pdf/1312.6034v2.pdf">Deep Inside Convolutional Networks: Visualising Image Classification Models and Saliency Maps</a></p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. The model input shape must be: <code>(samples, channels, image_dims...)</code> 
-  if data_format='channels_first' or <code>(samples, image_dims..., channels)</code> if data_format='channels_last'.</li>
+<li><strong>input_tensor</strong>:  An input tensor of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
+  channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
+<li><strong>losses</strong>:  List of (<a href="../vis.losses#Loss">Loss</a>, weight) tuples.</li>
+<li><strong>seed_input</strong>:  The model input for which activation map needs to be visualized.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The heatmap image indicating the <code>seed_input</code> regions whose change would most contribute towards minimizing
+weighted <code>losses</code>.</p>
+<hr />
+<h3 id="visualize_class_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L264">visualize_class_saliency</a></h3>
+<pre><code class="python">visualize_class_saliency(model, layer_idx, filter_indices, seed_input)
+</code></pre>
+
+<p>Generates an attention heatmap over the <code>seed_input</code> for maximizing <code>filter_indices</code>
+output in the given <code>layer_idx</code>.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. The model input shape must be: <code>(samples, channels, image_dims...)</code>
+  if <code>image_data_format=channels_first</code> or <code>(samples, image_dims..., channels)</code> if
+  <code>image_data_format=channels_last</code>.</li>
 <li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
 <li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
   For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</li>
@@ -249,9 +363,7 @@ For a full description of saliency, see the paper:
   better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
   output can be maximized by minimizing scores for other classes.</p>
 <ul>
-<li><strong>seed_img</strong>:  The input image for which activation map needs to be visualized.</li>
-<li><strong>alpha</strong>:  The alpha value of image as overlayed onto the heatmap. 
-  This value needs to be between [0, 1], with 0 being heatmap only to 1 being image only (Default value = 0.5)</li>
+<li><strong>seed_input</strong>:  The model input for which activation map needs to be visualized.</li>
 </ul>
 <p><em>Example:</em></p>
 <p>If you wanted to visualize attention over 'bird' category, say output index 22 on the
@@ -259,23 +371,75 @@ final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</
 <p>One could also set filter indices to more than one value. For example, <code>filter_indices = [22, 23]</code> should
 (hopefully) show attention map that corresponds to both 22, 23 output categories.</p>
 <p><em>Returns:</em></p>
-<p>The heatmap image, overlayed with <code>seed_img</code> using <code>alpha</code>, indicating image regions that, when changed, 
-would contribute the most towards maximizing the output of <code>filter_indices</code>.</p>
+<p>The heatmap image indicating the <code>seed_input</code> regions whose change would most contribute towards
+maximizing the output of <code>filter_indices</code>.</p>
 <hr />
-<h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L167">visualize_cam</a></h3>
-<pre><code class="python">visualize_cam(model, layer_idx, filter_indices, seed_img, penultimate_layer_idx=None, alpha=0.5)
+<h3 id="visualize_regression_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L304">visualize_regression_saliency</a></h3>
+<pre><code class="python">visualize_regression_saliency(model, layer_idx, output_indices, targets, seed_input)
 </code></pre>
 
-<p>Generates a gradient based class activation map (CAM) as described in paper
-<a href="https://arxiv.org/pdf/1610.02391v1.pdf">Grad-CAM: Why did you say that? Visual Explanations from Deep Networks via Gradient-based Localization</a>.
-Unlike <a href="https://arxiv.org/pdf/1512.04150v1.pdf">class activation mapping</a>, which requires minor changes to
+<p>Generates an attention heatmap over the <code>seed_input</code> for driving the outputs of <code>output_indices</code>
+in the given <code>layer_idx</code> to the corresponding regression <code>targets</code>.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. The model input shape must be: <code>(samples, channels, image_dims...)</code>
+  if <code>image_data_format=channels_first</code> or <code>(samples, image_dims..., channels)</code> if
+  <code>image_data_format=channels_last</code>.</li>
+<li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
+<li><strong>output_indices</strong>:  Output indices within the layer for the corresponding regression <code>targets</code>.</li>
+<li><strong>targets</strong>:  The regression targets for the corresponding <code>output_indices</code>.</li>
+<li><strong>seed_input</strong>:  The model input for which activation map needs to be visualized.</li>
+</ul>
+<p><em>Example:</em></p>
+<p>Consider a model with continuous regression output such as the self driving car.</p>
+<p>If you wanted to visualize the attention over input image that would cause the final <code>Dense</code> layer output_index
+0 to output 45 degrees, then you would set <code>output_indices = 0</code>, <code>layer_idx = dense_layer_idx</code> and <code>targets = 45</code>.</p>
+<p>Suppose this model has two regression outputs, one for the steering angle and another for acceleration.
+Setting <code>output_indices = [0, 1]</code>, <code>layer_idx = dense_layer_idx</code> and <code>targets = [45, -5]</code> would generate
+the attention heatmap over input that would cause the steering angle to increase and acceleration to decrease.</p>
+<p><em>Returns:</em></p>
+<p>The heatmap image indicating the <code>seed_input</code> regions whose change would most contribute towards <code>output_indices</code>
+outputs to approach their corresponding <code>targets</code>.</p>
+<hr />
+<h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L342">visualize_cam</a></h3>
+<pre><code class="python">visualize_cam(input_tensor, losses, seed_input, penultimate_layer)
+</code></pre>
+
+<p>Generates a gradient based class activation map (CAM) by using positive gradients of <code>input_tensor</code>
+with respect to weighted <code>losses</code>.</p>
+<p>For details on grad-CAM, see the paper:
+<a href="https://arxiv.org/pdf/1610.02391v1.pdf">Grad-CAM: Why did you say that? Visual Explanations from Deep Networks via Gradient-based Localization</a>.</p>
+<p>Unlike <a href="https://arxiv.org/pdf/1512.04150v1.pdf">class activation mapping</a>, which requires minor changes to
 network architecture in some instances, grad-CAM has a more general applicability.</p>
 <p>Compared to saliency maps, grad-CAM is class discriminative; i.e., the 'cat' explanation exclusively highlights
 cat regions and not the 'dog' region and vice-versa.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. The model input shape must be: <code>(samples, channels, image_dims...)</code> 
-  if data_format='channels_first' or <code>(samples, image_dims..., channels)</code> if data_format='channels_last'.</li>
+<li><strong>input_tensor</strong>:  An input tensor of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
+  channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
+<li><strong>losses</strong>:  List of (<a href="../vis.losses#Loss">Loss</a>, weight) tuples.</li>
+<li><strong>seed_input</strong>:  The model input for which activation map needs to be visualized.</li>
+<li><strong>penultimate_layer</strong>:  The pre-layer to <code>layer_idx</code> whose feature maps should be used to compute gradients
+  with respect to filter output.</li>
+</ul>
+<p><em>Notes:</em></p>
+<p>This technique deprecates occlusion maps as it gives similar results, but with one-pass gradient computation
+as opposed inefficient sliding window approach.</p>
+<p><em>Returns:</em></p>
+<p>The heatmap image indicating the <code>seed_input</code> regions whose change would most contribute towards minimizing the
+weighted <code>losses</code>.</p>
+<hr />
+<h3 id="visualize_class_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L406">visualize_class_cam</a></h3>
+<pre><code class="python">visualize_class_cam(model, layer_idx, filter_indices, seed_input, penultimate_layer_idx=None)
+</code></pre>
+
+<p>Generates a gradient based class activation map (grad-CAM) that maximizes the outputs of
+<code>filter_indices</code> in <code>layer_idx</code>.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. The model input shape must be: <code>(samples, channels, image_dims...)</code>
+  if <code>image_data_format=channels_first</code> or <code>(samples, image_dims..., channels)</code> if
+  <code>image_data_format=channels_last</code>.</li>
 <li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
 <li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
   For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</li>
@@ -284,11 +448,9 @@ cat regions and not the 'dog' region and vice-versa.</p>
   better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
   output can be maximized by minimizing scores for other classes.</p>
 <ul>
-<li><strong>seed_img</strong>:  The input image for which activation map needs to be visualized.</li>
+<li><strong>seed_input</strong>:  The input image for which activation map needs to be visualized.</li>
 <li><strong>penultimate_layer_idx</strong>:  The pre-layer to <code>layer_idx</code> whose feature maps should be used to compute gradients
-  wrt filter output. If not provided, it is set to the nearest penultimate <code>Convolutional</code> or <code>Pooling</code> layer.</li>
-<li><strong>alpha</strong>:  The alpha value of image as overlayed onto the heatmap. 
-  This value needs to be between [0, 1], with 0 being heatmap only to 1 being image only (Default value = 0.5)</li>
+  wrt filter output. If not provided, it is set to the nearest penultimate <code>Conv</code> or <code>Pooling</code> layer.</li>
 </ul>
 <p><em>Example:</em></p>
 <p>If you wanted to visualize attention over 'bird' category, say output index 22 on the
@@ -299,8 +461,38 @@ final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</
 <p>This technique deprecates occlusion maps as it gives similar results, but with one-pass gradient computation
 as opposed inefficient sliding window approach.</p>
 <p><em>Returns:</em></p>
-<p>The heatmap image, overlayed with <code>seed_img</code> using <code>alpha</code>, indicating image regions that, when changed, 
-would contribute the most towards maximizing the output of <code>filter_indices</code>.</p>
+<p>The heatmap image indicating the input regions whose change would most contribute towards
+maximizing the output of <code>filter_indices</code>.</p>
+<hr />
+<h3 id="visualize_regression_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L452">visualize_regression_cam</a></h3>
+<pre><code class="python">visualize_regression_cam(model, layer_idx, output_indices, targets, seed_input, \
+    penultimate_layer_idx=None)
+</code></pre>
+
+<p>Generates gradient based class activation map (grad-CAM) over the <code>seed_input</code> for driving the outputs of
+<code>output_indices</code> in the given <code>layer_idx</code> to the corresponding regression <code>targets</code>.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>model</strong>:  The <code>keras.models.Model</code> instance. The model input shape must be: <code>(samples, channels, image_dims...)</code>
+  if <code>image_data_format=channels_first</code> or <code>(samples, image_dims..., channels)</code> if
+  <code>image_data_format=channels_last</code>.</li>
+<li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
+<li><strong>output_indices</strong>:  Output indices within the layer for the corresponding regression <code>targets</code>.</li>
+<li><strong>targets</strong>:  The regression targets for the corresponding <code>output_indices</code>.</li>
+<li><strong>seed_input</strong>:  The input image for which activation map needs to be visualized.</li>
+<li><strong>penultimate_layer_idx</strong>:  The pre-layer to <code>layer_idx</code> whose feature maps should be used to compute gradients
+  wrt filter output. If not provided, it is set to the nearest penultimate <code>Conv</code> or <code>Pooling</code> layer.</li>
+</ul>
+<p><em>Example:</em></p>
+<p>Consider a model with continuous regression output such as the self driving car.</p>
+<p>If you wanted to visualize the attention over input image that would cause the final <code>Dense</code> layer output_index
+0 to output 45 degrees, then you would set <code>output_indices = 0</code>, <code>layer_idx = dense_layer_idx</code> and <code>targets = 45</code>.</p>
+<p>Suppose this model has two regression outputs, one for the steering angle and another for acceleration.
+Setting <code>output_indices = [0, 1]</code>, <code>layer_idx = dense_layer_idx</code> and <code>targets = [45, -5]</code> would generate
+the attention heatmap over input that would cause the steering angle to increase and acceleration to decrease.</p>
+<p><em>Returns:</em></p>
+<p>The heatmap image indicating the <code>seed_input</code> regions whose change would most contribute towards <code>output_indices</code>
+outputs to approach their corresponding <code>targets</code>.</p>
               
             </div>
           </div>

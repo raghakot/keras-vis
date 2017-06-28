@@ -209,8 +209,8 @@ modifier.post(img)
 simply ignore the implementation. It returns the unmodified <code>img</code> by default.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> if data_format='channels_first' or
-  <code>(samples, image_dims..., channels)</code> if data_format='channels_last'.</li>
+<li><strong>img</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
+  channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
 </ul>
 <p><em>Returns:</em></p>
 <p>The modified post image.</p>
@@ -223,8 +223,8 @@ simply ignore the implementation. It returns the unmodified <code>img</code> by 
 simply ignore the implementation. It returns the unmodified <code>img</code> by default.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> if data_format='channels_first' or
-  <code>(samples, image_dims..., channels)</code> if data_format='channels_last'.</li>
+<li><strong>img</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
+  channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
 </ul>
 <p><em>Returns:</em></p>
 <p>The modified pre image.</p>
@@ -250,8 +250,8 @@ Jitter has been shown to produce crisper activation maximization images.</p>
 simply ignore the implementation. It returns the unmodified <code>img</code> by default.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> if data_format='channels_first' or
-  <code>(samples, image_dims..., channels)</code> if data_format='channels_last'.</li>
+<li><strong>img</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
+  channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
 </ul>
 <p><em>Returns:</em></p>
 <p>The modified post image.</p>

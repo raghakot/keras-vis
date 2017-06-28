@@ -193,23 +193,23 @@
                 <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L0">vis/regularizers.py#L0</a></p>
 <hr />
 <h3 id="normalize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L11">normalize</a></h3>
-<pre><code class="python">normalize(img, tensor)
+<pre><code class="python">normalize(input_tensor, output_tensor)
 </code></pre>
 
-<p>Normalizes the tensor with respect to image dimensions. This makes regularizer weight factor more or less
-uniform across various input image dimensions.</p>
+<p>Normalizes the <code>output_tensor</code> with respect to <code>input_tensor</code> dimensions.
+This makes regularizer weight factor more or less uniform across various input image dimensions.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img</strong>:  An tensor of shape: <code>(samples, channels, image_dims...)</code> if data_format='channels_first' or
-  <code>(samples, image_dims..., channels)</code> if data_format='channels_last'.</li>
-<li><strong>tensor</strong>:  The tensor to normalize</li>
+<li><strong>input_tensor</strong>:  An tensor of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
+  channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
+<li><strong>output_tensor</strong>:  The tensor to normalize.</li>
 </ul>
 <p><em>Returns:</em></p>
 <p>The normalized tensor.</p>
 <hr />
-<h2 id="totalvariation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L28">TotalVariation</a></h2>
+<h2 id="totalvariation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L27">TotalVariation</a></h2>
 <hr />
-<h3 id="totalvariation__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L30">TotalVariation.<code>__init__</code></a></h3>
+<h3 id="totalvariation__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L29">TotalVariation.<code>__init__</code></a></h3>
 <pre><code class="python">__init__(self, img_input, beta=2.0)
 </code></pre>
 
@@ -219,13 +219,12 @@ See <code>section 3.2.2</code> in
 for details.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img_input</strong>:  An image tensor of shape: <code>(samples, channels, image_dims...)</code> if data_format='channels_first' or
-  <code>(samples, image_dims..., channels)</code> if data_format='channels_last'.</li>
+<li><strong>img_input</strong>:  An image tensor of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=</code>channels_first<code>or</code>(samples, image_dims..., channels)<code>if</code>image_data_format=channels_last`</li>
 <li><strong>beta</strong>:  Smaller values of beta give sharper but 'spikier' images.
   Values <script type="math/tex">\in [1.5, 3.0]</script> are recommended as a reasonable compromise. (Default value = 2.)</li>
 </ul>
 <hr />
-<h3 id="totalvariationbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L47">TotalVariation.build_loss</a></h3>
+<h3 id="totalvariationbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L46">TotalVariation.build_loss</a></h3>
 <pre><code class="python">build_loss(self)
 </code></pre>
 
@@ -234,9 +233,9 @@ for details.</p>
 \left ( x(h+1, w, c) - x(h, w, c) \right )^{2} \right )^{\frac{\beta}{2}}</script>
 to return total variation for all images in the batch.</p>
 <hr />
-<h2 id="lpnorm"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L76">LPNorm</a></h2>
+<h2 id="lpnorm"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L75">LPNorm</a></h2>
 <hr />
-<h3 id="lpnorm__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L78">LPNorm.<code>__init__</code></a></h3>
+<h3 id="lpnorm__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L77">LPNorm.<code>__init__</code></a></h3>
 <pre><code class="python">__init__(self, img_input, p=6.0)
 </code></pre>
 
@@ -249,7 +248,7 @@ to return total variation for all images in the batch.</p>
 <li><strong>p</strong>:  The pth norm to use. If p = float('inf'), infinity-norm will be used.</li>
 </ul>
 <hr />
-<h3 id="lpnormbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L95">LPNorm.build_loss</a></h3>
+<h3 id="lpnormbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L94">LPNorm.build_loss</a></h3>
 <pre><code class="python">build_loss(self)
 </code></pre>
               

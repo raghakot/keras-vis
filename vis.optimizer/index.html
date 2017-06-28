@@ -181,31 +181,34 @@
 <h2 id="optimizer"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L11">Optimizer</a></h2>
 <hr />
 <h3 id="optimizer__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L13">Optimizer.<code>__init__</code></a></h3>
-<pre><code class="python">__init__(self, img_input, losses, wrt=None, norm_grads=True)
+<pre><code class="python">__init__(self, input_tensor, losses, input_range=(0, 255), wrt_tensor=None, norm_grads=True)
 </code></pre>
 
 <p>Creates an optimizer that minimizes weighted loss function.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img_input</strong>:  An image input tensor of shape: <code>(samples, channels, image_dims...)</code> if 
-  data_format='channels_first' or <code>(samples, image_dims..., channels)</code> if data_format='channels_last'.</li>
+<li><strong>input_tensor</strong>:  An input tensor of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
+  channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
 <li><strong>losses</strong>:  List of (<a href="../vis.losses#Loss">Loss</a>, weight) tuples.</li>
-<li><strong>wrt</strong>:  Short for, with respect to. This instructs the optimizer that the aggregate loss from <code>losses</code>
+<li><strong>input_range</strong>:  Specifies the input range as a <code>(min, max)</code> tuple. This is used to rescale the
+  final optimized input to the given range. (Default value=(0, 255))</li>
+<li><strong>wrt_tensor</strong>:  Short for, with respect to. This instructs the optimizer that the aggregate loss from <code>losses</code>
   should be minimized with respect to <code>wrt</code>. <code>wrt</code> can be any tensor that is part of the model graph.
-  Default value is set to None which means that loss will simply be minimized with respect to <code>img_input</code>.</li>
-<li><strong>norm_grads</strong>:  True to normalize gradients. Normalization avoids very small or large gradients and ensures 
-  a smooth gradient gradient descent process. If you want the actual gradient, set this to false.</li>
+  Default value is set to None which means that loss will simply be minimized with respect to <code>input_tensor</code>.</li>
+<li><strong>norm_grads</strong>:  True to normalize gradients. Normalization avoids very small or large gradients and ensures
+  a smooth gradient gradient descent process. If you want the actual gradient
+  (for example, visualizing attention), set this to false.</li>
 </ul>
 <hr />
-<h3 id="optimizerminimize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L87">Optimizer.minimize</a></h3>
-<pre><code class="python">minimize(self, seed_img=None, max_iter=200, image_modifiers=None, callbacks=None, verbose=True)
+<h3 id="optimizerminimize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L92">Optimizer.minimize</a></h3>
+<pre><code class="python">minimize(self, seed_input=None, max_iter=200, image_modifiers=None, callbacks=None, verbose=True)
 </code></pre>
 
 <p>Performs gradient descent on the input image with respect to defined losses.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>seed_img</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> 
-  if data_format='channels_first' or <code>(samples, image_dims..., channels)</code> if data_format='channels_last'. 
+<li><strong>seed_input</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
+  channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.
   Seeded with random noise if set to None. (Default value = None)</li>
 <li><strong>max_iter</strong>:  The maximum number of gradient descent iterations. (Default value = 200)</li>
 <li><strong>image_modifiers</strong>:  A list of <a href="../ImageModifier">../vis/modifiers/#ImageModifier</a> instances specifying <code>pre</code> and
@@ -214,10 +217,10 @@
   <code>pre_img = g(f(img))</code> and <code>post_img = f(g(img))</code></li>
 <li><strong>callbacks</strong>:  A list of <a href="../OptimizerCallback">../vis/callbacks/#OptimizerCallback</a> to trigger during optimization.</li>
 <li><strong>verbose</strong>:  Logs individual losses at the end of every gradient descent iteration.
-  Very useful to estimate loss weight factor. (Default value = True)</li>
+  Very useful to estimate loss weight factor(s). (Default value = True)</li>
 </ul>
 <p><em>Returns:</em></p>
-<p>The tuple of <code>(optimized_image, grads with respect to wrt, wrt_value)</code> after gradient descent iterations.</p>
+<p>The tuple of <code>(optimized input, grads with respect to wrt, wrt_value)</code> after gradient descent iterations.</p>
               
             </div>
           </div>

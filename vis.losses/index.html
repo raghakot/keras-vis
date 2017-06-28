@@ -107,6 +107,17 @@
         </ul>
     
 
+    <li class="toctree-l4"><a href="#regressiontarget">RegressionTarget</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l5" href="#regressiontarget__init__">RegressionTarget.__init__</a></li>
+        
+            <li><a class="toctree-l5" href="#regressiontargetbuild_loss">RegressionTarget.build_loss</a></li>
+        
+        </ul>
+    
+
     </ul>
                 </li>
                 <li class="toctree-l3">
@@ -204,11 +215,12 @@ Defaults to 'Unnamed Loss' if not overridden.</p>
 <pre><code class="python">build_loss(self)
 </code></pre>
 
-<p>Implement this function to build the loss function expression. 
+<p>Implement this function to build the loss function expression.
 Any additional arguments required to build this loss function may be passed in via <code>__init__</code>.</p>
-<p>Ideally, the function expression must be compatible with both theano/tensorflow backends with
-'th' or 'tf' image dim ordering. <code>utils.slicer</code> can be used to define backend agnostic slices
-(just define it for theano, it will automatically shuffle indices for tensorflow).</p>
+<p>Ideally, the function expression must be compatible with all keras backends and <code>channels_first</code> or
+<code>channels_last</code> image_data_format(s). <code>utils.slicer</code> can be used to define data format agnostic slices.
+(just define it in <code>channels_first</code> format, it will automatically shuffle indices for tensorflow
+which uses <code>channels_last</code> format).</p>
 <pre><code class="python"># theano slice
 conv_layer[:, filter_idx, ...]
 
@@ -224,7 +236,7 @@ conv_layer[utils.slicer[:, filter_idx, ...]]
 <p><em>Returns:</em></p>
 <p>The loss expression.</p>
 <hr />
-<h2 id="activationmaximization"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L48">ActivationMaximization</a></h2>
+<h2 id="activationmaximization"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L49">ActivationMaximization</a></h2>
 <p>A loss function that maximizes the activation of a set of filters within a particular layer.</p>
 <p>Typically this loss is used to ask the reverse question - What kind of input image would increase the networks
 confidence, for say, dog class. This helps determine what the network might be internalizing as being the 'dog'
@@ -232,7 +244,7 @@ image space.</p>
 <p>One might also use this to generate an input image that maximizes both 'dog' and 'human' outputs on the final
 <code>keras.layers.Dense</code> layer.</p>
 <hr />
-<h3 id="activationmaximization__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L58">ActivationMaximization.<code>__init__</code></a></h3>
+<h3 id="activationmaximization__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L59">ActivationMaximization.<code>__init__</code></a></h3>
 <pre><code class="python">__init__(self, layer, filter_indices)
 </code></pre>
 
@@ -247,9 +259,62 @@ image space.</p>
   better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
   output can be maximized by minimizing scores for other classes.</p>
 <hr />
-<h3 id="activationmaximizationbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L75">ActivationMaximization.build_loss</a></h3>
+<h3 id="activationmaximizationbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L76">ActivationMaximization.build_loss</a></h3>
 <pre><code class="python">build_loss(self)
 </code></pre>
+
+<hr />
+<h2 id="regressiontarget"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L94">RegressionTarget</a></h2>
+<p>A loss function that drives regression outputs to targets.</p>
+<p>Unlike classification, we cannot simply maximize the class output as it only serves to increase the regression
+node output. We might want to visualize change in input that would cause the output to:</p>
+<ul>
+<li>Increase</li>
+<li>Decrease</li>
+<li>Remain the same</li>
+</ul>
+<p>For example, with self driving car steering angle output, we might want to see what causes it to turn more right
+than predicted (increase output), more left (decrease output), or maintain its prediction (same).</p>
+<hr />
+<h3 id="regressiontarget__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L107">RegressionTarget.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, layer, output_indices, targets, threshold=0.05)
+</code></pre>
+
+<p><em>Args:</em></p>
+<ul>
+<li><strong>layer</strong>:  The keras layer whose regression outputs needs to be visualized. This can be any layer with output
+  of shape <code>(batch_size, outputs)</code>.</li>
+<li><strong>output_indices</strong>:  Output indices within the layer.</li>
+<li><strong>targets</strong>:  The desired regression output targets corresponding to <code>output_indices</code> outputs.
+  To visualize input where output is same as the target, a value of <code>None</code> can be passed. This saves
+  additional computation of predicting the actual output and then passing it as the target.</li>
+<li><strong>threshold</strong>:  The threshold within which output should be considered the same as target.
+  ie., |output - target| &lt; threshold means that regression output should not be changed.</li>
+</ul>
+<hr />
+<h3 id="regressiontargetbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L133">RegressionTarget.build_loss</a></h3>
+<pre><code class="python">build_loss(self)
+</code></pre>
+
+<p>The rationale for this loss is as follows:</p>
+<ul>
+<li>
+<p>When we consider the gradient of input pixel with respect to output, a positive gradient indicates the
+direction that would cause the output to increase. Hence we try to increase the output when <code>target &gt; output</code>.</p>
+</li>
+<li>
+<p>To decrease the value we need to consider negative gradients. So if we step in negative of that direction,
+the output will decrease.</p>
+</li>
+<li>
+<p>To maintain the same output, we want to focus on the gradients that are small. Hence we consider inverse of
+output to highlight gradients that would be small.</p>
+</li>
+</ul>
+<p>Basically, we want positive gradient to indicate the direction that achieves the increase, decrease or
+remains same cases so that the optimization code can be uniform.</p>
+<p><em>Returns:</em></p>
+<p>The loss expression.</p>
               
             </div>
           </div>
