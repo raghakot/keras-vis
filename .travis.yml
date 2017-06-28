@@ -55,5 +55,5 @@ script:
   - if [[ "$TEST_MODE" == "PEP8" ]]; then
       PYTHONPATH=$PWD:$PYTHONPATH py.test --pep8 -m pep8 -n0;
     else
-      PYTHONPATH=$PWD:$PYTHONPATH/tests py.test
+      PYTHONPATH=$PWD:$PYTHONPATH/tests py.test;
     fi
