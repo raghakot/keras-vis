@@ -160,4 +160,4 @@ class Optimizer(object):
         for c in callbacks:
             c.on_end()
 
-        return utils.deprocess_input(best_input[0]), grads, wrt_value
+        return utils.deprocess_input(best_input[0], self.input_range), grads, wrt_value
