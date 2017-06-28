@@ -173,7 +173,7 @@ class RegressionTarget(Loss):
             # Negative sign to overall expression since reduction in loss should get us closer to our goal of
             # driving outputs closer to targets.
             loss = -K.switch(is_greater, output,
-                             K.switch(is_lesser, -output, K.sign(diff + K.epsilon()) / (output + K.epsilon())))
+                             K.switch(is_lesser, -output, K.sign(diff) / (output + K.epsilon())))
             overall_loss = loss if overall_loss is None else overall_loss + loss
 
         return overall_loss
