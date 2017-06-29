@@ -284,7 +284,7 @@ final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</
 <p><em>Returns:</em></p>
 <p>The model input that maximizes the output of <code>filter_indices</code> in the given <code>layer_idx</code>.</p>
 <hr />
-<h3 id="visualize_regression_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L182">visualize_regression_activation</a></h3>
+<h3 id="visualize_regression_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L179">visualize_regression_activation</a></h3>
 <pre><code class="python">visualize_regression_activation(model, layer_idx, output_indices, targets, seed_img=None, \
     input_range=(0, 255), reg_target_weight=1.0, lp_norm_weight=0.001, tv_weight=0.001, \
     **optimizer_params)
@@ -323,7 +323,7 @@ the model input that would cause the steering angle to increase but the accelera
 <p><em>Returns:</em></p>
 <p>The model input that causes regression <code>output_indices</code> outputs to approach their corresponding <code>targets</code>.</p>
 <hr />
-<h3 id="visualize_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L233">visualize_saliency</a></h3>
+<h3 id="visualize_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L227">visualize_saliency</a></h3>
 <pre><code class="python">visualize_saliency(input_tensor, losses, seed_input)
 </code></pre>
 
@@ -344,7 +344,7 @@ refer to <code>visualize_class_saliency</code> or <code>visualize_regression_sal
 <p>The heatmap image indicating the <code>seed_input</code> regions whose change would most contribute towards minimizing
 weighted <code>losses</code>.</p>
 <hr />
-<h3 id="visualize_class_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L264">visualize_class_saliency</a></h3>
+<h3 id="visualize_class_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L258">visualize_class_saliency</a></h3>
 <pre><code class="python">visualize_class_saliency(model, layer_idx, filter_indices, seed_input)
 </code></pre>
 
@@ -374,7 +374,7 @@ final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</
 <p>The heatmap image indicating the <code>seed_input</code> regions whose change would most contribute towards
 maximizing the output of <code>filter_indices</code>.</p>
 <hr />
-<h3 id="visualize_regression_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L304">visualize_regression_saliency</a></h3>
+<h3 id="visualize_regression_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L295">visualize_regression_saliency</a></h3>
 <pre><code class="python">visualize_regression_saliency(model, layer_idx, output_indices, targets, seed_input)
 </code></pre>
 
@@ -401,7 +401,7 @@ the attention heatmap over input that would cause the steering angle to increase
 <p>The heatmap image indicating the <code>seed_input</code> regions whose change would most contribute towards <code>output_indices</code>
 outputs to approach their corresponding <code>targets</code>.</p>
 <hr />
-<h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L342">visualize_cam</a></h3>
+<h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L330">visualize_cam</a></h3>
 <pre><code class="python">visualize_cam(input_tensor, losses, seed_input, penultimate_layer)
 </code></pre>
 
@@ -429,7 +429,7 @@ as opposed inefficient sliding window approach.</p>
 <p>The heatmap image indicating the <code>seed_input</code> regions whose change would most contribute towards minimizing the
 weighted <code>losses</code>.</p>
 <hr />
-<h3 id="visualize_class_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L406">visualize_class_cam</a></h3>
+<h3 id="visualize_class_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L394">visualize_class_cam</a></h3>
 <pre><code class="python">visualize_class_cam(model, layer_idx, filter_indices, seed_input, penultimate_layer_idx=None)
 </code></pre>
 
@@ -464,7 +464,7 @@ as opposed inefficient sliding window approach.</p>
 <p>The heatmap image indicating the input regions whose change would most contribute towards
 maximizing the output of <code>filter_indices</code>.</p>
 <hr />
-<h3 id="visualize_regression_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L452">visualize_regression_cam</a></h3>
+<h3 id="visualize_regression_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization.py#L440">visualize_regression_cam</a></h3>
 <pre><code class="python">visualize_regression_cam(model, layer_idx, output_indices, targets, seed_input, \
     penultimate_layer_idx=None)
 </code></pre>
