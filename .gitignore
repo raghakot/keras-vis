@@ -14,3 +14,4 @@ keras_vis.egg-info
 dist/*
 build/*
 *.pyc
+.ipynb_checkpoints
