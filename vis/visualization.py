@@ -168,9 +168,6 @@ def visualize_class_activation(model, layer_idx, filter_indices=None, seed_input
     Returns:
         The model input that maximizes the output of `filter_indices` in the given `layer_idx`.
     """
-    filter_indices = utils.listify(filter_indices)
-    print("Working on filters: {}".format(pprint.pformat(filter_indices)))
-
     losses = [
         (ActivationMaximization(model.layers[layer_idx], filter_indices), act_max_weight),
         (LPNorm(model.input), lp_norm_weight),
@@ -219,9 +216,6 @@ def visualize_regression_activation(model, layer_idx, output_indices, targets, s
     Returns:
         The model input that causes regression `output_indices` outputs to approach their corresponding `targets`.
     """
-    output_indices = utils.listify(output_indices)
-    print("Working on output indices: {}".format(pprint.pformat(output_indices)))
-
     losses = [
         (RegressionTarget(model.layers[layer_idx], output_indices, targets), reg_target_weight),
         (LPNorm(model.input), lp_norm_weight),
@@ -290,9 +284,6 @@ def visualize_class_saliency(model, layer_idx, filter_indices, seed_input):
         The heatmap image indicating the `seed_input` regions whose change would most contribute towards
         maximizing the output of `filter_indices`.
     """
-    filter_indices = utils.listify(filter_indices)
-    print("Working on filters: {}".format(pprint.pformat(filter_indices)))
-
     # `ActivationMaximization` loss reduces as outputs get large, hence negative gradients indicate the direction
     # for increasing activations. Multiply with -1 so that positive gradients indicate increase instead.
     losses = [
@@ -328,9 +319,6 @@ def visualize_regression_saliency(model, layer_idx, output_indices, targets, see
         The heatmap image indicating the `seed_input` regions whose change would most contribute towards `output_indices`
         outputs to approach their corresponding `targets`.
     """
-    output_indices = utils.listify(output_indices)
-    print("Working on filters: {}".format(pprint.pformat(output_indices)))
-
     # `RegressionTarget` loss reduces as outputs approach target, hence negative gradients indicate this direction.
     # Multiply with -1 so that positive gradients indicate this direction instead.
     losses = [

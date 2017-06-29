@@ -71,7 +71,7 @@ class ActivationMaximization(Loss):
         super(ActivationMaximization, self).__init__()
         self.name = "ActivationMax Loss"
         self.layer = layer
-        self.filter_indices = filter_indices
+        self.filter_indices = utils.listify(filter_indices)
 
     def build_loss(self):
         layer_output = self.layer.output
