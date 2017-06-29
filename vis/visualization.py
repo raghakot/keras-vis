@@ -117,7 +117,7 @@ def visualize_activation(input_tensor, losses, seed_input=None, input_range=(0, 
     optimizer_params_default.update(optimizer_params)
     optimizer_params = optimizer_params_default
 
-    opt = Optimizer(input_tensor, losses)
+    opt = Optimizer(input_tensor, losses, input_range)
     img = opt.minimize(**optimizer_params)[0]
 
     # If range has integer numbers, cast to 'uint8'
