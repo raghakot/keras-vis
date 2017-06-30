@@ -160,3 +160,17 @@ crisper activation maximization images. As an exercise, try:
 ![opt_progress](https://raw.githubusercontent.com/raghakot/keras-vis/master/images/opt_progress.gif?raw=true "Optimization progress")
 
 <hr/>
+
+## Citation
+
+Please cite keras-vis in your publications if it helped your research. Here is an example BibTeX entry:
+
+```
+@misc{raghakotkerasvis
+  title={keras-vis},
+  author={Kotikalapudi, Raghavendra and contributors},
+  year={2017},
+  publisher={GitHub},
+  howpublished={\url{https://github.com/raghakot/keras-vis}},
+}
+```
