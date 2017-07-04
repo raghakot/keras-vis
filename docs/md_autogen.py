@@ -6,6 +6,7 @@ import os
 import re
 import inspect
 from inspect import getdoc, getargspec, getsourcefile, getsourcelines, getmembers
+from collections import defaultdict
 
 import sys
 if sys.version[0] == '2':
@@ -182,7 +183,7 @@ class MarkdownAPIGenerator(object):
 
         return "".join(out)
 
-    def func2md(self, func, clsname="", depth=3):
+    def func2md(self, func, clsname=None, names=None, depth=3):
         """Takes a function (or method) and documents it.
 
         Args:
@@ -191,8 +192,11 @@ class MarkdownAPIGenerator(object):
 
         """
         section = "#" * depth
-        funcname = func.__name__
-        escfuncname = "`%s`" % funcname if funcname.startswith("_") else funcname
+        if names is None:
+            names = [func.__name__]
+
+        funcname = ", ".join(names)
+        escfuncname = ", ".join(["`%s`" % funcname if funcname.startswith("_") else funcname for funcname in names])
         header = "%s%s" % ("%s." % clsname if clsname else "", escfuncname)
 
         path = self.get_src_path(func)
@@ -326,26 +330,39 @@ class MarkdownAPIGenerator(object):
         modname = module.__name__
         path = self.get_src_path(module, append_base=False)
         path = "[{}]({})".format(path, os.path.join(self.github_link, path))
-        found = []
+        found = set()
 
         classes = []
         line_nos = []
         for name, obj in getmembers(module, inspect.isclass):
             # handle classes
-            found.append(name)
+            found.add(name)
             if not name.startswith("_") and hasattr(obj, "__module__") and obj.__module__ == modname:
                 classes.append(self.class2md(obj))
                 line_nos.append(self.get_line_no(obj) or 0)
         classes = order_by_line_nos(classes, line_nos)
 
+        # Since functions can have multiple aliases.
+        func2names = defaultdict(list)
+        for name, obj in getmembers(module, inspect.isfunction):
+            func2names[obj].append(name)
+
         functions = []
         line_nos = []
-        for name, obj in getmembers(module, inspect.isfunction):
-            # handle functions
-            found.append(name)
-            if not name.startswith("_") and hasattr(obj, "__module__") and obj.__module__ == modname:
-                functions.append(self.func2md(obj))
-                line_nos.append(self.get_line_no(obj) or 0)
+        for obj in func2names:
+            names = func2names[obj]
+            found.update(names)
+
+            # Include if within module or included modules within __init__.py and exclude from global variables
+            is_module_within_init = '__init__.py' in path and obj.__module__.startswith(modname)
+            if is_module_within_init:
+                found.add(obj.__module__.replace(modname + '.', ''))
+
+            if hasattr(obj, "__module__") and (obj.__module__ == modname or is_module_within_init):
+                names = list(filter(lambda name: not name.startswith("_"), names))
+                if len(names) > 0:
+                    functions.append(self.func2md(obj, names=names))
+                    line_nos.append(self.get_line_no(obj) or 0)
         functions = order_by_line_nos(functions, line_nos)
 
         variables = []
@@ -356,6 +373,7 @@ class MarkdownAPIGenerator(object):
                     continue
                 if hasattr(obj, "__name__") and not obj.__name__.startswith(modname):
                     continue
+
                 comments = inspect.getcomments(obj)
                 comments = ": %s" % comments if comments else ""
                 variables.append("- **%s**%s" % (name, comments))
