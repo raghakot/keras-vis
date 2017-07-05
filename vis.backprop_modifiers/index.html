@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>vggnet - Keras-vis Documentation</title>
+  <title>backprop_modifiers - Keras-vis Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -18,9 +18,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "vggnet";
-    var mkdocs_page_input_path = "vis.utils.vggnet.md";
-    var mkdocs_page_url = "/vis.utils.vggnet/";
+    var mkdocs_page_name = "backprop_modifiers";
+    var mkdocs_page_input_path = "vis.backprop_modifiers.md";
+    var mkdocs_page_url = "/vis.backprop_modifiers/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -59,15 +59,15 @@
     <ul class="subnav">
                 <li class="">
                     
-    <a class="" href="../visualizations/conv_filters/">Convolutional Filters</a>
+    <a class="" href="../visualizations/activation_maximization/">Activation Maximization</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../visualizations/dense/">Dense Layers</a>
+    <a class="" href="../visualizations/saliency/">Saliency Maps</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../visualizations/attention/">Attention Maps</a>
+    <a class="" href="../visualizations/class_activation_maps/">Class Activation Maps</a>
                 </li>
     </ul>
 	    </li>
@@ -78,7 +78,11 @@
     <ul class="subnav">
                 <li class="">
                     
-    <span class="caption-text">Core API</span>
+    <a class="" href="../vis.visualization/">Visualization</a>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Optimization</span>
     <ul class="subnav">
                 <li class="toctree-l3">
                     
@@ -90,19 +94,45 @@
                 </li>
                 <li class="toctree-l3">
                     
-    <a class="" href="../vis.modifiers/">modifiers</a>
-                </li>
-                <li class="toctree-l3">
-                    
     <a class="" href="../vis.optimizer/">optimizer</a>
                 </li>
                 <li class="toctree-l3">
                     
-    <a class="" href="../vis.visualization/">visualization</a>
+    <a class="" href="../vis.callbacks/">callbacks</a>
                 </li>
     </ul>
                 </li>
                 <li class=" current">
+                    
+    <span class="caption-text">Modifiers</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.input_modifiers/">input_modifiers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.grad_modifiers/">grad_modifiers</a>
+                </li>
+                <li class="toctree-l3 current">
+                    
+    <a class="current" href="./">backprop_modifiers</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l4"><a href="#guided">guided</a></li>
+    
+
+    <li class="toctree-l4"><a href="#deconv-rectified-relu">deconv, rectified, relu</a></li>
+    
+
+    <li class="toctree-l4"><a href="#get">get</a></li>
+    
+
+    </ul>
+                </li>
+    </ul>
+                </li>
+                <li class="">
                     
     <span class="caption-text">Utils</span>
     <ul class="subnav">
@@ -110,30 +140,15 @@
                     
     <a class="" href="../vis.utils.utils/">utils</a>
                 </li>
-                <li class="toctree-l3 current">
-                    
-    <a class="current" href="./">vggnet</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l4"><a href="#global-variables">Global Variables</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l5" href="#vgg16">VGG16</a></li>
-        
-        </ul>
-    
-
-    <li class="toctree-l4"><a href="#arguments">Arguments</a></li>
-    
-
-    <li class="toctree-l4"><a href="#returns">Returns</a></li>
-    
-
-    <li class="toctree-l4"><a href="#raises">Raises</a></li>
-    
-
     </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Backend Specific</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.backend/">backend</a>
                 </li>
     </ul>
                 </li>
@@ -166,14 +181,14 @@
         
       
         
-          <li>Utils &raquo;</li>
+          <li>Modifiers &raquo;</li>
         
       
     
-    <li>vggnet</li>
+    <li>backprop_modifiers</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.utils.vggnet.md"
+        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.backprop_modifiers.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -183,65 +198,37 @@
           <div role="main">
             <div class="section">
               
-                <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/vggnet.py#L0">vis/utils/vggnet.py#L0</a></p>
-<h2 id="global-variables"><strong>Global Variables</strong></h2>
-<ul>
-<li><strong>WEIGHTS_PATH_NO_TOP</strong></li>
-<li><strong>WEIGHTS_PATH</strong></li>
-</ul>
+                <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/backprop_modifiers.py#L0">vis/backprop_modifiers.py#L0</a></p>
 <hr />
-<h3 id="vgg16"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/vggnet.py#L25">VGG16</a></h3>
-<pre><code class="python">VGG16(include_top=True, weights=&quot;imagenet&quot;, input_tensor=None, input_shape=None, pooling=None, \
-    classes=1000)
+<h3 id="guided"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/backprop_modifiers.py#L7">guided</a></h3>
+<pre><code class="python">guided(model)
 </code></pre>
 
-<p>Instantiates the VGG16 architecture.</p>
-<p>Optionally loads weights pre-trained
-on ImageNet. Note that when using TensorFlow,
-for best performance you should set
-<code>image_data_format="channels_last"</code> in your Keras config
-at ~/.keras/keras.json.</p>
-<p>The model and the weights are compatible with both
-TensorFlow and Theano. The data format
-convention used by the model is the one
-specified in your Keras config file.</p>
-<h1 id="arguments">Arguments</h1>
+<p>Modifies backprop to only propagate positive gradients for positive activations.</p>
+<p><em>Args:</em></p>
 <ul>
-<li><strong>include_top</strong>:  whether to include the 3 fully-connected
-  layers at the top of the network.</li>
-<li><strong>weights</strong>:  one of <code>None</code> (random initialization)
-  or "imagenet" (pre-training on ImageNet).</li>
-<li><strong>input_tensor</strong>:  optional Keras tensor (i.e. output of <code>layers.Input()</code>)
-  to use as image input for the model.</li>
-<li><strong>input_shape</strong>:  optional shape tuple, only to be specified
-  if <code>include_top</code> is False (otherwise the input shape
-  has to be <code>(224, 224, 3)</code> (with <code>channels_last</code> data format)
-  or <code>(3, 224, 244)</code> (with <code>channels_first</code> data format).
-  It should have exactly 3 inputs channels,
-  and width and height should be no smaller than 48.
-  E.g. <code>(200, 200, 3)</code> would be one valid value.</li>
-<li><strong>pooling</strong>:  Optional pooling mode for feature extraction
-  when <code>include_top</code> is <code>False</code>.</li>
-<li><code>None</code> means that the output of the model will be
-  the 4D tensor output of the
-  last convolutional layer.</li>
-<li><code>avg</code> means that global average pooling
-  will be applied to the output of the
-  last convolutional layer, and thus
-  the output of the model will be a 2D tensor.</li>
-<li><code>max</code> means that global max pooling will
-  be applied.</li>
-<li><strong>classes</strong>:  optional number of classes to classify images
-  into, only to be specified if <code>include_top</code> is True, and
-  if no <code>weights</code> argument is specified.</li>
+<li><strong>model</strong>:  The <code>keras.models.Model</code> instance whose gradient computation needs to be overridden.</li>
 </ul>
-<h1 id="returns">Returns</h1>
-<p>A Keras model instance.</p>
-<h1 id="raises">Raises</h1>
+<p>References:
+Details on guided back propagation can be found in paper: [String For Simplicity: The All Convolutional Net]
+(https://arxiv.org/pdf/1412.6806.pdf)</p>
+<hr />
+<h3 id="deconv-rectified-relu"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/backprop_modifiers.py#L20">deconv, rectified, relu</a></h3>
+<pre><code class="python">relu(model)
+</code></pre>
+
+<p>Modifies backprop to only propagate positive gradients.</p>
+<p><em>Args:</em></p>
 <ul>
-<li><strong>ValueError</strong>:  in case of invalid argument for <code>weights</code>,
-  or invalid input shape.</li>
+<li><strong>model</strong>:  The <code>keras.models.Model</code> instance whose gradient computation needs to be overridden.</li>
 </ul>
+<p>References:
+Details can be found in the paper: [Visualizing and Understanding Convolutional Networks]
+(https://arxiv.org/pdf/1311.2901.pdf)</p>
+<hr />
+<h3 id="get"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/backprop_modifiers.py#L37">get</a></h3>
+<pre><code class="python">get(identifier)
+</code></pre>
               
             </div>
           </div>
@@ -249,8 +236,10 @@ specified in your Keras config file.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="../vis.utils.utils/" class="btn btn-neutral float-right" title="utils">Next <span class="icon icon-circle-arrow-right"></span></a>
       
-        <a href="../vis.utils.utils/" class="btn btn-neutral" title="utils"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+        <a href="../vis.grad_modifiers/" class="btn btn-neutral" title="grad_modifiers"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -278,8 +267,10 @@ specified in your Keras config file.</p>
           <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../vis.utils.utils/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../vis.grad_modifiers/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
+      
+        <span style="margin-left: 15px"><a href="../vis.utils.utils/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

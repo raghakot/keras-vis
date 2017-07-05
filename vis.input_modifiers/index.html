@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>modifiers - Keras-vis Documentation</title>
+  <title>input_modifiers - Keras-vis Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -18,9 +18,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "modifiers";
-    var mkdocs_page_input_path = "vis.modifiers.md";
-    var mkdocs_page_url = "/vis.modifiers/";
+    var mkdocs_page_name = "input_modifiers";
+    var mkdocs_page_input_path = "vis.input_modifiers.md";
+    var mkdocs_page_url = "/vis.input_modifiers/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -59,15 +59,15 @@
     <ul class="subnav">
                 <li class="">
                     
-    <a class="" href="../visualizations/conv_filters/">Convolutional Filters</a>
+    <a class="" href="../visualizations/activation_maximization/">Activation Maximization</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../visualizations/dense/">Dense Layers</a>
+    <a class="" href="../visualizations/saliency/">Saliency Maps</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../visualizations/attention/">Attention Maps</a>
+    <a class="" href="../visualizations/class_activation_maps/">Class Activation Maps</a>
                 </li>
     </ul>
 	    </li>
@@ -76,9 +76,13 @@
 		
     <span class="caption-text">API Docs</span>
     <ul class="subnav">
-                <li class=" current">
+                <li class="">
                     
-    <span class="caption-text">Core API</span>
+    <a class="" href="../vis.visualization/">Visualization</a>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Optimization</span>
     <ul class="subnav">
                 <li class="toctree-l3">
                     
@@ -88,18 +92,32 @@
                     
     <a class="" href="../vis.regularizers/">regularizers</a>
                 </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.optimizer/">optimizer</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.callbacks/">callbacks</a>
+                </li>
+    </ul>
+                </li>
+                <li class=" current">
+                    
+    <span class="caption-text">Modifiers</span>
+    <ul class="subnav">
                 <li class="toctree-l3 current">
                     
-    <a class="current" href="./">modifiers</a>
+    <a class="current" href="./">input_modifiers</a>
     <ul class="subnav">
             
-    <li class="toctree-l4"><a href="#imagemodifier">ImageModifier</a></li>
+    <li class="toctree-l4"><a href="#inputmodifier">InputModifier</a></li>
     
         <ul>
         
-            <li><a class="toctree-l5" href="#imagemodifierpost">ImageModifier.post</a></li>
+            <li><a class="toctree-l5" href="#inputmodifierpost">InputModifier.post</a></li>
         
-            <li><a class="toctree-l5" href="#imagemodifierpre">ImageModifier.pre</a></li>
+            <li><a class="toctree-l5" href="#inputmodifierpre">InputModifier.pre</a></li>
         
         </ul>
     
@@ -121,11 +139,11 @@
                 </li>
                 <li class="toctree-l3">
                     
-    <a class="" href="../vis.optimizer/">optimizer</a>
+    <a class="" href="../vis.grad_modifiers/">grad_modifiers</a>
                 </li>
                 <li class="toctree-l3">
                     
-    <a class="" href="../vis.visualization/">visualization</a>
+    <a class="" href="../vis.backprop_modifiers/">backprop_modifiers</a>
                 </li>
     </ul>
                 </li>
@@ -137,9 +155,15 @@
                     
     <a class="" href="../vis.utils.utils/">utils</a>
                 </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Backend Specific</span>
+    <ul class="subnav">
                 <li class="toctree-l3">
                     
-    <a class="" href="../vis.utils.vggnet/">vggnet</a>
+    <a class="" href="../vis.backend/">backend</a>
                 </li>
     </ul>
                 </li>
@@ -172,14 +196,14 @@
         
       
         
-          <li>Core API &raquo;</li>
+          <li>Modifiers &raquo;</li>
         
       
     
-    <li>modifiers</li>
+    <li>input_modifiers</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.modifiers.md"
+        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.input_modifiers.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -189,74 +213,77 @@
           <div role="main">
             <div class="section">
               
-                <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L0">vis/modifiers.py#L0</a></p>
+                <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/input_modifiers.py#L0">vis/input_modifiers.py#L0</a></p>
 <hr />
-<h2 id="imagemodifier"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L8">ImageModifier</a></h2>
-<p>Abstract class for defining an image modifier. An image modifier can be used with the
-<a href="../vis.optimizer/#optimizerminimize">Optimizer.minimize</a> to make <code>pre</code> and <code>post</code> image changes with the
-gradient descent update step.</p>
-<pre><code class="python">modifier.pre(img)
+<h2 id="inputmodifier"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/input_modifiers.py#L9">InputModifier</a></h2>
+<p>Abstract class for defining an input modifier. An input modifier can be used with the
+<a href="../vis.optimizer/#optimizerminimize">Optimizer.minimize</a> to make <code>pre</code> and <code>post</code> changes to the optimized input
+during the optimization process.</p>
+<pre><code class="python">modifier.pre(seed_input)
 # gradient descent update to img
-modifier.post(img)
+modifier.post(seed_input)
 </code></pre>
 
 <hr />
-<h3 id="imagemodifierpost"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L33">ImageModifier.post</a></h3>
-<pre><code class="python">post(self, img)
+<h3 id="inputmodifierpost"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/input_modifiers.py#L34">InputModifier.post</a></h3>
+<pre><code class="python">post(self, inp)
 </code></pre>
 
-<p>Implement post gradient descent update modification to the image. If post-processing is not desired,
-simply ignore the implementation. It returns the unmodified <code>img</code> by default.</p>
+<p>Implement post gradient descent update modification to the input. If post-processing is not desired,
+simply ignore the implementation. It returns the unmodified <code>inp</code> by default.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
+<li><strong>inp</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
   channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
 </ul>
 <p><em>Returns:</em></p>
-<p>The modified post image.</p>
+<p>The modified post input.</p>
 <hr />
-<h3 id="imagemodifierpre"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L20">ImageModifier.pre</a></h3>
-<pre><code class="python">pre(self, img)
+<h3 id="inputmodifierpre"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/input_modifiers.py#L21">InputModifier.pre</a></h3>
+<pre><code class="python">pre(self, inp)
 </code></pre>
 
-<p>Implement pre gradient descent update modification to the image. If pre-processing is not desired,
-simply ignore the implementation. It returns the unmodified <code>img</code> by default.</p>
+<p>Implement pre gradient descent update modification to the input. If pre-processing is not desired,
+simply ignore the implementation. It returns the unmodified <code>inp</code> by default.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
+<li><strong>inp</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
   channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
 </ul>
 <p><em>Returns:</em></p>
-<p>The modified pre image.</p>
+<p>The modified pre input.</p>
 <hr />
-<h2 id="jitter"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L47">Jitter</a></h2>
+<h2 id="jitter"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/input_modifiers.py#L48">Jitter</a></h2>
 <hr />
-<h3 id="jitter__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L49">Jitter.<code>__init__</code></a></h3>
-<pre><code class="python">__init__(self, jitter=16)
+<h3 id="jitter__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/input_modifiers.py#L50">Jitter.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, jitter=0.05)
 </code></pre>
 
-<p>Implements an image modifier that introduces random jitter in <code>pre</code> and undoes in <code>post</code>.
+<p>Implements an input modifier that introduces random jitter in <code>pre</code>.
 Jitter has been shown to produce crisper activation maximization images.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>jitter</strong>:  Number of pixels to jitter in rows and cols dimensions.</li>
+<li><strong>jitter</strong>:  The amount of jitter to apply, scalar or sequence.
+  If a scalar, same jitter is applied to all image dims. If sequence, <code>jitter</code> should contain a value
+  per image dim.</li>
 </ul>
+<p>A value between <code>[0., 1.]</code> is interpreted as a percentage of the image dimension. (Default value: 0.05)</p>
 <hr />
-<h3 id="jitterpost"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L33">Jitter.post</a></h3>
-<pre><code class="python">post(self, img)
+<h3 id="jitterpost"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/input_modifiers.py#L34">Jitter.post</a></h3>
+<pre><code class="python">post(self, inp)
 </code></pre>
 
-<p>Implement post gradient descent update modification to the image. If post-processing is not desired,
-simply ignore the implementation. It returns the unmodified <code>img</code> by default.</p>
+<p>Implement post gradient descent update modification to the input. If post-processing is not desired,
+simply ignore the implementation. It returns the unmodified <code>inp</code> by default.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
+<li><strong>inp</strong>:  An N-dim numpy array of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
   channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
 </ul>
 <p><em>Returns:</em></p>
-<p>The modified post image.</p>
+<p>The modified post input.</p>
 <hr />
-<h3 id="jitterpre"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/modifiers.py#L59">Jitter.pre</a></h3>
+<h3 id="jitterpre"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/input_modifiers.py#L83">Jitter.pre</a></h3>
 <pre><code class="python">pre(self, img)
 </code></pre>
               
@@ -266,10 +293,10 @@ simply ignore the implementation. It returns the unmodified <code>img</code> by 
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../vis.optimizer/" class="btn btn-neutral float-right" title="optimizer">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../vis.grad_modifiers/" class="btn btn-neutral float-right" title="grad_modifiers">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../vis.regularizers/" class="btn btn-neutral" title="regularizers"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../vis.callbacks/" class="btn btn-neutral" title="callbacks"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -297,10 +324,10 @@ simply ignore the implementation. It returns the unmodified <code>img</code> by 
           <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../vis.regularizers/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../vis.callbacks/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../vis.optimizer/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../vis.grad_modifiers/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

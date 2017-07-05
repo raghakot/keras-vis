@@ -59,15 +59,15 @@
     <ul class="subnav">
                 <li class="">
                     
-    <a class="" href="../visualizations/conv_filters/">Convolutional Filters</a>
+    <a class="" href="../visualizations/activation_maximization/">Activation Maximization</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../visualizations/dense/">Dense Layers</a>
+    <a class="" href="../visualizations/saliency/">Saliency Maps</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../visualizations/attention/">Attention Maps</a>
+    <a class="" href="../visualizations/class_activation_maps/">Class Activation Maps</a>
                 </li>
     </ul>
 	    </li>
@@ -78,7 +78,11 @@
     <ul class="subnav">
                 <li class="">
                     
-    <span class="caption-text">Core API</span>
+    <a class="" href="../vis.visualization/">Visualization</a>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Optimization</span>
     <ul class="subnav">
                 <li class="toctree-l3">
                     
@@ -90,15 +94,29 @@
                 </li>
                 <li class="toctree-l3">
                     
-    <a class="" href="../vis.modifiers/">modifiers</a>
-                </li>
-                <li class="toctree-l3">
-                    
     <a class="" href="../vis.optimizer/">optimizer</a>
                 </li>
                 <li class="toctree-l3">
                     
-    <a class="" href="../vis.visualization/">visualization</a>
+    <a class="" href="../vis.callbacks/">callbacks</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Modifiers</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.input_modifiers/">input_modifiers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.grad_modifiers/">grad_modifiers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.backprop_modifiers/">backprop_modifiers</a>
                 </li>
     </ul>
                 </li>
@@ -121,7 +139,15 @@
         
             <li><a class="toctree-l5" href="#listify">listify</a></li>
         
+            <li><a class="toctree-l5" href="#add_defaults_to_kwargs">add_defaults_to_kwargs</a></li>
+        
+            <li><a class="toctree-l5" href="#get_identifier">get_identifier</a></li>
+        
+            <li><a class="toctree-l5" href="#apply_modifications">apply_modifications</a></li>
+        
             <li><a class="toctree-l5" href="#random_array">random_array</a></li>
+        
+            <li><a class="toctree-l5" href="#find_layer_idx">find_layer_idx</a></li>
         
             <li><a class="toctree-l5" href="#deprocess_input">deprocess_input</a></li>
         
@@ -144,9 +170,15 @@
 
     </ul>
                 </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Backend Specific</span>
+    <ul class="subnav">
                 <li class="toctree-l3">
                     
-    <a class="" href="../vis.utils.vggnet/">vggnet</a>
+    <a class="" href="../vis.backend/">backend</a>
                 </li>
     </ul>
                 </li>
@@ -202,7 +234,7 @@
 <li><strong>slicer</strong></li>
 </ul>
 <hr />
-<h3 id="set_random_seed"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L42">set_random_seed</a></h3>
+<h3 id="set_random_seed"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L46">set_random_seed</a></h3>
 <pre><code class="python">set_random_seed(seed_value=1337)
 </code></pre>
 
@@ -212,19 +244,60 @@
 <li><strong>seed_value</strong>:  The seed value to use. (Default Value = infamous 1337)</li>
 </ul>
 <hr />
-<h3 id="reverse_enumerate"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L58">reverse_enumerate</a></h3>
+<h3 id="reverse_enumerate"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L55">reverse_enumerate</a></h3>
 <pre><code class="python">reverse_enumerate(iterable)
 </code></pre>
 
 <p>Enumerate over an iterable in reverse order while retaining proper indexes, without creating any copies.</p>
 <hr />
-<h3 id="listify"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L64">listify</a></h3>
+<h3 id="listify"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L61">listify</a></h3>
 <pre><code class="python">listify(value)
 </code></pre>
 
 <p>Ensures that the value is a list. If it is not a list, it creates a new list with <code>value</code> as an item.</p>
 <hr />
-<h3 id="random_array"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L72">random_array</a></h3>
+<h3 id="add_defaults_to_kwargs"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L69">add_defaults_to_kwargs</a></h3>
+<pre><code class="python">add_defaults_to_kwargs(defaults, **kwargs)
+</code></pre>
+
+<p>Updates <code>kwargs</code> with dict of <code>defaults</code></p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>defaults</strong>:  A dictionary of keys and values
+**kwargs: The kwargs to update.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The updated kwargs.</p>
+<hr />
+<h3 id="get_identifier"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L84">get_identifier</a></h3>
+<pre><code class="python">get_identifier(identifier, module_globals, module_name)
+</code></pre>
+
+<p>Helper utility to retrieve the callable function associated with a string identifier.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>identifier</strong>:  The identifier. Could be a string or function.</li>
+<li><strong>module_globals</strong>:  The global objects of the module.</li>
+<li><strong>module_name</strong>:  The module name</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The callable associated with the identifier.</p>
+<hr />
+<h3 id="apply_modifications"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L106">apply_modifications</a></h3>
+<pre><code class="python">apply_modifications(model)
+</code></pre>
+
+<p>Applies modifications to the model layers to create a new Graph. For example, simply changing
+<code>model.layers[idx].activation = new activation</code> does not change the graph. The entire graph needs to be updated
+with modified inbound and outbound tensors because of change in layer building function.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>model</strong>:  The <code>keras.models.Model</code> instance.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The modified model with changes applied. Does not mutate the original <code>model</code>.</p>
+<hr />
+<h3 id="random_array"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L129">random_array</a></h3>
 <pre><code class="python">random_array(shape, mean=128.0, std=20.0)
 </code></pre>
 
@@ -237,7 +310,20 @@
 </ul>
 <p><em>Returns: Random numpy array of given <code>shape</code> uniformly distributed with desired <code>mean</code> and <code>std</code>.</em></p>
 <hr />
-<h3 id="deprocess_input"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L90">deprocess_input</a></h3>
+<h3 id="find_layer_idx"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L147">find_layer_idx</a></h3>
+<pre><code class="python">find_layer_idx(model, layer_name)
+</code></pre>
+
+<p>Looks up the layer index corresponding to <code>layer_name</code> from <code>model</code>.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>model</strong>:  The <code>keras.models.Model</code> instance.</li>
+<li><strong>layer_name</strong>:  The name of the layer to lookup.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The layer index if found. Raises an exception otherwise.</p>
+<hr />
+<h3 id="deprocess_input"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L168">deprocess_input</a></h3>
 <pre><code class="python">deprocess_input(input_array, input_range=(0, 255))
 </code></pre>
 
@@ -250,7 +336,7 @@
 <p><em>Returns:</em></p>
 <p>The rescaled <code>input_array</code>.</p>
 <hr />
-<h3 id="stitch_images"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L114">stitch_images</a></h3>
+<h3 id="stitch_images"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L192">stitch_images</a></h3>
 <pre><code class="python">stitch_images(images, margin=5, cols=5)
 </code></pre>
 
@@ -265,7 +351,7 @@
 <p><em>Returns:</em></p>
 <p>A single numpy image array comprising of input images.</p>
 <hr />
-<h3 id="get_img_shape"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L149">get_img_shape</a></h3>
+<h3 id="get_img_shape"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L227">get_img_shape</a></h3>
 <pre><code class="python">get_img_shape(img)
 </code></pre>
 
@@ -278,7 +364,7 @@
 <p><em>Returns:</em></p>
 <p>Tuple containing image shape information in <code>(samples, channels, image_dims...)</code> order.</p>
 <hr />
-<h3 id="load_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L171">load_img</a></h3>
+<h3 id="load_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L249">load_img</a></h3>
 <pre><code class="python">load_img(path, grayscale=False, target_size=None)
 </code></pre>
 
@@ -292,7 +378,7 @@
 <p><em>Returns:</em></p>
 <p>The loaded numpy image.</p>
 <hr />
-<h3 id="get_imagenet_label"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L188">get_imagenet_label</a></h3>
+<h3 id="get_imagenet_label"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L266">get_imagenet_label</a></h3>
 <pre><code class="python">get_imagenet_label(indices, join=&quot;, &quot;)
 </code></pre>
 
@@ -305,7 +391,7 @@
 <p><em>Returns:</em></p>
 <p>Image net label corresponding to the image category.</p>
 <hr />
-<h3 id="draw_text"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L207">draw_text</a></h3>
+<h3 id="draw_text"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L285">draw_text</a></h3>
 <pre><code class="python">draw_text(img, text, position=(10, 10), font=&quot;FreeSans.ttf&quot;, font_size=14, color=(0, 0, 0))
 </code></pre>
 
@@ -321,7 +407,7 @@
 </ul>
 <p><em>Returns: Image overlayed with text.</em></p>
 <hr />
-<h3 id="bgr2rgb"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L236">bgr2rgb</a></h3>
+<h3 id="bgr2rgb"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L314">bgr2rgb</a></h3>
 <pre><code class="python">bgr2rgb(img)
 </code></pre>
 
@@ -332,7 +418,7 @@
 </ul>
 <p><em>Returns: The converted image format</em></p>
 <hr />
-<h3 id="normalize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L247">normalize</a></h3>
+<h3 id="normalize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L325">normalize</a></h3>
 <pre><code class="python">normalize(array, min_value=0.0, max_value=1.0)
 </code></pre>
 
@@ -352,10 +438,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../vis.utils.vggnet/" class="btn btn-neutral float-right" title="vggnet">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../vis.backend/" class="btn btn-neutral float-right" title="backend">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../vis.visualization/" class="btn btn-neutral" title="visualization"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../vis.backprop_modifiers/" class="btn btn-neutral" title="backprop_modifiers"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -383,10 +469,10 @@
           <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../vis.visualization/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../vis.backprop_modifiers/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../vis.utils.vggnet/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../vis.backend/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

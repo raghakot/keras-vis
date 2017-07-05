@@ -65,6 +65,8 @@
         
             <li><a class="toctree-l3" href="#visualizations">Visualizations</a></li>
         
+            <li><a class="toctree-l3" href="#citation">Citation</a></li>
+        
         </ul>
     
 
@@ -77,15 +79,15 @@
     <ul class="subnav">
                 <li class="">
                     
-    <a class="" href="visualizations/conv_filters/">Convolutional Filters</a>
+    <a class="" href="visualizations/activation_maximization/">Activation Maximization</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="visualizations/dense/">Dense Layers</a>
+    <a class="" href="visualizations/saliency/">Saliency Maps</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="visualizations/attention/">Attention Maps</a>
+    <a class="" href="visualizations/class_activation_maps/">Class Activation Maps</a>
                 </li>
     </ul>
 	    </li>
@@ -96,7 +98,11 @@
     <ul class="subnav">
                 <li class="">
                     
-    <span class="caption-text">Core API</span>
+    <a class="" href="vis.visualization/">Visualization</a>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Optimization</span>
     <ul class="subnav">
                 <li class="toctree-l3">
                     
@@ -108,15 +114,29 @@
                 </li>
                 <li class="toctree-l3">
                     
-    <a class="" href="vis.modifiers/">modifiers</a>
-                </li>
-                <li class="toctree-l3">
-                    
     <a class="" href="vis.optimizer/">optimizer</a>
                 </li>
                 <li class="toctree-l3">
                     
-    <a class="" href="vis.visualization/">visualization</a>
+    <a class="" href="vis.callbacks/">callbacks</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Modifiers</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="vis.input_modifiers/">input_modifiers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="vis.grad_modifiers/">grad_modifiers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="vis.backprop_modifiers/">backprop_modifiers</a>
                 </li>
     </ul>
                 </li>
@@ -128,9 +148,15 @@
                     
     <a class="" href="vis.utils.utils/">utils</a>
                 </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Backend Specific</span>
+    <ul class="subnav">
                 <li class="toctree-l3">
                     
-    <a class="" href="vis.utils.vggnet/">vggnet</a>
+    <a class="" href="vis.backend/">backend</a>
                 </li>
     </ul>
                 </li>
@@ -245,6 +271,8 @@ with theano or tensorflow backend. Note that this library requires Keras &gt; 2.
 </code></pre>
 
 <h2 id="visualizations">Visualizations</h2>
+<p><strong>NOTE: The links are currently broken and the entire documentation is being reworked.
+Please see examples/ for samples.</strong></p>
 <p>Neural nets are black boxes. In the recent years, several approaches for understanding and visualizing Convolutional 
 Networks have been developed in the literature. They give us a way to peer into the black boxes, 
 diagnose mis-classifications, and assess whether the network is over/under fitting. </p>
@@ -310,6 +338,17 @@ crisper activation maximization images. As an exercise, try:</p>
 </ul>
 <p><img alt="opt_progress" src="https://raw.githubusercontent.com/raghakot/keras-vis/master/images/opt_progress.gif?raw=true" title="Optimization progress" /></p>
 <hr/>
+
+<h2 id="citation">Citation</h2>
+<p>Please cite keras-vis in your publications if it helped your research. Here is an example BibTeX entry:</p>
+<pre><code>@misc{raghakotkerasvis
+  title={keras-vis},
+  author={Kotikalapudi, Raghavendra and contributors},
+  year={2017},
+  publisher={GitHub},
+  howpublished={\url{https://github.com/raghakot/keras-vis}},
+}
+</code></pre>
               
             </div>
           </div>
@@ -317,7 +356,7 @@ crisper activation maximization images. As an exercise, try:</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="visualizations/conv_filters/" class="btn btn-neutral float-right" title="Convolutional Filters">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="visualizations/activation_maximization/" class="btn btn-neutral float-right" title="Activation Maximization">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
     </div>
@@ -347,7 +386,7 @@ crisper activation maximization images. As an exercise, try:</p>
       
       
       
-        <span style="margin-left: 15px"><a href="visualizations/conv_filters/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="visualizations/activation_maximization/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
@@ -359,5 +398,5 @@ crisper activation maximization images. As an exercise, try:</p>
 
 <!--
 MkDocs version : 0.16.3
-Build Date UTC : 2017-06-29 04:34:34
+Build Date UTC : 2017-07-05 08:51:41
 -->

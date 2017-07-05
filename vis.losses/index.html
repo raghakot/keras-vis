@@ -59,15 +59,15 @@
     <ul class="subnav">
                 <li class="">
                     
-    <a class="" href="../visualizations/conv_filters/">Convolutional Filters</a>
+    <a class="" href="../visualizations/activation_maximization/">Activation Maximization</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../visualizations/dense/">Dense Layers</a>
+    <a class="" href="../visualizations/saliency/">Saliency Maps</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../visualizations/attention/">Attention Maps</a>
+    <a class="" href="../visualizations/class_activation_maps/">Class Activation Maps</a>
                 </li>
     </ul>
 	    </li>
@@ -76,9 +76,13 @@
 		
     <span class="caption-text">API Docs</span>
     <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../vis.visualization/">Visualization</a>
+                </li>
                 <li class=" current">
                     
-    <span class="caption-text">Core API</span>
+    <span class="caption-text">Optimization</span>
     <ul class="subnav">
                 <li class="toctree-l3 current">
                     
@@ -107,17 +111,6 @@
         </ul>
     
 
-    <li class="toctree-l4"><a href="#regressiontarget">RegressionTarget</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l5" href="#regressiontarget__init__">RegressionTarget.__init__</a></li>
-        
-            <li><a class="toctree-l5" href="#regressiontargetbuild_loss">RegressionTarget.build_loss</a></li>
-        
-        </ul>
-    
-
     </ul>
                 </li>
                 <li class="toctree-l3">
@@ -126,15 +119,29 @@
                 </li>
                 <li class="toctree-l3">
                     
-    <a class="" href="../vis.modifiers/">modifiers</a>
-                </li>
-                <li class="toctree-l3">
-                    
     <a class="" href="../vis.optimizer/">optimizer</a>
                 </li>
                 <li class="toctree-l3">
                     
-    <a class="" href="../vis.visualization/">visualization</a>
+    <a class="" href="../vis.callbacks/">callbacks</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Modifiers</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.input_modifiers/">input_modifiers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.grad_modifiers/">grad_modifiers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.backprop_modifiers/">backprop_modifiers</a>
                 </li>
     </ul>
                 </li>
@@ -146,9 +153,15 @@
                     
     <a class="" href="../vis.utils.utils/">utils</a>
                 </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Backend Specific</span>
+    <ul class="subnav">
                 <li class="toctree-l3">
                     
-    <a class="" href="../vis.utils.vggnet/">vggnet</a>
+    <a class="" href="../vis.backend/">backend</a>
                 </li>
     </ul>
                 </li>
@@ -181,7 +194,7 @@
         
       
         
-          <li>Core API &raquo;</li>
+          <li>Optimization &raquo;</li>
         
       
     
@@ -262,59 +275,6 @@ image space.</p>
 <h3 id="activationmaximizationbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L76">ActivationMaximization.build_loss</a></h3>
 <pre><code class="python">build_loss(self)
 </code></pre>
-
-<hr />
-<h2 id="regressiontarget"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L94">RegressionTarget</a></h2>
-<p>A loss function that drives regression outputs to targets.</p>
-<p>Unlike classification, we cannot simply maximize the class output as it only serves to increase the regression
-node output. We might want to visualize change in input that would cause the output to:</p>
-<ul>
-<li>Increase</li>
-<li>Decrease</li>
-<li>Remain the same</li>
-</ul>
-<p>For example, with self driving car steering angle output, we might want to see what causes it to turn more right
-than predicted (increase output), more left (decrease output), or maintain its prediction (same).</p>
-<hr />
-<h3 id="regressiontarget__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L107">RegressionTarget.<code>__init__</code></a></h3>
-<pre><code class="python">__init__(self, layer, output_indices, targets, threshold=0.05)
-</code></pre>
-
-<p><em>Args:</em></p>
-<ul>
-<li><strong>layer</strong>:  The keras layer whose regression outputs needs to be visualized. This can be any layer with output
-  of shape <code>(batch_size, outputs)</code>.</li>
-<li><strong>output_indices</strong>:  Output indices within the layer.</li>
-<li><strong>targets</strong>:  The desired regression output targets corresponding to <code>output_indices</code> outputs.
-  To visualize input where output is same as the target, a value of <code>None</code> can be passed. This saves
-  additional computation of predicting the actual output and then passing it as the target.</li>
-<li><strong>threshold</strong>:  The threshold within which output should be considered the same as target.
-  ie., |output - target| &lt; threshold means that regression output should not be changed.</li>
-</ul>
-<hr />
-<h3 id="regressiontargetbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L133">RegressionTarget.build_loss</a></h3>
-<pre><code class="python">build_loss(self)
-</code></pre>
-
-<p>The rationale for this loss is as follows:</p>
-<ul>
-<li>
-<p>When we consider the gradient of input pixel with respect to output, a positive gradient indicates the
-direction that would cause the output to increase. Hence we try to increase the output when <code>target &gt; output</code>.</p>
-</li>
-<li>
-<p>To decrease the value we need to consider negative gradients. So if we step in negative of that direction,
-the output will decrease.</p>
-</li>
-<li>
-<p>To maintain the same output, we want to focus on the gradients that are small. Hence we consider inverse of
-output to highlight gradients that would be small.</p>
-</li>
-</ul>
-<p>Basically, we want positive gradient to indicate the direction that achieves the increase, decrease or
-remains same cases so that the optimization code can be uniform.</p>
-<p><em>Returns:</em></p>
-<p>The loss expression.</p>
               
             </div>
           </div>
@@ -325,7 +285,7 @@ remains same cases so that the optimization code can be uniform.</p>
         <a href="../vis.regularizers/" class="btn btn-neutral float-right" title="regularizers">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../visualizations/attention/" class="btn btn-neutral" title="Attention Maps"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../vis.visualization/" class="btn btn-neutral" title="Visualization"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -353,7 +313,7 @@ remains same cases so that the optimization code can be uniform.</p>
           <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../visualizations/attention/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../vis.visualization/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
         <span style="margin-left: 15px"><a href="../vis.regularizers/" style="color: #fcfcfc">Next &raquo;</a></span>

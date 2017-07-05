@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>regularizers - Keras-vis Documentation</title>
+  <title>grad_modifiers - Keras-vis Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -18,9 +18,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "regularizers";
-    var mkdocs_page_input_path = "vis.regularizers.md";
-    var mkdocs_page_url = "/vis.regularizers/";
+    var mkdocs_page_name = "grad_modifiers";
+    var mkdocs_page_input_path = "vis.grad_modifiers.md";
+    var mkdocs_page_url = "/vis.grad_modifiers/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -80,7 +80,7 @@
                     
     <a class="" href="../vis.visualization/">Visualization</a>
                 </li>
-                <li class=" current">
+                <li class="">
                     
     <span class="caption-text">Optimization</span>
     <ul class="subnav">
@@ -88,37 +88,9 @@
                     
     <a class="" href="../vis.losses/">losses</a>
                 </li>
-                <li class="toctree-l3 current">
+                <li class="toctree-l3">
                     
-    <a class="current" href="./">regularizers</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l4"><a href="#normalize">normalize</a></li>
-    
-
-    <li class="toctree-l4"><a href="#totalvariation">TotalVariation</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l5" href="#totalvariation__init__">TotalVariation.__init__</a></li>
-        
-            <li><a class="toctree-l5" href="#totalvariationbuild_loss">TotalVariation.build_loss</a></li>
-        
-        </ul>
-    
-
-    <li class="toctree-l4"><a href="#lpnorm">LPNorm</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l5" href="#lpnorm__init__">LPNorm.__init__</a></li>
-        
-            <li><a class="toctree-l5" href="#lpnormbuild_loss">LPNorm.build_loss</a></li>
-        
-        </ul>
-    
-
-    </ul>
+    <a class="" href="../vis.regularizers/">regularizers</a>
                 </li>
                 <li class="toctree-l3">
                     
@@ -130,7 +102,7 @@
                 </li>
     </ul>
                 </li>
-                <li class="">
+                <li class=" current">
                     
     <span class="caption-text">Modifiers</span>
     <ul class="subnav">
@@ -138,9 +110,30 @@
                     
     <a class="" href="../vis.input_modifiers/">input_modifiers</a>
                 </li>
-                <li class="toctree-l3">
+                <li class="toctree-l3 current">
                     
-    <a class="" href="../vis.grad_modifiers/">grad_modifiers</a>
+    <a class="current" href="./">grad_modifiers</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l4"><a href="#negate">negate</a></li>
+    
+
+    <li class="toctree-l4"><a href="#absolute">absolute</a></li>
+    
+
+    <li class="toctree-l4"><a href="#invert">invert</a></li>
+    
+
+    <li class="toctree-l4"><a href="#relu">relu</a></li>
+    
+
+    <li class="toctree-l4"><a href="#small_values">small_values</a></li>
+    
+
+    <li class="toctree-l4"><a href="#get">get</a></li>
+    
+
+    </ul>
                 </li>
                 <li class="toctree-l3">
                     
@@ -197,14 +190,14 @@
         
       
         
-          <li>Optimization &raquo;</li>
+          <li>Modifiers &raquo;</li>
         
       
     
-    <li>regularizers</li>
+    <li>grad_modifiers</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.regularizers.md"
+        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.grad_modifiers.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -214,66 +207,70 @@
           <div role="main">
             <div class="section">
               
-                <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L0">vis/regularizers.py#L0</a></p>
+                <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/grad_modifiers.py#L0">vis/grad_modifiers.py#L0</a></p>
 <hr />
-<h3 id="normalize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L11">normalize</a></h3>
-<pre><code class="python">normalize(input_tensor, output_tensor)
+<h3 id="negate"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/grad_modifiers.py#L8">negate</a></h3>
+<pre><code class="python">negate(grads)
 </code></pre>
 
-<p>Normalizes the <code>output_tensor</code> with respect to <code>input_tensor</code> dimensions.
-This makes regularizer weight factor more or less uniform across various input image dimensions.</p>
+<p>Negates the gradients.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>input_tensor</strong>:  An tensor of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
-  channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
-<li><strong>output_tensor</strong>:  The tensor to normalize.</li>
+<li><strong>grads</strong>:  A numpy array of grads to use.</li>
 </ul>
 <p><em>Returns:</em></p>
-<p>The normalized tensor.</p>
+<p>The negated gradients.</p>
 <hr />
-<h2 id="totalvariation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L27">TotalVariation</a></h2>
-<hr />
-<h3 id="totalvariation__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L29">TotalVariation.<code>__init__</code></a></h3>
-<pre><code class="python">__init__(self, img_input, beta=2.0)
+<h3 id="absolute"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/grad_modifiers.py#L20">absolute</a></h3>
+<pre><code class="python">absolute(grads)
 </code></pre>
 
-<p>Total variation regularizer encourages blobbier and coherent image structures, akin to natural images.
-See <code>section 3.2.2</code> in
-<a href="https://arxiv.org/pdf/1512.02017v3.pdf">Visualizing deep convolutional neural networks using natural pre-images</a>
-for details.</p>
+<p>Absolutes the gradients.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img_input</strong>:  An image tensor of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=</code>channels_first<code>or</code>(samples, image_dims..., channels)<code>if</code>image_data_format=channels_last`</li>
-<li><strong>beta</strong>:  Smaller values of beta give sharper but 'spikier' images.
-  Values <script type="math/tex">\in [1.5, 3.0]</script> are recommended as a reasonable compromise. (Default value = 2.)</li>
+<li><strong>grads</strong>:  A numpy array of grads to use.</li>
 </ul>
+<p><em>Returns:</em></p>
+<p>The absolute gradients.</p>
 <hr />
-<h3 id="totalvariationbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L46">TotalVariation.build_loss</a></h3>
-<pre><code class="python">build_loss(self)
+<h3 id="invert"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/grad_modifiers.py#L32">invert</a></h3>
+<pre><code class="python">invert(grads)
 </code></pre>
 
-<p>Implements the N-dim version of function
-<script type="math/tex; mode=display">TV^{\beta}(x) = \sum_{whc} \left ( \left ( x(h, w+1, c) - x(h, w, c) \right )^{2} +
-\left ( x(h+1, w, c) - x(h, w, c) \right )^{2} \right )^{\frac{\beta}{2}}</script>
-to return total variation for all images in the batch.</p>
-<hr />
-<h2 id="lpnorm"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L75">LPNorm</a></h2>
-<hr />
-<h3 id="lpnorm__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L77">LPNorm.<code>__init__</code></a></h3>
-<pre><code class="python">__init__(self, img_input, p=6.0)
-</code></pre>
-
-<p>Builds a L-p norm function. This regularizer encourages the intensity of pixels to stay bounded.
-  i.e., prevents pixels from taking on very large values.</p>
+<p>Inverts the gradients.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img_input</strong>:  4D image input tensor to the model of shape: <code>(samples, channels, rows, cols)</code>
-  if data_format='channels_first' or <code>(samples, rows, cols, channels)</code> if data_format='channels_last'.</li>
-<li><strong>p</strong>:  The pth norm to use. If p = float('inf'), infinity-norm will be used.</li>
+<li><strong>grads</strong>:  A numpy array of grads to use.</li>
 </ul>
+<p><em>Returns:</em></p>
+<p>The inverted gradients.</p>
 <hr />
-<h3 id="lpnormbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L94">LPNorm.build_loss</a></h3>
-<pre><code class="python">build_loss(self)
+<h3 id="relu"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/grad_modifiers.py#L44">relu</a></h3>
+<pre><code class="python">relu(grads)
+</code></pre>
+
+<p>Clips negative gradient values.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>grads</strong>:  A numpy array of grads to use.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The rectified gradients.</p>
+<hr />
+<h3 id="small_values"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/grad_modifiers.py#L57">small_values</a></h3>
+<pre><code class="python">small_values(grads)
+</code></pre>
+
+<p>Can be used to highlight small gradient values.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>grads</strong>:  A numpy array of grads to use.</li>
+</ul>
+<p><em>Returns:</em></p>
+<p>The modified gradients that highlight small values.</p>
+<hr />
+<h3 id="get"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/grad_modifiers.py#L69">get</a></h3>
+<pre><code class="python">get(identifier)
 </code></pre>
               
             </div>
@@ -282,10 +279,10 @@ to return total variation for all images in the batch.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../vis.optimizer/" class="btn btn-neutral float-right" title="optimizer">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../vis.backprop_modifiers/" class="btn btn-neutral float-right" title="backprop_modifiers">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../vis.losses/" class="btn btn-neutral" title="losses"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../vis.input_modifiers/" class="btn btn-neutral" title="input_modifiers"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -313,10 +310,10 @@ to return total variation for all images in the batch.</p>
           <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../vis.losses/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../vis.input_modifiers/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../vis.optimizer/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../vis.backprop_modifiers/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

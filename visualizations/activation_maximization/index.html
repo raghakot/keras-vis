@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Activation Maximization - Keras-vis Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/highlight.css">
+  <link href="../../css/extras.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Activation Maximization";
+    var mkdocs_page_input_path = "visualizations/activation_maximization.md";
+    var mkdocs_page_url = "/visualizations/activation_maximization/";
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Keras-vis Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Visualizations</span>
+    <ul class="subnav">
+                <li class=" current">
+                    
+    <a class="current" href="./">Activation Maximization</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#what-is-activation-maximization">What is Activation Maximization?</a></li>
+    
+
+    <li class="toctree-l3"><a href="#usage">Usage</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#scenarios">Scenarios</a></li>
+        
+            <li><a class="toctree-l4" href="#advanced-usage">Advanced usage</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#tips-and-tricks">Tips and tricks</a></li>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../saliency/">Saliency Maps</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../class_activation_maps/">Class Activation Maps</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">API Docs</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../vis.visualization/">Visualization</a>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Optimization</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.losses/">losses</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.regularizers/">regularizers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.optimizer/">optimizer</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.callbacks/">callbacks</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Modifiers</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.input_modifiers/">input_modifiers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.grad_modifiers/">grad_modifiers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.backprop_modifiers/">backprop_modifiers</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Utils</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.utils.utils/">utils</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Backend Specific</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.backend/">backend</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Keras-vis Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Visualizations &raquo;</li>
+        
+      
+    
+    <li>Activation Maximization</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/visualizations/activation_maximization.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h2 id="what-is-activation-maximization">What is Activation Maximization?</h2>
+<p>In a CNN, each Conv layer has several learned <em>template matching</em> filters that maximize their output when a similar 
+template pattern is found in the input image. First Conv layer is easy to interpret; simply visualize the weights as 
+an image. To see what the Conv layer is doing, a simple option is to apply the filter over raw input pixels. 
+Subsequent Conv filters operate over the outputs of previous Conv filters (which indicate the presence or absence 
+of some templates), making them hard to interpret.</p>
+<p>The idea behind activation maximization is simple in hindsight - Generate an input image that maximizes the filter 
+output activations. i.e., we compute </p>
+<p>
+<script type="math/tex; mode=display">\frac{\partial ActivationMaximizationLoss}{\partial input}</script>
+</p>
+<p>and use that estimate to update the input. <a href="../../vis.losses#ActivationMaximization">ActivationMaximization</a> loss simply 
+outputs small values for large filter activations (we are minimizing losses during gradient descent iterations). 
+This allows us to understand what sort of input patterns activate a particular filter. For example, there could be 
+an eye filter that activates for the presence of eye within the input image.</p>
+<h2 id="usage">Usage</h2>
+<p>There are two APIs exposed to perform activation maximization.</p>
+<ol>
+<li><a href="../../vis.visualization#visualize_activation">visualize_activation</a>: This is the general purpose API for visualizing
+activations.</li>
+<li><a href="../../vis.visualization#visualize_activation_with_losses">visualize_activation_with_losses</a>: This is intended for 
+research use-cases where some custom weighted losses can be minimized.</li>
+</ol>
+<h3 id="scenarios">Scenarios</h3>
+<p>The API is very general purpose and can be used in a wide variety of scenarios. We will list the most common use-cases
+below:</p>
+<h4 id="categorical-output-dense-layer-visualization">Categorical Output <code>Dense</code> layer visualization</h4>
+<p>How can we assess whether a network is over/under fitting or generalizing well? Given an input image, a CNN can 
+classify whether it is a cat, bird etc. How can we be sure that it is capturing the correct notion of what it means 
+to be a bird? </p>
+<p>One way to answer these questions is to pose the reverse question:</p>
+<blockquote>
+<p>Generate an input image that maximizes the final <code>Dense</code> layer output corresponding to bird class. </p>
+</blockquote>
+<p>This can be done by pointing <code>layer_idx</code> to final <code>Dense</code> layer, and setting <code>filter_indices</code> to the desired output 
+category. </p>
+<ul>
+<li>For multi-class classification, <code>filter_indices</code> can point to a single class. You could point also point it to 
+multiple categories to see what a cat-fish might look like, as an example.</li>
+<li>For multi-label classifier, simply set the appropriate <code>filter_indices</code>.</li>
+</ul>
+<h4 id="regression-output-dense-layer-visualization">Regression Output <code>Dense</code> layer visualization</h4>
+<p>Unlike class activation visualizations, for regression outputs, we could visualize input that </p>
+<ul>
+<li>increases</li>
+<li>decreases</li>
+</ul>
+<p>the regressed <code>filter_indices</code> output. For example, if you trained an apple counter model, increasing the regression
+output should correspond to more apples showing up in the input image. Similarly one could decrease the current output.
+This can be achieved by using <code>grad_modifier</code> option. As the name suggests, it is used to modify the gradient of losses
+with respect to inputs. By default, <code>ActivationMaximization</code> loss is used to increase the output. By setting 
+<code>grad_modifier='negate'</code> you can negate the gradients, thus causing output values to decrease. 
+<a href="../../vis.grad_modifiers">gradient_modifiers</a> are very powerful and show up in other visualization APIs as well. </p>
+<h4 id="conv-filter-visualization"><code>Conv</code> filter visualization</h4>
+<p>By pointing <code>layer_idx</code> to <code>Conv</code> layer, you can visualize what pattern activates a filter. This might help you discover
+what a filter might be computing. Here, <code>filter_indices</code> refers to the index of the <code>Conv</code> filter within the layer.</p>
+<h3 id="advanced-usage">Advanced usage</h3>
+<p><code>backprop_modifier</code> allows you to modify the backpropagation behavior. For examples, you could tweak backprop to only
+propagate positive gradients by using <code>backprop_modifier='relu'</code>. This parameter also accepts a function and can be
+used to implement your crazy research idea :)</p>
+<h2 id="tips-and-tricks">Tips and tricks</h2>
+<ul>
+<li>
+<p>If you get garbage visualization, try setting <code>verbose=True</code> to see various losses during gradient descent iterations.
+By default, <code>visualize_activation</code> uses <code>TotalVariation</code> and <code>LpNorm</code> regularization to enforce natural image prior. It
+is very likely that you would see <code>ActivationMax Loss</code> bounce back and forth as they are dominated by regularization 
+loss weights. Try setting all weights to zero and gradually try increasing values of total variation weight.</p>
+</li>
+<li>
+<p>To get sharper looking images, use <a href="../../vis.input_modifiers#Jitter">Jitter</a> input modifier.</p>
+</li>
+<li>
+<p>Regression models usually do not provide enough gradient information to generate meaningful input images. Try seeding
+the input using <code>seed_input</code> and see if the modifications to the input make sense.</p>
+</li>
+<li>
+<p>Consider submitting a PR to add more tips and tricks that you found useful.</p>
+</li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../saliency/" class="btn btn-neutral float-right" title="Saliency Maps">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../.." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../.." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../saliency/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>

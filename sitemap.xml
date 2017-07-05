@@ -4,7 +4,7 @@
     
     <url>
      <loc>/</loc>
-     <lastmod>2017-06-28</lastmod>
+     <lastmod>2017-07-05</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -12,26 +12,44 @@
     
         
     <url>
-     <loc>/visualizations/conv_filters/</loc>
-     <lastmod>2017-06-28</lastmod>
+     <loc>/visualizations/activation_maximization/</loc>
+     <lastmod>2017-07-05</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>/visualizations/dense/</loc>
-     <lastmod>2017-06-28</lastmod>
+     <loc>/visualizations/saliency/</loc>
+     <lastmod>2017-07-05</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>/visualizations/attention/</loc>
-     <lastmod>2017-06-28</lastmod>
+     <loc>/visualizations/class_activation_maps/</loc>
+     <lastmod>2017-07-05</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     
 
     
+        
+    <url>
+     <loc>/vis.visualization/</loc>
+     <lastmod>2017-07-05</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc></loc>
+     <lastmod></lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc></loc>
+     <lastmod></lastmod>
+     <changefreq>daily</changefreq>
+    </url>
         
     <url>
      <loc></loc>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Class Activation Maps - Keras-vis Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/highlight.css">
+  <link href="../../css/extras.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Class Activation Maps";
+    var mkdocs_page_input_path = "visualizations/class_activation_maps.md";
+    var mkdocs_page_url = "/visualizations/class_activation_maps/";
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Keras-vis Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Visualizations</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../activation_maximization/">Activation Maximization</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../saliency/">Saliency Maps</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Class Activation Maps</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#what-is-a-class-activation-map">What is a Class Activation Map?</a></li>
+    
+
+    <li class="toctree-l3"><a href="#usage">Usage</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#scenarios">Scenarios</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#gotchas">Gotchas</a></li>
+    
+
+    </ul>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">API Docs</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../vis.visualization/">Visualization</a>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Optimization</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.losses/">losses</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.regularizers/">regularizers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.optimizer/">optimizer</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.callbacks/">callbacks</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Modifiers</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.input_modifiers/">input_modifiers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.grad_modifiers/">grad_modifiers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.backprop_modifiers/">backprop_modifiers</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Utils</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.utils.utils/">utils</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Backend Specific</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../../vis.backend/">backend</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Keras-vis Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Visualizations &raquo;</li>
+        
+      
+    
+    <li>Class Activation Maps</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/visualizations/class_activation_maps.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h2 id="what-is-a-class-activation-map">What is a Class Activation Map?</h2>
+<p>Class activation maps or grad-CAM is another way of visualizing attention over input. Instead of using gradients with
+respect to output (see <a href="../saliency">saliency</a>), grad-CAM uses penultimate (pre <code>Dense</code> layer) <code>Conv</code> layer output. The
+intuition is to use the nearest <code>Conv</code> layer to utilize spatial information that gets completely lost in <code>Dense</code> layers.</p>
+<p>In keras-vis, we use <a href="https://arxiv.org/pdf/1610.02391.pdf">grad-CAM</a> as its considered more general than 
+<a href="http://cnnlocalization.csail.mit.edu/">Class Activation maps</a>.</p>
+<h2 id="usage">Usage</h2>
+<p>There are two APIs exposed to visualize grad-CAM and are almost identical to <a href="../saliency#Usage">saliency usage</a>.</p>
+<ol>
+<li><a href="../../vis.visualization#visualize_cam">visualize_cam</a>: This is the general purpose API for visualizing
+grad-CAM.</li>
+<li><a href="../../vis.visualization#visualize_cam_with_losses">visualize_cam_with_losses</a>: This is intended for 
+research use-cases where some custom weighted loss can be used.</li>
+</ol>
+<p>The only notable addition is the <code>penultimate_layer_idx</code> parameter. This can be used to specify the pre-layer
+whose output gradients are used. By default, keras-vis will search for the nearest layer with filters.</p>
+<h3 id="scenarios">Scenarios</h3>
+<p>See <a href="../saliency#Scenarios">saliency scenarios</a>. Everything is identical expect the added <code>penultimate_layer_idx</code> param.</p>
+<h2 id="gotchas">Gotchas</h2>
+<p>grad-CAM only works well if the penultimate layer is close to the layer being visualized. This also applies to <code>Conv</code> 
+filter visualizations. You are better off using saliency of this is not the case with your model.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../vis.visualization/" class="btn btn-neutral float-right" title="Visualization">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../saliency/" class="btn btn-neutral" title="Saliency Maps"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../saliency/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../../vis.visualization/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>

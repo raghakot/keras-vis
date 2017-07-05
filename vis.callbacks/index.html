@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>regularizers - Keras-vis Documentation</title>
+  <title>callbacks - Keras-vis Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -18,9 +18,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "regularizers";
-    var mkdocs_page_input_path = "vis.regularizers.md";
-    var mkdocs_page_url = "/vis.regularizers/";
+    var mkdocs_page_name = "callbacks";
+    var mkdocs_page_input_path = "vis.callbacks.md";
+    var mkdocs_page_url = "/vis.callbacks/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -88,45 +88,55 @@
                     
     <a class="" href="../vis.losses/">losses</a>
                 </li>
-                <li class="toctree-l3 current">
+                <li class="toctree-l3">
                     
-    <a class="current" href="./">regularizers</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l4"><a href="#normalize">normalize</a></li>
-    
-
-    <li class="toctree-l4"><a href="#totalvariation">TotalVariation</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l5" href="#totalvariation__init__">TotalVariation.__init__</a></li>
-        
-            <li><a class="toctree-l5" href="#totalvariationbuild_loss">TotalVariation.build_loss</a></li>
-        
-        </ul>
-    
-
-    <li class="toctree-l4"><a href="#lpnorm">LPNorm</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l5" href="#lpnorm__init__">LPNorm.__init__</a></li>
-        
-            <li><a class="toctree-l5" href="#lpnormbuild_loss">LPNorm.build_loss</a></li>
-        
-        </ul>
-    
-
-    </ul>
+    <a class="" href="../vis.regularizers/">regularizers</a>
                 </li>
                 <li class="toctree-l3">
                     
     <a class="" href="../vis.optimizer/">optimizer</a>
                 </li>
-                <li class="toctree-l3">
+                <li class="toctree-l3 current">
                     
-    <a class="" href="../vis.callbacks/">callbacks</a>
+    <a class="current" href="./">callbacks</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l4"><a href="#optimizercallback">OptimizerCallback</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l5" href="#optimizercallbackcallback">OptimizerCallback.callback</a></li>
+        
+            <li><a class="toctree-l5" href="#optimizercallbackon_end">OptimizerCallback.on_end</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l4"><a href="#print">Print</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l5" href="#printcallback">Print.callback</a></li>
+        
+            <li><a class="toctree-l5" href="#printon_end">Print.on_end</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l4"><a href="#gifgenerator">GifGenerator</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l5" href="#gifgenerator__init__">GifGenerator.__init__</a></li>
+        
+            <li><a class="toctree-l5" href="#gifgeneratorcallback">GifGenerator.callback</a></li>
+        
+            <li><a class="toctree-l5" href="#gifgeneratoron_end">GifGenerator.on_end</a></li>
+        
+        </ul>
+    
+
+    </ul>
                 </li>
     </ul>
                 </li>
@@ -201,10 +211,10 @@
         
       
     
-    <li>regularizers</li>
+    <li>callbacks</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.regularizers.md"
+        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.callbacks.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -214,66 +224,66 @@
           <div role="main">
             <div class="section">
               
-                <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L0">vis/regularizers.py#L0</a></p>
+                <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/callbacks.py#L0">vis/callbacks.py#L0</a></p>
 <hr />
-<h3 id="normalize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L11">normalize</a></h3>
-<pre><code class="python">normalize(input_tensor, output_tensor)
+<h2 id="optimizercallback"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/callbacks.py#L16">OptimizerCallback</a></h2>
+<p>Abstract class for defining callbacks for use with <a href="../vis.optimizer/#minimize">optimizer.minimize</a>.</p>
+<hr />
+<h3 id="optimizercallbackcallback"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/callbacks.py#L20">OptimizerCallback.callback</a></h3>
+<pre><code class="python">callback(self, i, named_losses, overall_loss, grads, wrt_value)
 </code></pre>
 
-<p>Normalizes the <code>output_tensor</code> with respect to <code>input_tensor</code> dimensions.
-This makes regularizer weight factor more or less uniform across various input image dimensions.</p>
+<p>This function will be called within <a href="../vis.optimizer/#minimize">optimizer.minimize</a>.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>input_tensor</strong>:  An tensor of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
-  channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
-<li><strong>output_tensor</strong>:  The tensor to normalize.</li>
+<li><strong>i</strong>:  The optimizer iteration.</li>
+<li><strong>named_losses</strong>:  List of <code>(loss_name, loss_value)</code> tuples.</li>
+<li><strong>overall_loss</strong>:  Overall weighted loss.</li>
+<li><strong>grads</strong>:  The gradient of input image with respect to <code>wrt_value</code>.</li>
+<li><strong>wrt_value</strong>:  The current <code>wrt_value</code>.</li>
 </ul>
-<p><em>Returns:</em></p>
-<p>The normalized tensor.</p>
 <hr />
-<h2 id="totalvariation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L27">TotalVariation</a></h2>
-<hr />
-<h3 id="totalvariation__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L29">TotalVariation.<code>__init__</code></a></h3>
-<pre><code class="python">__init__(self, img_input, beta=2.0)
+<h3 id="optimizercallbackon_end"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/callbacks.py#L32">OptimizerCallback.on_end</a></h3>
+<pre><code class="python">on_end(self)
 </code></pre>
 
-<p>Total variation regularizer encourages blobbier and coherent image structures, akin to natural images.
-See <code>section 3.2.2</code> in
-<a href="https://arxiv.org/pdf/1512.02017v3.pdf">Visualizing deep convolutional neural networks using natural pre-images</a>
-for details.</p>
+<p>Called at the end of optimization process. This function is typically used to cleanup / close any
+opened resources at the end of optimization.</p>
+<hr />
+<h2 id="print"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/callbacks.py#L39">Print</a></h2>
+<p>Callback to print values during optimization.</p>
+<hr />
+<h3 id="printcallback"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/callbacks.py#L42">Print.callback</a></h3>
+<pre><code class="python">callback(self, i, named_losses, overall_loss, grads, wrt_value)
+</code></pre>
+
+<hr />
+<h3 id="printon_end"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/callbacks.py#L32">Print.on_end</a></h3>
+<pre><code class="python">on_end(self)
+</code></pre>
+
+<p>Called at the end of optimization process. This function is typically used to cleanup / close any
+opened resources at the end of optimization.</p>
+<hr />
+<h2 id="gifgenerator"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/callbacks.py#L47">GifGenerator</a></h2>
+<p>Callback to construct gif of optimized image.</p>
+<hr />
+<h3 id="gifgenerator__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/callbacks.py#L50">GifGenerator.<code>__init__</code></a></h3>
+<pre><code class="python">__init__(self, path)
+</code></pre>
+
 <p><em>Args:</em></p>
 <ul>
-<li><strong>img_input</strong>:  An image tensor of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=</code>channels_first<code>or</code>(samples, image_dims..., channels)<code>if</code>image_data_format=channels_last`</li>
-<li><strong>beta</strong>:  Smaller values of beta give sharper but 'spikier' images.
-  Values <script type="math/tex">\in [1.5, 3.0]</script> are recommended as a reasonable compromise. (Default value = 2.)</li>
+<li><strong>path</strong>:  The file path to save gif.</li>
 </ul>
 <hr />
-<h3 id="totalvariationbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L46">TotalVariation.build_loss</a></h3>
-<pre><code class="python">build_loss(self)
+<h3 id="gifgeneratorcallback"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/callbacks.py#L60">GifGenerator.callback</a></h3>
+<pre><code class="python">callback(self, i, named_losses, overall_loss, grads, wrt_value)
 </code></pre>
 
-<p>Implements the N-dim version of function
-<script type="math/tex; mode=display">TV^{\beta}(x) = \sum_{whc} \left ( \left ( x(h, w+1, c) - x(h, w, c) \right )^{2} +
-\left ( x(h+1, w, c) - x(h, w, c) \right )^{2} \right )^{\frac{\beta}{2}}</script>
-to return total variation for all images in the batch.</p>
 <hr />
-<h2 id="lpnorm"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L75">LPNorm</a></h2>
-<hr />
-<h3 id="lpnorm__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L77">LPNorm.<code>__init__</code></a></h3>
-<pre><code class="python">__init__(self, img_input, p=6.0)
-</code></pre>
-
-<p>Builds a L-p norm function. This regularizer encourages the intensity of pixels to stay bounded.
-  i.e., prevents pixels from taking on very large values.</p>
-<p><em>Args:</em></p>
-<ul>
-<li><strong>img_input</strong>:  4D image input tensor to the model of shape: <code>(samples, channels, rows, cols)</code>
-  if data_format='channels_first' or <code>(samples, rows, cols, channels)</code> if data_format='channels_last'.</li>
-<li><strong>p</strong>:  The pth norm to use. If p = float('inf'), infinity-norm will be used.</li>
-</ul>
-<hr />
-<h3 id="lpnormbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/regularizers.py#L94">LPNorm.build_loss</a></h3>
-<pre><code class="python">build_loss(self)
+<h3 id="gifgeneratoron_end"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/callbacks.py#L65">GifGenerator.on_end</a></h3>
+<pre><code class="python">on_end(self)
 </code></pre>
               
             </div>
@@ -282,10 +292,10 @@ to return total variation for all images in the batch.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../vis.optimizer/" class="btn btn-neutral float-right" title="optimizer">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../vis.input_modifiers/" class="btn btn-neutral float-right" title="input_modifiers">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../vis.losses/" class="btn btn-neutral" title="losses"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../vis.optimizer/" class="btn btn-neutral" title="optimizer"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -313,10 +323,10 @@ to return total variation for all images in the batch.</p>
           <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../vis.losses/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../vis.optimizer/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../vis.optimizer/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../vis.input_modifiers/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

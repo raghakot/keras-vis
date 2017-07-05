@@ -59,15 +59,15 @@
     <ul class="subnav">
                 <li class="">
                     
-    <a class="" href="../visualizations/conv_filters/">Convolutional Filters</a>
+    <a class="" href="../visualizations/activation_maximization/">Activation Maximization</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../visualizations/dense/">Dense Layers</a>
+    <a class="" href="../visualizations/saliency/">Saliency Maps</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../visualizations/attention/">Attention Maps</a>
+    <a class="" href="../visualizations/class_activation_maps/">Class Activation Maps</a>
                 </li>
     </ul>
 	    </li>
@@ -76,9 +76,13 @@
 		
     <span class="caption-text">API Docs</span>
     <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../vis.visualization/">Visualization</a>
+                </li>
                 <li class=" current">
                     
-    <span class="caption-text">Core API</span>
+    <span class="caption-text">Optimization</span>
     <ul class="subnav">
                 <li class="toctree-l3">
                     
@@ -87,10 +91,6 @@
                 <li class="toctree-l3">
                     
     <a class="" href="../vis.regularizers/">regularizers</a>
-                </li>
-                <li class="toctree-l3">
-                    
-    <a class="" href="../vis.modifiers/">modifiers</a>
                 </li>
                 <li class="toctree-l3 current">
                     
@@ -112,7 +112,25 @@
                 </li>
                 <li class="toctree-l3">
                     
-    <a class="" href="../vis.visualization/">visualization</a>
+    <a class="" href="../vis.callbacks/">callbacks</a>
+                </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Modifiers</span>
+    <ul class="subnav">
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.input_modifiers/">input_modifiers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.grad_modifiers/">grad_modifiers</a>
+                </li>
+                <li class="toctree-l3">
+                    
+    <a class="" href="../vis.backprop_modifiers/">backprop_modifiers</a>
                 </li>
     </ul>
                 </li>
@@ -124,9 +142,15 @@
                     
     <a class="" href="../vis.utils.utils/">utils</a>
                 </li>
+    </ul>
+                </li>
+                <li class="">
+                    
+    <span class="caption-text">Backend Specific</span>
+    <ul class="subnav">
                 <li class="toctree-l3">
                     
-    <a class="" href="../vis.utils.vggnet/">vggnet</a>
+    <a class="" href="../vis.backend/">backend</a>
                 </li>
     </ul>
                 </li>
@@ -159,7 +183,7 @@
         
       
         
-          <li>Core API &raquo;</li>
+          <li>Optimization &raquo;</li>
         
       
     
@@ -178,9 +202,9 @@
               
                 <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L0">vis/optimizer.py#L0</a></p>
 <hr />
-<h2 id="optimizer"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L11">Optimizer</a></h2>
+<h2 id="optimizer"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L18">Optimizer</a></h2>
 <hr />
-<h3 id="optimizer__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L13">Optimizer.<code>__init__</code></a></h3>
+<h3 id="optimizer__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L20">Optimizer.<code>__init__</code></a></h3>
 <pre><code class="python">__init__(self, input_tensor, losses, input_range=(0, 255), wrt_tensor=None, norm_grads=True)
 </code></pre>
 
@@ -200,8 +224,9 @@
   (for example, visualizing attention), set this to false.</li>
 </ul>
 <hr />
-<h3 id="optimizerminimize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L92">Optimizer.minimize</a></h3>
-<pre><code class="python">minimize(self, seed_input=None, max_iter=200, image_modifiers=None, callbacks=None, verbose=True)
+<h3 id="optimizerminimize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L99">Optimizer.minimize</a></h3>
+<pre><code class="python">minimize(self, seed_input=None, max_iter=200, input_modifiers=None, grad_modifier=None, \
+    callbacks=None, verbose=True)
 </code></pre>
 
 <p>Performs gradient descent on the input image with respect to defined losses.</p>
@@ -211,14 +236,14 @@
   channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.
   Seeded with random noise if set to None. (Default value = None)</li>
 <li><strong>max_iter</strong>:  The maximum number of gradient descent iterations. (Default value = 200)</li>
-<li><strong>image_modifiers</strong>:  A list of <a href="../ImageModifier">../vis/modifiers/#ImageModifier</a> instances specifying <code>pre</code> and
-  <code>post</code> image processing steps with the gradient descent update step. <code>pre</code> is applied in list order while
-  <code>post</code> is applied in reverse order. For example, <code>image_modifiers = [f, g]</code> means that
-  <code>pre_img = g(f(img))</code> and <code>post_img = f(g(img))</code></li>
-<li><strong>callbacks</strong>:  A list of <a href="../OptimizerCallback">../vis/callbacks/#OptimizerCallback</a> to trigger during optimization.</li>
-<li><strong>verbose</strong>:  Logs individual losses at the end of every gradient descent iteration.
-  Very useful to estimate loss weight factor(s). (Default value = True)</li>
+<li><strong>input_modifiers</strong>:  A list of <a href="../InputModifier">../vis/input_modifier/#InputModifier</a> instances specifying
+  how to make <code>pre</code> and <code>post</code> changes to the optimized input during the optimization process.</li>
 </ul>
+<p><code>pre</code> is applied in list order while <code>post</code> is applied in reverse order. For example,
+  <code>input_modifiers = [f, g]</code> means that <code>pre_input = g(f(inp))</code> and <code>post_input = f(g(inp))</code>
+ - <strong>callbacks</strong>:  A list of <a href="../OptimizerCallback">../vis/callbacks/#OptimizerCallback</a> to trigger during optimization.
+ - <strong>verbose</strong>:  Logs individual losses at the end of every gradient descent iteration.
+  Very useful to estimate loss weight factor(s). (Default value = True)</p>
 <p><em>Returns:</em></p>
 <p>The tuple of <code>(optimized input, grads with respect to wrt, wrt_value)</code> after gradient descent iterations.</p>
               
@@ -228,10 +253,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../vis.visualization/" class="btn btn-neutral float-right" title="visualization">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../vis.callbacks/" class="btn btn-neutral float-right" title="callbacks">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../vis.modifiers/" class="btn btn-neutral" title="modifiers"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../vis.regularizers/" class="btn btn-neutral" title="regularizers"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -259,10 +284,10 @@
           <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../vis.modifiers/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../vis.regularizers/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../vis.visualization/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../vis.callbacks/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
