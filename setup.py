@@ -2,7 +2,7 @@ from setuptools import setup
 from setuptools import find_packages
 
 
-version = '0.3.3'
+version = '0.4'
 
 setup(name='keras-vis',
       version=version,
