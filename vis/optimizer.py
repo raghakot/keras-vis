@@ -1,11 +1,18 @@
-import numpy as np
+from __future__ import absolute_import
 
+import numpy as np
 from keras import backend as K
+
 from .callbacks import Print
+from .grad_modifiers import get
 from .utils import utils
 
 
 _PRINT_CALLBACK = Print()
+
+
+def _identity(x):
+    return x
 
 
 class Optimizer(object):
@@ -89,7 +96,9 @@ class Optimizer(object):
             seed_input = np.moveaxis(seed_input, -1, 1)
         return seed_input.astype(K.floatx())
 
-    def minimize(self, seed_input=None, max_iter=200, image_modifiers=None, callbacks=None, verbose=True):
+    def minimize(self, seed_input=None, max_iter=200,
+                 input_modifiers=None, grad_modifier=None,
+                 callbacks=None, verbose=True):
         """Performs gradient descent on the input image with respect to defined losses.
 
         Args:
@@ -97,10 +106,11 @@ class Optimizer(object):
                 channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
                 Seeded with random noise if set to None. (Default value = None)
             max_iter: The maximum number of gradient descent iterations. (Default value = 200)
-            image_modifiers: A list of [../vis/modifiers/#ImageModifier](ImageModifier) instances specifying `pre` and
-                `post` image processing steps with the gradient descent update step. `pre` is applied in list order while
-                `post` is applied in reverse order. For example, `image_modifiers = [f, g]` means that
-                `pre_img = g(f(img))` and `post_img = f(g(img))`
+            input_modifiers: A list of [../vis/input_modifier/#InputModifier](InputModifier) instances specifying
+                how to make `pre` and `post` changes to the optimized input during the optimization process.
+
+                `pre` is applied in list order while `post` is applied in reverse order. For example,
+                `input_modifiers = [f, g]` means that `pre_input = g(f(inp))` and `post_input = f(g(inp))`
             callbacks: A list of [../vis/callbacks/#OptimizerCallback](OptimizerCallback) to trigger during optimization.
             verbose: Logs individual losses at the end of every gradient descent iteration.
                 Very useful to estimate loss weight factor(s). (Default value = True)
@@ -109,8 +119,8 @@ class Optimizer(object):
             The tuple of `(optimized input, grads with respect to wrt, wrt_value)` after gradient descent iterations.
         """
         seed_input = self._get_seed_input(seed_input)
-        if image_modifiers is None:
-            image_modifiers = []
+        input_modifiers = input_modifiers or []
+        grad_modifier = _identity if grad_modifier is None else get(grad_modifier)
 
         callbacks = callbacks or []
         if verbose:
@@ -125,7 +135,7 @@ class Optimizer(object):
 
         for i in range(max_iter):
             # Apply modifiers `pre` step
-            for modifier in image_modifiers:
+            for modifier in input_modifiers:
                 seed_input = modifier.pre(seed_input)
 
             # 0 learning phase for 'test'
@@ -138,6 +148,9 @@ class Optimizer(object):
             if grads.shape != wrt_value.shape:
                 grads = np.reshape(grads, wrt_value.shape)
 
+            # Apply grad modifier.
+            grads = grad_modifier(grads)
+
             # Trigger callbacks
             for c in callbacks:
                 c.callback(i, named_losses, overall_loss, grads, wrt_value)
@@ -149,7 +162,7 @@ class Optimizer(object):
                 seed_input += step
 
             # Apply modifiers `post` step
-            for modifier in reversed(image_modifiers):
+            for modifier in reversed(input_modifiers):
                 seed_input = modifier.post(seed_input)
 
             if overall_loss < best_loss:

@@ -17,16 +17,21 @@ markdown_extensions:
 pages:
   - Home: index.md
   - Visualizations:
-    - Convolutional Filters: visualizations/conv_filters.md
-    - Dense Layers: visualizations/dense.md
-    - Attention Maps: visualizations/attention.md
+    - Activation Maximization: visualizations/activation_maximization.md
+    - Saliency Maps: visualizations/saliency.md
+    - Class Activation Maps: visualizations/class_activation_maps.md
   - API Docs:
-    - Core API:
+    - Visualization: vis.visualization.md
+    - Optimization:
       - losses: vis.losses.md
       - regularizers: vis.regularizers.md
-      - modifiers: vis.modifiers.md
       - optimizer: vis.optimizer.md
-      - visualization: vis.visualization.md
+      - callbacks: vis.callbacks.md
+    - Modifiers:
+      - input_modifiers: vis.input_modifiers.md
+      - grad_modifiers: vis.grad_modifiers.md
+      - backprop_modifiers: vis.backprop_modifiers.md
     - Utils:
       - utils: vis.utils.utils.md
-      - vggnet: vis.utils.vggnet.md
+    - Backend Specific:
+      - backend: vis.backend.md

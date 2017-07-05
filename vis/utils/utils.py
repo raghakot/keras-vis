@@ -1,16 +1,20 @@
 from __future__ import absolute_import
 from __future__ import division
 
-import numpy as np
-import matplotlib.font_manager as fontman
-
 import os
+import tempfile
 import math
 import json
+import six
+
+import numpy as np
+import matplotlib.font_manager as fontman
+from .. import backend
 
 from skimage import io, transform
 from collections import Iterable
 from keras import backend as K
+from keras.models import load_model
 
 import logging
 logger = logging.getLogger(__name__)
@@ -45,14 +49,7 @@ def set_random_seed(seed_value=1337):
     Args:
         seed_value: The seed value to use. (Default Value = infamous 1337)
     """
-    np.random.seed(seed_value)
-
-    # Set tensorflow seed if available.
-    try:
-        import tensorflow as tf
-        tf.set_random_seed(seed_value)
-    except ImportError:
-        pass
+    backend.set_random_seed(seed_value)
 
 
 def reverse_enumerate(iterable):
@@ -67,6 +64,66 @@ def listify(value):
     if not isinstance(value, Iterable):
         value = [value]
     return value
+
+
+def add_defaults_to_kwargs(defaults, **kwargs):
+    """Updates `kwargs` with dict of `defaults`
+
+    Args:
+        defaults: A dictionary of keys and values
+        **kwargs: The kwargs to update.
+
+    Returns:
+        The updated kwargs.
+    """
+    defaults = dict(defaults)
+    defaults.update(kwargs)
+    return defaults
+
+
+def get_identifier(identifier, module_globals, module_name):
+    """Helper utility to retrieve the callable function associated with a string identifier.
+
+    Args:
+        identifier: The identifier. Could be a string or function.
+        module_globals: The global objects of the module.
+        module_name: The module name
+
+    Returns:
+        The callable associated with the identifier.
+    """
+    if isinstance(identifier, six.string_types):
+        fn = module_globals.get(identifier)
+        if fn is None:
+            raise ValueError('Unknown {}: {}'.format(module_name, identifier))
+        return fn
+    elif callable(identifier):
+        return identifier
+    else:
+        raise ValueError('Could not interpret identifier')
+
+
+def apply_modifications(model):
+    """Applies modifications to the model layers to create a new Graph. For example, simply changing
+    `model.layers[idx].activation = new activation` does not change the graph. The entire graph needs to be updated
+    with modified inbound and outbound tensors because of change in layer building function.
+
+    Args:
+        model: The `keras.models.Model` instance.
+
+    Returns:
+        The modified model with changes applied. Does not mutate the original `model`.
+    """
+    # The strategy is to save the modified model and load it back. This is done because setting the activation
+    # in a Keras layer doesnt actually change the graph. We have to iterate the entire graph and change the
+    # layer inbound and outbound nodes with modified tensors. This is doubly complicated in Keras 2.x since
+    # multiple inbound and outbound nodes are allowed with the Graph API.
+    model_path = '/tmp/' + next(tempfile._get_candidate_names()) + '.h5'
+    try:
+        model.save(model_path)
+        return load_model(model_path)
+    finally:
+        os.remove(model_path)
 
 
 def random_array(shape, mean=128., std=20.):
@@ -85,6 +142,27 @@ def random_array(shape, mean=128., std=20.):
     # and then around the desired mean/std
     x = (x * std) + mean
     return x
+
+
+def find_layer_idx(model, layer_name):
+    """Looks up the layer index corresponding to `layer_name` from `model`.
+
+    Args:
+        model: The `keras.models.Model` instance.
+        layer_name: The name of the layer to lookup.
+
+    Returns:
+        The layer index if found. Raises an exception otherwise.
+    """
+    layer_idx = None
+    for idx, layer in enumerate(model.layers):
+        if layer.name == layer_name:
+            layer_idx = idx
+            break
+
+    if layer_idx is None:
+        raise ValueError("No layer with name '{}' within the model".format(layer_name))
+    return layer_idx
 
 
 def deprocess_input(input_array, input_range=(0, 255)):

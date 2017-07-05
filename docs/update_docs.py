@@ -3,33 +3,36 @@ import shutil
 from md_autogen import MarkdownAPIGenerator
 from md_autogen import to_md_file
 
-from vis import callbacks
-from vis import losses
-from vis import regularizers
-from vis import modifiers
-from vis import optimizer
-from vis import visualization
-
+from vis import backend
 from vis.utils import utils
-from vis.utils import vggnet
+from vis import visualization
+from vis import backprop_modifiers
+from vis import callbacks
+from vis import grad_modifiers
+from vis import input_modifiers
+from vis import losses
+from vis import optimizer
+from vis import regularizers
 
 
 def generate_api_docs():
     modules = [
-        callbacks,
-        losses,
-        modifiers,
-        optimizer,
-        regularizers,
-        visualization,
+        backend,
         utils,
-        vggnet
+        visualization,
+        backprop_modifiers,
+        callbacks,
+        grad_modifiers,
+        input_modifiers,
+        losses,
+        optimizer,
+        regularizers
     ]
 
     md_gen = MarkdownAPIGenerator("vis", "https://github.com/raghakot/keras-vis/tree/master")
-    for module in modules:
-        md_string = md_gen.module2md(module)
-        to_md_file(md_string, module.__name__, "sources")
+    for m in modules:
+        md_string = md_gen.module2md(m)
+        to_md_file(md_string, m.__name__, "sources")
 
 
 def update_index_md():
