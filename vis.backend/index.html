@@ -201,8 +201,7 @@
 <pre><code class="python">modify_model_backprop(model, backprop_modifier)
 </code></pre>
 
-<p>Creates a copy of model by modifying all activations to custom op that clips the negative gradients in the
-backward pass.</p>
+<p>Creates a copy of model by modifying all activations to use a custom op to modify the backprop behavior.</p>
 <p><em>Args:</em></p>
 <ul>
 <li><strong>model</strong>:   The <code>keras.models.Model</code> instance.</li>
@@ -211,7 +210,7 @@ backward pass.</p>
 <p><em>Returns:</em></p>
 <p>A copy of model with modified activations for backwards pass.</p>
 <hr />
-<h3 id="set_random_seed"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/backend/tensorflow_backend.py#L96">set_random_seed</a></h3>
+<h3 id="set_random_seed"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/backend/tensorflow_backend.py#L95">set_random_seed</a></h3>
 <pre><code class="python">set_random_seed(seed_value=1337)
 </code></pre>
 

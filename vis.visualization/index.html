@@ -274,6 +274,9 @@ refer to <code>visualize_class_saliency</code> or <code>visualize_regression_sal
   channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
 <li><strong>losses</strong>:  List of (<a href="../vis.losses#Loss">Loss</a>, weight) tuples.</li>
 <li><strong>seed_input</strong>:  The model input for which activation map needs to be visualized.</li>
+<li><strong>grad_modifier</strong>:  gradient modifier to use. See <a href="../vis.grad_modifiers/">grad_modifiers</a>. By default <code>absolute</code>
+  value of gradients are used. To visualize positive or negative gradients, use <code>relu</code> and <code>negate</code>
+  respectively. (Default value = 'absolute')</li>
 </ul>
 <p><em>Returns:</em></p>
 <p>The heatmap image indicating the <code>seed_input</code> regions whose change would most contribute towards minimizing
@@ -304,6 +307,10 @@ weighted <code>losses</code>.</p>
   (Default value = None)</li>
 <li><strong>input_range</strong>:  Specifies the input range as a <code>(min, max)</code> tuple. This is used to rescale the
   final optimized input to the given range. (Default value=(0, 255))</li>
+<li><strong>backprop_modifier</strong>:  backprop modifier to use. See <a href="../vis.backprop_modifiers/">backprop_modifiers</a>. If you don't
+  specify anything, no backprop modification is applied. (Default value = None)</li>
+<li><strong>grad_modifier</strong>:  gradient modifier to use. See <a href="../vis.grad_modifiers/">grad_modifiers</a>. If you don't
+  specify anything, gradients are unchanged (Default value = None)</li>
 <li><strong>act_max_weight</strong>:  The weight param for <code>ActivationMaximization</code> loss. Not used if 0 or None. (Default value = 1)</li>
 <li><strong>lp_norm_weight</strong>:  The weight param for <code>LPNorm</code> regularization loss. Not used if 0 or None. (Default value = 10)</li>
 <li><strong>tv_weight</strong>:  The weight param for <code>TotalVariation</code> regularization loss. Not used if 0 or None. (Default value = 10)</li>
@@ -317,7 +324,7 @@ final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</
 <p><em>Returns:</em></p>
 <p>The model input that maximizes the output of <code>filter_indices</code> in the given <code>layer_idx</code>.</p>
 <hr />
-<h3 id="visualize_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L80">visualize_saliency</a></h3>
+<h3 id="visualize_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L83">visualize_saliency</a></h3>
 <pre><code class="python">visualize_saliency(model, layer_idx, filter_indices, seed_input, backprop_modifier=None, \
     grad_modifier=&quot;absolute&quot;)
 </code></pre>
@@ -335,10 +342,13 @@ output in the given <code>layer_idx</code>.</p>
 </ul>
 <p>If you are visualizing final <code>keras.layers.Dense</code> layer, you tend to get
   better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
-  output can be maximized by minimizing scores for other classes.</p>
-<ul>
-<li><strong>seed_input</strong>:  The model input for which activation map needs to be visualized.</li>
-</ul>
+  output can be maximized by minimizing scores for other classes.
+ - <strong>seed_input</strong>:  The model input for which activation map needs to be visualized.
+ - <strong>backprop_modifier</strong>:  backprop modifier to use. See <a href="../vis.backprop_modifiers/">backprop_modifiers</a>. If you don't
+  specify anything, no backprop modification is applied. (Default value = None)
+ - <strong>grad_modifier</strong>:  gradient modifier to use. See <a href="../vis.grad_modifiers/">grad_modifiers</a>. By default <code>absolute</code>
+  value of gradients are used. To visualize positive or negative gradients, use <code>relu</code> and <code>negate</code>
+  respectively. (Default value = 'absolute')</p>
 <p><em>Example:</em></p>
 <p>If you wanted to visualize attention over 'bird' category, say output index 22 on the
 final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</code>, <code>layer = dense_layer</code>.</p>
@@ -348,7 +358,7 @@ final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</
 <p>The heatmap image indicating the <code>seed_input</code> regions whose change would most contribute towards
 maximizing the output of <code>filter_indices</code>.</p>
 <hr />
-<h3 id="visualize_cam_with_losses"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L122">visualize_cam_with_losses</a></h3>
+<h3 id="visualize_cam_with_losses"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L129">visualize_cam_with_losses</a></h3>
 <pre><code class="python">visualize_cam_with_losses(input_tensor, losses, seed_input, penultimate_layer, grad_modifier=None)
 </code></pre>
 
@@ -369,15 +379,14 @@ cat regions and not the 'dog' region and vice-versa.</p>
 <li><strong>seed_input</strong>:  The model input for which activation map needs to be visualized.</li>
 <li><strong>penultimate_layer</strong>:  The pre-layer to <code>layer_idx</code> whose feature maps should be used to compute gradients
   with respect to filter output.</li>
+<li><strong>grad_modifier</strong>:  gradient modifier to use. See <a href="../vis.grad_modifiers/">grad_modifiers</a>. If you don't
+  specify anything, gradients are unchanged (Default value = None)</li>
 </ul>
-<p><em>Notes:</em></p>
-<p>This technique deprecates occlusion maps as it gives similar results, but with one-pass gradient computation
-as opposed inefficient sliding window approach.</p>
 <p><em>Returns:</em></p>
 <p>The heatmap image indicating the <code>seed_input</code> regions whose change would most contribute towards minimizing the
 weighted <code>losses</code>.</p>
 <hr />
-<h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L189">visualize_cam</a></h3>
+<h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L194">visualize_cam</a></h3>
 <pre><code class="python">visualize_cam(model, layer_idx, filter_indices, seed_input, penultimate_layer_idx=None, \
     backprop_modifier=None, grad_modifier=None)
 </code></pre>
@@ -400,15 +409,16 @@ weighted <code>losses</code>.</p>
 <li><strong>seed_input</strong>:  The input image for which activation map needs to be visualized.</li>
 <li><strong>penultimate_layer_idx</strong>:  The pre-layer to <code>layer_idx</code> whose feature maps should be used to compute gradients
   wrt filter output. If not provided, it is set to the nearest penultimate <code>Conv</code> or <code>Pooling</code> layer.</li>
+<li><strong>backprop_modifier</strong>:  backprop modifier to use. See <a href="../vis.backprop_modifiers/">backprop_modifiers</a>. If you don't
+  specify anything, no backprop modification is applied. (Default value = None)</li>
+<li><strong>grad_modifier</strong>:  gradient modifier to use. See <a href="../vis.grad_modifiers/">grad_modifiers</a>. If you don't
+  specify anything, gradients are unchanged (Default value = None)</li>
 </ul>
 <p><em>Example:</em></p>
 <p>If you wanted to visualize attention over 'bird' category, say output index 22 on the
 final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</code>, <code>layer = dense_layer</code>.</p>
 <p>One could also set filter indices to more than one value. For example, <code>filter_indices = [22, 23]</code> should
 (hopefully) show attention map that corresponds to both 22, 23 output categories.</p>
-<p><em>Notes:</em></p>
-<p>This technique deprecates occlusion maps as it gives similar results, but with one-pass gradient computation
-as opposed inefficient sliding window approach.</p>
 <p><em>Returns:</em></p>
 <p>The heatmap image indicating the input regions whose change would most contribute towards
 maximizing the output of <code>filter_indices</code>.</p>
