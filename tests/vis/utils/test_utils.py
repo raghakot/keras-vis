@@ -31,7 +31,7 @@ def test_get_img_shape_on_3d_image():
 
 
 def test_reverse_iterable():
-    assert utils.reverse_enumerate('abcde') == [(4, 'e'), (3, 'd'), (2, 'c'), (1, 'b'), (0, 'a')]
+    assert list(utils.reverse_enumerate('abcde')) == [(4, 'e'), (3, 'd'), (2, 'c'), (1, 'b'), (0, 'a')]
 
 
 if __name__ == '__main__':
