@@ -81,6 +81,10 @@ sudo pip install keras-vis
 ```
 
 ## Visualizations
+
+**NOTE: The links are currently broken and the entire documentation is being reworked.
+Please see examples/ for samples.**
+
 Neural nets are black boxes. In the recent years, several approaches for understanding and visualizing Convolutional 
 Networks have been developed in the literature. They give us a way to peer into the black boxes, 
 diagnose mis-classifications, and assess whether the network is over/under fitting. 
