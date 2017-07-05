@@ -34,7 +34,7 @@ class TotalVariation(Loss):
 
         Args:
             img_input: An image tensor of shape: `(samples, channels, image_dims...)` if `image_data_format=`channels_first`
-                or `(samples, image_dims..., channels)` if `image_data_format=channels_last`
+                or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
             beta: Smaller values of beta give sharper but 'spikier' images.
                 Values \(\in [1.5, 3.0]\) are recommended as a reasonable compromise. (Default value = 2.)
         """

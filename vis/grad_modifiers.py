@@ -18,7 +18,7 @@ def negate(grads):
 
 
 def absolute(grads):
-    """Absolutes the gradients.
+    """Computes absolute gradients.
 
     Args:
         grads: A numpy array of grads to use.

@@ -111,7 +111,9 @@ class Optimizer(object):
 
                 `pre` is applied in list order while `post` is applied in reverse order. For example,
                 `input_modifiers = [f, g]` means that `pre_input = g(f(inp))` and `post_input = f(g(inp))`
-            callbacks: A list of [../vis/callbacks/#OptimizerCallback](OptimizerCallback) to trigger during optimization.
+            grad_modifier: gradient modifier to use. See [grad_modifiers](vis.grad_modifiers.md). If you don't
+                specify anything, gradients are unchanged. (Default value = None)
+            callbacks: A list of [vis.callbacks#optimizercallback](OptimizerCallback) instances to trigger.
             verbose: Logs individual losses at the end of every gradient descent iteration.
                 Very useful to estimate loss weight factor(s). (Default value = True)
 

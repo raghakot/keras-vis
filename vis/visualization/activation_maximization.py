@@ -74,6 +74,10 @@ def visualize_activation(model, layer_idx, filter_indices=None,
             (Default value = None)
         input_range: Specifies the input range as a `(min, max)` tuple. This is used to rescale the
             final optimized input to the given range. (Default value=(0, 255))
+        backprop_modifier: backprop modifier to use. See [backprop_modifiers](vis.backprop_modifiers.md). If you don't
+            specify anything, no backprop modification is applied. (Default value = None)
+        grad_modifier: gradient modifier to use. See [grad_modifiers](vis.grad_modifiers.md). If you don't
+            specify anything, gradients are unchanged (Default value = None)
         act_max_weight: The weight param for `ActivationMaximization` loss. Not used if 0 or None. (Default value = 1)
         lp_norm_weight: The weight param for `LPNorm` regularization loss. Not used if 0 or None. (Default value = 10)
         tv_weight: The weight param for `TotalVariation` regularization loss. Not used if 0 or None. (Default value = 10)

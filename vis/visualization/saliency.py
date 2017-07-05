@@ -61,6 +61,9 @@ def visualize_saliency_with_losses(input_tensor, losses, seed_input, grad_modifi
             channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
         losses: List of ([Loss](vis.losses#Loss), weight) tuples.
         seed_input: The model input for which activation map needs to be visualized.
+        grad_modifier: gradient modifier to use. See [grad_modifiers](vis.grad_modifiers.md). By default `absolute`
+            value of gradients are used. To visualize positive or negative gradients, use `relu` and `negate`
+            respectively. (Default value = 'absolute')
 
     Returns:
         The heatmap image indicating the `seed_input` regions whose change would most contribute towards minimizing
@@ -93,8 +96,12 @@ def visualize_saliency(model, layer_idx, filter_indices, seed_input,
             If you are visualizing final `keras.layers.Dense` layer, you tend to get
             better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
             output can be maximized by minimizing scores for other classes.
-
         seed_input: The model input for which activation map needs to be visualized.
+        backprop_modifier: backprop modifier to use. See [backprop_modifiers](vis.backprop_modifiers.md). If you don't
+            specify anything, no backprop modification is applied. (Default value = None)
+        grad_modifier: gradient modifier to use. See [grad_modifiers](vis.grad_modifiers.md). By default `absolute`
+            value of gradients are used. To visualize positive or negative gradients, use `relu` and `negate`
+            respectively. (Default value = 'absolute')
 
     Example:
         If you wanted to visualize attention over 'bird' category, say output index 22 on the
@@ -142,10 +149,8 @@ def visualize_cam_with_losses(input_tensor, losses,
         seed_input: The model input for which activation map needs to be visualized.
         penultimate_layer: The pre-layer to `layer_idx` whose feature maps should be used to compute gradients
             with respect to filter output.
-
-    Notes:
-        This technique deprecates occlusion maps as it gives similar results, but with one-pass gradient computation
-        as opposed inefficient sliding window approach.
+        grad_modifier: gradient modifier to use. See [grad_modifiers](vis.grad_modifiers.md). If you don't
+            specify anything, gradients are unchanged (Default value = None)
 
     Returns:
         The heatmap image indicating the `seed_input` regions whose change would most contribute towards minimizing the
@@ -207,6 +212,10 @@ def visualize_cam(model, layer_idx, filter_indices,
         seed_input: The input image for which activation map needs to be visualized.
         penultimate_layer_idx: The pre-layer to `layer_idx` whose feature maps should be used to compute gradients
             wrt filter output. If not provided, it is set to the nearest penultimate `Conv` or `Pooling` layer.
+        backprop_modifier: backprop modifier to use. See [backprop_modifiers](vis.backprop_modifiers.md). If you don't
+            specify anything, no backprop modification is applied. (Default value = None)
+        grad_modifier: gradient modifier to use. See [grad_modifiers](vis.grad_modifiers.md). If you don't
+            specify anything, gradients are unchanged (Default value = None)
 
      Example:
         If you wanted to visualize attention over 'bird' category, say output index 22 on the
@@ -214,10 +223,6 @@ def visualize_cam(model, layer_idx, filter_indices,
 
         One could also set filter indices to more than one value. For example, `filter_indices = [22, 23]` should
         (hopefully) show attention map that corresponds to both 22, 23 output categories.
-
-    Notes:
-        This technique deprecates occlusion maps as it gives similar results, but with one-pass gradient computation
-        as opposed inefficient sliding window approach.
 
     Returns:
         The heatmap image indicating the input regions whose change would most contribute towards

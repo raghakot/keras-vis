@@ -35,8 +35,7 @@ _BACKPROP_MODIFIERS = {
 
 
 def modify_model_backprop(model, backprop_modifier):
-    """Creates a copy of model by modifying all activations to custom op that clips the negative gradients in the
-    backward pass.
+    """Creates a copy of model by modifying all activations to use a custom op to modify the backprop behavior.
 
     Args:
         model:  The `keras.models.Model` instance.
