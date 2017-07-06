@@ -91,11 +91,10 @@ def visualize_saliency(model, layer_idx, filter_indices, seed_input,
             `image_data_format=channels_last`.
         layer_idx: The layer index within `model.layers` whose filters needs to be visualized.
         filter_indices: filter indices within the layer to be maximized.
+            If None, all filters are visualized. (Default value = None)
             For `keras.layers.Dense` layer, `filter_idx` is interpreted as the output index.
-
-            If you are visualizing final `keras.layers.Dense` layer, you tend to get
-            better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
-            output can be maximized by minimizing scores for other classes.
+            If you are visualizing final `keras.layers.Dense` layer, consider switching 'softmax' activation for
+            'linear' using [utils.apply_modifications](vis.utils.utils#apply_modifications) for better results.
         seed_input: The model input for which activation map needs to be visualized.
         backprop_modifier: backprop modifier to use. See [backprop_modifiers](vis.backprop_modifiers.md). If you don't
             specify anything, no backprop modification is applied. (Default value = None)
@@ -203,12 +202,10 @@ def visualize_cam(model, layer_idx, filter_indices,
             `image_data_format=channels_last`.
         layer_idx: The layer index within `model.layers` whose filters needs to be visualized.
         filter_indices: filter indices within the layer to be maximized.
+            If None, all filters are visualized. (Default value = None)
             For `keras.layers.Dense` layer, `filter_idx` is interpreted as the output index.
-
-            If you are visualizing final `keras.layers.Dense` layer, you tend to get
-            better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
-            output can be maximized by minimizing scores for other classes.
-
+            If you are visualizing final `keras.layers.Dense` layer, consider switching 'softmax' activation for
+            'linear' using [utils.apply_modifications](vis.utils.utils#apply_modifications) for better results.
         seed_input: The input image for which activation map needs to be visualized.
         penultimate_layer_idx: The pre-layer to `layer_idx` whose feature maps should be used to compute gradients
             wrt filter output. If not provided, it is set to the nearest penultimate `Conv` or `Pooling` layer.

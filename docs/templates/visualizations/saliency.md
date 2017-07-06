@@ -20,10 +20,7 @@ $$\frac{\partial output}{\partial input}$$
 
 This should tell us how the output value changes with respect to a small change in inputs. We can use these gradients 
 to highlight input regions that cause the most change in the output. Intuitively this should highlight salient image 
-regions that most contribute towards the output. 
-
-Refer to [Deep Inside Convolutional Networks: Visualising Image Classification Models and Saliency Maps](https://arxiv.org/pdf/1312.6034v2.pdf) 
-for details.
+regions that most contribute towards the output.
 
 ## Usage
 
@@ -34,12 +31,14 @@ saliency.
 2. [visualize_saliency_with_losses](../vis.visualization#visualize_saliency_with_losses): This is intended for 
 research use-cases where some custom weighted loss can be used.
 
+See [examples/](https://github.com/raghakot/keras-vis/tree/master/examples) for code examples.
+
 ### Scenarios
 
 The API is very general purpose and can be used in a wide variety of scenarios. We will list the most common use-cases
 below:
 
-#### Categorical `Dense` layer visualization
+#### Categorical Dense layer visualization
 
 By setting `layer_idx` to final `Dense` layer, and `filter_indices` to the desired output category, we can visualize 
 parts of the `seed_input` that contribute most towards activating the corresponding output nodes,
@@ -47,7 +46,7 @@ parts of the `seed_input` that contribute most towards activating the correspond
 - For multi-class classification, `filter_indices` can point to a single class.
 - For multi-label classifier, simply set the appropriate `filter_indices`.
 
-#### Regression `Dense` layer visualization
+#### Regression Dense layer visualization
 
 For regression outputs, we could visualize attention over input that 
 
@@ -69,9 +68,11 @@ gradients (which indicate the decrease) as positive and therefore visualize decr
 
 - To visualize what contributed to the predicted output, we want to consider gradients that have very low positive
 or negative values. This can be achieved by performing `grads = abs(1 / grads)` to magnifies small gradients. Equivalently, 
-you can use `grad_modifier='small_values'`, which does the same thing.
+you can use `grad_modifier='small_values'`, which does the same thing. [gradient_modifiers](../vis.grad_modifiers) 
+are very powerful and show up in other visualization APIs as well.
 
-[gradient_modifiers](../vis.grad_modifiers) are very powerful and show up in other visualization APIs as well.
+You can see a practical application for this in the 
+[self diving car](https://github.com/raghakot/keras-vis/tree/master/applications/self_driving) example.
 
 #### Guided / rectified saliency
 
@@ -83,9 +84,9 @@ In guided saliency, the backprop step is modified to only propagate positive gra
 For details see the paper: [String For Simplicity: The All Convolutional Net](https://arxiv.org/pdf/1412.6806.pdf).
 
 For both these cases, we can use `backprop_modifier='relu'` and `backprop_modifier='guided'` respectively. You 
-can also implement your own `backprop_modifier` to try your crazy research idea :)
+can also implement your own [backprop_modifier](../vis.backprop_modifiers) to try your crazy research idea :)
 
-#### `Conv` filter saliency
+#### Conv filter saliency
 
 By pointing `layer_idx` to `Conv` layer, you can visualize parts of the image that influence the filter. This might 
 help you discover what a filter cares about. Here, `filter_indices` refers to the index of the `Conv` filter within 

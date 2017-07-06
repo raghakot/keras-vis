@@ -13,7 +13,10 @@ from keras import backend as K
 
 
 def get_num_filters(layer):
-    """Determines the number of filters within the give `layer`.
+    """Determines the number of filters within the given `layer`.
+
+    Args:
+        layer: The keras layer to use.
 
     Returns:
         Total number of filters within `layer`.

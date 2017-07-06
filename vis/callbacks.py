@@ -14,7 +14,7 @@ def _check_imageio():
 
 
 class OptimizerCallback(object):
-    """Abstract class for defining callbacks for use with [optimizer.minimize](vis.optimizer.md#minimize).
+    """Abstract class for defining callbacks for use with [Optimizer.minimize](vis.optimizer#optimizerminimize).
     """
 
     def callback(self, i, named_losses, overall_loss, grads, wrt_value):

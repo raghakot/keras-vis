@@ -21,7 +21,7 @@ whose output gradients are used. By default, keras-vis will search for the neare
 
 ### Scenarios
 
-See [saliency scenarios](saliency#Scenarios). Everything is identical expect the added `penultimate_layer_idx` param.
+See [saliency scenarios](saliency#scenarios). Everything is identical expect the added `penultimate_layer_idx` param.
 
 ## Gotchas
 

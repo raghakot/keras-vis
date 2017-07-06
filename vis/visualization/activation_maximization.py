@@ -24,7 +24,7 @@ def visualize_activation_with_losses(input_tensor, losses,
             (Default value = None)
         input_range: Specifies the input range as a `(min, max)` tuple. This is used to rescale the
             final optimized input to the given range. (Default value=(0, 255))
-        optimizer_params: The **kwargs for optimizer [params](vis.optimizer.md##optimizerminimize). Will default to
+        optimizer_params: The **kwargs for optimizer [params](vis.optimizer#optimizerminimize). Will default to
             reasonable values when required keys are not found.
 
     Returns:
@@ -63,13 +63,9 @@ def visualize_activation(model, layer_idx, filter_indices=None,
         layer_idx: The layer index within `model.layers` whose filters needs to be visualized.
         filter_indices: filter indices within the layer to be maximized.
             If None, all filters are visualized. (Default value = None)
-
             For `keras.layers.Dense` layer, `filter_idx` is interpreted as the output index.
-
-            If you are visualizing final `keras.layers.Dense` layer, you tend to get
-            better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
-            output can be maximized by minimizing scores for other classes.
-
+            If you are visualizing final `keras.layers.Dense` layer, consider switching 'softmax' activation for
+            'linear' using [utils.apply_modifications](vis.utils.utils#apply_modifications) for better results.
         seed_input: Seeds the optimization with a starting input. Initialized with a random value when set to None.
             (Default value = None)
         input_range: Specifies the input range as a `(min, max)` tuple. This is used to rescale the
@@ -81,7 +77,7 @@ def visualize_activation(model, layer_idx, filter_indices=None,
         act_max_weight: The weight param for `ActivationMaximization` loss. Not used if 0 or None. (Default value = 1)
         lp_norm_weight: The weight param for `LPNorm` regularization loss. Not used if 0 or None. (Default value = 10)
         tv_weight: The weight param for `TotalVariation` regularization loss. Not used if 0 or None. (Default value = 10)
-        optimizer_params: The **kwargs for optimizer [params](vis.optimizer.md##optimizerminimize). Will default to
+        optimizer_params: The **kwargs for optimizer [params](vis.optimizer#optimizerminimize). Will default to
             reasonable values when required keys are not found.
 
     Example:

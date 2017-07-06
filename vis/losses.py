@@ -37,8 +37,7 @@ class Loss(object):
         conv_layer[utils.slicer[:, filter_idx, ...]]
         ```
 
-        [utils.get_img_shape](vis.utils.utils.md#get_img_shape) and
-        [utils.get_img_indices](vis.utils.utils.md#get_img_indices) are other optional utilities that make this easier.
+        [utils.get_img_shape](vis.utils.utils.md#get_img_shape) is another optional utility that make this easier.
 
         Returns:
             The loss expression.
