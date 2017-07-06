@@ -244,12 +244,11 @@ conv_layer[..., filter_idx]
 conv_layer[utils.slicer[:, filter_idx, ...]]
 </code></pre>
 
-<p><a href="../vis.utils.utils/#get_img_shape">utils.get_img_shape</a> and
-<a href="../vis.utils.utils/#get_img_indices">utils.get_img_indices</a> are other optional utilities that make this easier.</p>
+<p><a href="../vis.utils.utils/#get_img_shape">utils.get_img_shape</a> is another optional utility that make this easier.</p>
 <p><em>Returns:</em></p>
 <p>The loss expression.</p>
 <hr />
-<h2 id="activationmaximization"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L49">ActivationMaximization</a></h2>
+<h2 id="activationmaximization"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L48">ActivationMaximization</a></h2>
 <p>A loss function that maximizes the activation of a set of filters within a particular layer.</p>
 <p>Typically this loss is used to ask the reverse question - What kind of input image would increase the networks
 confidence, for say, dog class. This helps determine what the network might be internalizing as being the 'dog'
@@ -257,7 +256,7 @@ image space.</p>
 <p>One might also use this to generate an input image that maximizes both 'dog' and 'human' outputs on the final
 <code>keras.layers.Dense</code> layer.</p>
 <hr />
-<h3 id="activationmaximization__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L59">ActivationMaximization.<code>__init__</code></a></h3>
+<h3 id="activationmaximization__init__"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L58">ActivationMaximization.<code>__init__</code></a></h3>
 <pre><code class="python">__init__(self, layer, filter_indices)
 </code></pre>
 
@@ -272,7 +271,7 @@ image space.</p>
   better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
   output can be maximized by minimizing scores for other classes.</p>
 <hr />
-<h3 id="activationmaximizationbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L76">ActivationMaximization.build_loss</a></h3>
+<h3 id="activationmaximizationbuild_loss"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/losses.py#L75">ActivationMaximization.build_loss</a></h3>
 <pre><code class="python">build_loss(self)
 </code></pre>
               

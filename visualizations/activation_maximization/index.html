@@ -213,7 +213,7 @@ output activations. i.e., we compute </p>
 <p>
 <script type="math/tex; mode=display">\frac{\partial ActivationMaximizationLoss}{\partial input}</script>
 </p>
-<p>and use that estimate to update the input. <a href="../../vis.losses#ActivationMaximization">ActivationMaximization</a> loss simply 
+<p>and use that estimate to update the input. <a href="../../vis.losses#activationmaximization">ActivationMaximization</a> loss simply 
 outputs small values for large filter activations (we are minimizing losses during gradient descent iterations). 
 This allows us to understand what sort of input patterns activate a particular filter. For example, there could be 
 an eye filter that activates for the presence of eye within the input image.</p>
@@ -225,10 +225,11 @@ activations.</li>
 <li><a href="../../vis.visualization#visualize_activation_with_losses">visualize_activation_with_losses</a>: This is intended for 
 research use-cases where some custom weighted losses can be minimized.</li>
 </ol>
+<p>See <a href="https://github.com/raghakot/keras-vis/tree/master/examples">examples/</a> for code examples.</p>
 <h3 id="scenarios">Scenarios</h3>
 <p>The API is very general purpose and can be used in a wide variety of scenarios. We will list the most common use-cases
 below:</p>
-<h4 id="categorical-output-dense-layer-visualization">Categorical Output <code>Dense</code> layer visualization</h4>
+<h4 id="categorical-output-dense-layer-visualization">Categorical Output Dense layer visualization</h4>
 <p>How can we assess whether a network is over/under fitting or generalizing well? Given an input image, a CNN can 
 classify whether it is a cat, bird etc. How can we be sure that it is capturing the correct notion of what it means 
 to be a bird? </p>
@@ -243,7 +244,7 @@ category. </p>
 multiple categories to see what a cat-fish might look like, as an example.</li>
 <li>For multi-label classifier, simply set the appropriate <code>filter_indices</code>.</li>
 </ul>
-<h4 id="regression-output-dense-layer-visualization">Regression Output <code>Dense</code> layer visualization</h4>
+<h4 id="regression-output-dense-layer-visualization">Regression Output Dense layer visualization</h4>
 <p>Unlike class activation visualizations, for regression outputs, we could visualize input that </p>
 <ul>
 <li>increases</li>
@@ -255,23 +256,23 @@ This can be achieved by using <code>grad_modifier</code> option. As the name sug
 with respect to inputs. By default, <code>ActivationMaximization</code> loss is used to increase the output. By setting 
 <code>grad_modifier='negate'</code> you can negate the gradients, thus causing output values to decrease. 
 <a href="../../vis.grad_modifiers">gradient_modifiers</a> are very powerful and show up in other visualization APIs as well. </p>
-<h4 id="conv-filter-visualization"><code>Conv</code> filter visualization</h4>
+<h4 id="conv-filter-visualization">Conv filter visualization</h4>
 <p>By pointing <code>layer_idx</code> to <code>Conv</code> layer, you can visualize what pattern activates a filter. This might help you discover
 what a filter might be computing. Here, <code>filter_indices</code> refers to the index of the <code>Conv</code> filter within the layer.</p>
 <h3 id="advanced-usage">Advanced usage</h3>
-<p><code>backprop_modifier</code> allows you to modify the backpropagation behavior. For examples, you could tweak backprop to only
-propagate positive gradients by using <code>backprop_modifier='relu'</code>. This parameter also accepts a function and can be
-used to implement your crazy research idea :)</p>
+<p><a href="../../vis.backprop_modifiers">backprop_modifiers</a> allow you to modify the backpropagation behavior. For examples, 
+you could tweak backprop to only propagate positive gradients by using <code>backprop_modifier='relu'</code>. This parameter also 
+accepts a function and can be used to implement your crazy research idea :)</p>
 <h2 id="tips-and-tricks">Tips and tricks</h2>
 <ul>
 <li>
 <p>If you get garbage visualization, try setting <code>verbose=True</code> to see various losses during gradient descent iterations.
 By default, <code>visualize_activation</code> uses <code>TotalVariation</code> and <code>LpNorm</code> regularization to enforce natural image prior. It
-is very likely that you would see <code>ActivationMax Loss</code> bounce back and forth as they are dominated by regularization 
+is very likely that you would see <code>ActivationMaximization Loss</code> bounce back and forth as they are dominated by regularization 
 loss weights. Try setting all weights to zero and gradually try increasing values of total variation weight.</p>
 </li>
 <li>
-<p>To get sharper looking images, use <a href="../../vis.input_modifiers#Jitter">Jitter</a> input modifier.</p>
+<p>To get sharper looking images, use <a href="../../vis.input_modifiers#jitter">Jitter</a> input modifier.</p>
 </li>
 <li>
 <p>Regression models usually do not provide enough gradient information to generate meaningful input images. Try seeding

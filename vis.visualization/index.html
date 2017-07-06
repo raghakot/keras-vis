@@ -227,7 +227,7 @@ use cases where a custom loss is desired.</p>
   (Default value = None)</li>
 <li><strong>input_range</strong>:  Specifies the input range as a <code>(min, max)</code> tuple. This is used to rescale the
   final optimized input to the given range. (Default value=(0, 255))</li>
-<li><strong>optimizer_params</strong>:  The **kwargs for optimizer <a href="../vis.optimizer/##optimizerminimize">params</a>. Will default to
+<li><strong>optimizer_params</strong>:  The **kwargs for optimizer <a href="../vis.optimizer#optimizerminimize">params</a>. Will default to
   reasonable values when required keys are not found.</li>
 </ul>
 <p><em>Returns:</em></p>
@@ -237,12 +237,16 @@ use cases where a custom loss is desired.</p>
 <pre><code class="python">get_num_filters(layer)
 </code></pre>
 
-<p>Determines the number of filters within the give <code>layer</code>.</p>
+<p>Determines the number of filters within the given <code>layer</code>.</p>
+<p><em>Args:</em></p>
+<ul>
+<li><strong>layer</strong>:  The keras layer to use.</li>
+</ul>
 <p><em>Returns:</em></p>
 <p>Total number of filters within <code>layer</code>.
-  For <code>keras.layers.Dense</code> layer, this is the total number of outputs.</p>
+For <code>keras.layers.Dense</code> layer, this is the total number of outputs.</p>
 <hr />
-<h3 id="overlay"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/__init__.py#L30">overlay</a></h3>
+<h3 id="overlay"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/__init__.py#L33">overlay</a></h3>
 <pre><code class="python">overlay(array1, array2, alpha=0.5)
 </code></pre>
 
@@ -296,13 +300,10 @@ weighted <code>losses</code>.</p>
   <code>image_data_format=channels_last</code>.</li>
 <li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
 <li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
-  If None, all filters are visualized. (Default value = None)</li>
-</ul>
-<p>For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</p>
-<p>If you are visualizing final <code>keras.layers.Dense</code> layer, you tend to get
-  better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
-  output can be maximized by minimizing scores for other classes.</p>
-<ul>
+  If None, all filters are visualized. (Default value = None)
+  For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.
+  If you are visualizing final <code>keras.layers.Dense</code> layer, consider switching 'softmax' activation for
+  'linear' using <a href="../vis.utils.utils#apply_modifications">utils.apply_modifications</a> for better results.</li>
 <li><strong>seed_input</strong>:  Seeds the optimization with a starting input. Initialized with a random value when set to None.
   (Default value = None)</li>
 <li><strong>input_range</strong>:  Specifies the input range as a <code>(min, max)</code> tuple. This is used to rescale the
@@ -314,7 +315,7 @@ weighted <code>losses</code>.</p>
 <li><strong>act_max_weight</strong>:  The weight param for <code>ActivationMaximization</code> loss. Not used if 0 or None. (Default value = 1)</li>
 <li><strong>lp_norm_weight</strong>:  The weight param for <code>LPNorm</code> regularization loss. Not used if 0 or None. (Default value = 10)</li>
 <li><strong>tv_weight</strong>:  The weight param for <code>TotalVariation</code> regularization loss. Not used if 0 or None. (Default value = 10)</li>
-<li><strong>optimizer_params</strong>:  The **kwargs for optimizer <a href="../vis.optimizer/##optimizerminimize">params</a>. Will default to
+<li><strong>optimizer_params</strong>:  The **kwargs for optimizer <a href="../vis.optimizer#optimizerminimize">params</a>. Will default to
   reasonable values when required keys are not found.</li>
 </ul>
 <p><em>Example:</em></p>
@@ -338,17 +339,17 @@ output in the given <code>layer_idx</code>.</p>
   <code>image_data_format=channels_last</code>.</li>
 <li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
 <li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
-  For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</li>
-</ul>
-<p>If you are visualizing final <code>keras.layers.Dense</code> layer, you tend to get
-  better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
-  output can be maximized by minimizing scores for other classes.
- - <strong>seed_input</strong>:  The model input for which activation map needs to be visualized.
- - <strong>backprop_modifier</strong>:  backprop modifier to use. See <a href="../vis.backprop_modifiers/">backprop_modifiers</a>. If you don't
-  specify anything, no backprop modification is applied. (Default value = None)
- - <strong>grad_modifier</strong>:  gradient modifier to use. See <a href="../vis.grad_modifiers/">grad_modifiers</a>. By default <code>absolute</code>
+  If None, all filters are visualized. (Default value = None)
+  For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.
+  If you are visualizing final <code>keras.layers.Dense</code> layer, consider switching 'softmax' activation for
+  'linear' using <a href="../vis.utils.utils#apply_modifications">utils.apply_modifications</a> for better results.</li>
+<li><strong>seed_input</strong>:  The model input for which activation map needs to be visualized.</li>
+<li><strong>backprop_modifier</strong>:  backprop modifier to use. See <a href="../vis.backprop_modifiers/">backprop_modifiers</a>. If you don't
+  specify anything, no backprop modification is applied. (Default value = None)</li>
+<li><strong>grad_modifier</strong>:  gradient modifier to use. See <a href="../vis.grad_modifiers/">grad_modifiers</a>. By default <code>absolute</code>
   value of gradients are used. To visualize positive or negative gradients, use <code>relu</code> and <code>negate</code>
-  respectively. (Default value = 'absolute')</p>
+  respectively. (Default value = 'absolute')</li>
+</ul>
 <p><em>Example:</em></p>
 <p>If you wanted to visualize attention over 'bird' category, say output index 22 on the
 final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</code>, <code>layer = dense_layer</code>.</p>
@@ -358,7 +359,7 @@ final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</
 <p>The heatmap image indicating the <code>seed_input</code> regions whose change would most contribute towards
 maximizing the output of <code>filter_indices</code>.</p>
 <hr />
-<h3 id="visualize_cam_with_losses"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L129">visualize_cam_with_losses</a></h3>
+<h3 id="visualize_cam_with_losses"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L128">visualize_cam_with_losses</a></h3>
 <pre><code class="python">visualize_cam_with_losses(input_tensor, losses, seed_input, penultimate_layer, grad_modifier=None)
 </code></pre>
 
@@ -386,7 +387,7 @@ cat regions and not the 'dog' region and vice-versa.</p>
 <p>The heatmap image indicating the <code>seed_input</code> regions whose change would most contribute towards minimizing the
 weighted <code>losses</code>.</p>
 <hr />
-<h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L194">visualize_cam</a></h3>
+<h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L193">visualize_cam</a></h3>
 <pre><code class="python">visualize_cam(model, layer_idx, filter_indices, seed_input, penultimate_layer_idx=None, \
     backprop_modifier=None, grad_modifier=None)
 </code></pre>
@@ -400,12 +401,10 @@ weighted <code>losses</code>.</p>
   <code>image_data_format=channels_last</code>.</li>
 <li><strong>layer_idx</strong>:  The layer index within <code>model.layers</code> whose filters needs to be visualized.</li>
 <li><strong>filter_indices</strong>:  filter indices within the layer to be maximized.
-  For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.</li>
-</ul>
-<p>If you are visualizing final <code>keras.layers.Dense</code> layer, you tend to get
-  better results with 'linear' activation as opposed to 'softmax'. This is because 'softmax'
-  output can be maximized by minimizing scores for other classes.</p>
-<ul>
+  If None, all filters are visualized. (Default value = None)
+  For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.
+  If you are visualizing final <code>keras.layers.Dense</code> layer, consider switching 'softmax' activation for
+  'linear' using <a href="../vis.utils.utils#apply_modifications">utils.apply_modifications</a> for better results.</li>
 <li><strong>seed_input</strong>:  The input image for which activation map needs to be visualized.</li>
 <li><strong>penultimate_layer_idx</strong>:  The pre-layer to <code>layer_idx</code> whose feature maps should be used to compute gradients
   wrt filter output. If not provided, it is set to the nearest penultimate <code>Conv</code> or <code>Pooling</code> layer.</li>

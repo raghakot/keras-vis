@@ -217,7 +217,7 @@ research use-cases where some custom weighted loss can be used.</li>
 <p>The only notable addition is the <code>penultimate_layer_idx</code> parameter. This can be used to specify the pre-layer
 whose output gradients are used. By default, keras-vis will search for the nearest layer with filters.</p>
 <h3 id="scenarios">Scenarios</h3>
-<p>See <a href="../saliency#Scenarios">saliency scenarios</a>. Everything is identical expect the added <code>penultimate_layer_idx</code> param.</p>
+<p>See <a href="../saliency#scenarios">saliency scenarios</a>. Everything is identical expect the added <code>penultimate_layer_idx</code> param.</p>
 <h2 id="gotchas">Gotchas</h2>
 <p>grad-CAM only works well if the penultimate layer is close to the layer being visualized. This also applies to <code>Conv</code> 
 filter visualizations. You are better off using saliency of this is not the case with your model.</p>

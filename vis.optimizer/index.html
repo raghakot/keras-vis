@@ -236,16 +236,16 @@
   channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.
   Seeded with random noise if set to None. (Default value = None)</li>
 <li><strong>max_iter</strong>:  The maximum number of gradient descent iterations. (Default value = 200)</li>
-<li><strong>input_modifiers</strong>:  A list of <a href="../InputModifier">../vis/input_modifier/#InputModifier</a> instances specifying
-  how to make <code>pre</code> and <code>post</code> changes to the optimized input during the optimization process.</li>
+<li><strong>input_modifiers</strong>:  A list of <a href="../vis.input_modifiers#inputmodifier">InputModifier</a> instances specifying
+  how to make <code>pre</code> and <code>post</code> changes to the optimized input during the optimization process.
+  <code>pre</code> is applied in list order while <code>post</code> is applied in reverse order. For example,
+  <code>input_modifiers = [f, g]</code> means that <code>pre_input = g(f(inp))</code> and <code>post_input = f(g(inp))</code></li>
+<li><strong>grad_modifier</strong>:  gradient modifier to use. See <a href="../vis.grad_modifiers/">grad_modifiers</a>. If you don't
+  specify anything, gradients are unchanged. (Default value = None)</li>
+<li><strong>callbacks</strong>:  A list of <a href="../vis.callbacks#optimizercallback">OptimizerCallback</a> instances to trigger.</li>
+<li><strong>verbose</strong>:  Logs individual losses at the end of every gradient descent iteration.
+  Very useful to estimate loss weight factor(s). (Default value = True)</li>
 </ul>
-<p><code>pre</code> is applied in list order while <code>post</code> is applied in reverse order. For example,
-  <code>input_modifiers = [f, g]</code> means that <code>pre_input = g(f(inp))</code> and <code>post_input = f(g(inp))</code>
- - <strong>grad_modifier</strong>:  gradient modifier to use. See <a href="../vis.grad_modifiers/">grad_modifiers</a>. If you don't
-  specify anything, gradients are unchanged. (Default value = None)
- - <strong>callbacks</strong>:  A list of <a href="../OptimizerCallback">vis.callbacks#optimizercallback</a> instances to trigger.
- - <strong>verbose</strong>:  Logs individual losses at the end of every gradient descent iteration.
-  Very useful to estimate loss weight factor(s). (Default value = True)</p>
 <p><em>Returns:</em></p>
 <p>The tuple of <code>(optimized input, grads with respect to wrt, wrt_value)</code> after gradient descent iterations.</p>
               

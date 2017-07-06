@@ -214,9 +214,7 @@ input image. </p>
 </p>
 <p>This should tell us how the output value changes with respect to a small change in inputs. We can use these gradients 
 to highlight input regions that cause the most change in the output. Intuitively this should highlight salient image 
-regions that most contribute towards the output. </p>
-<p>Refer to <a href="https://arxiv.org/pdf/1312.6034v2.pdf">Deep Inside Convolutional Networks: Visualising Image Classification Models and Saliency Maps</a> 
-for details.</p>
+regions that most contribute towards the output.</p>
 <h2 id="usage">Usage</h2>
 <p>There are two APIs exposed to visualize saliency.</p>
 <ol>
@@ -225,17 +223,18 @@ saliency.</li>
 <li><a href="../../vis.visualization#visualize_saliency_with_losses">visualize_saliency_with_losses</a>: This is intended for 
 research use-cases where some custom weighted loss can be used.</li>
 </ol>
+<p>See <a href="https://github.com/raghakot/keras-vis/tree/master/examples">examples/</a> for code examples.</p>
 <h3 id="scenarios">Scenarios</h3>
 <p>The API is very general purpose and can be used in a wide variety of scenarios. We will list the most common use-cases
 below:</p>
-<h4 id="categorical-dense-layer-visualization">Categorical <code>Dense</code> layer visualization</h4>
+<h4 id="categorical-dense-layer-visualization">Categorical Dense layer visualization</h4>
 <p>By setting <code>layer_idx</code> to final <code>Dense</code> layer, and <code>filter_indices</code> to the desired output category, we can visualize 
 parts of the <code>seed_input</code> that contribute most towards activating the corresponding output nodes,</p>
 <ul>
 <li>For multi-class classification, <code>filter_indices</code> can point to a single class.</li>
 <li>For multi-label classifier, simply set the appropriate <code>filter_indices</code>.</li>
 </ul>
-<h4 id="regression-dense-layer-visualization">Regression <code>Dense</code> layer visualization</h4>
+<h4 id="regression-dense-layer-visualization">Regression Dense layer visualization</h4>
 <p>For regression outputs, we could visualize attention over input that </p>
 <ul>
 <li>increases</li>
@@ -257,10 +256,12 @@ gradients (which indicate the decrease) as positive and therefore visualize decr
 <li>
 <p>To visualize what contributed to the predicted output, we want to consider gradients that have very low positive
 or negative values. This can be achieved by performing <code>grads = abs(1 / grads)</code> to magnifies small gradients. Equivalently, 
-you can use <code>grad_modifier='small_values'</code>, which does the same thing.</p>
+you can use <code>grad_modifier='small_values'</code>, which does the same thing. <a href="../../vis.grad_modifiers">gradient_modifiers</a> 
+are very powerful and show up in other visualization APIs as well.</p>
 </li>
 </ul>
-<p><a href="../../vis.grad_modifiers">gradient_modifiers</a> are very powerful and show up in other visualization APIs as well.</p>
+<p>You can see a practical application for this in the 
+<a href="https://github.com/raghakot/keras-vis/tree/master/applications/self_driving">self diving car</a> example.</p>
 <h4 id="guided-rectified-saliency">Guided / rectified saliency</h4>
 <p>Zieler et al. has the idea of clipping negative gradients in the backprop step. i.e., only propagate positive gradient
 information that communicates the increase in output. We call this rectified or deconv saliency. Details can be found 
@@ -268,8 +269,8 @@ in the paper: <a href="https://arxiv.org/pdf/1311.2901.pdf">Visualizing and Unde
 <p>In guided saliency, the backprop step is modified to only propagate positive gradients for positive activations.
 For details see the paper: <a href="https://arxiv.org/pdf/1412.6806.pdf">String For Simplicity: The All Convolutional Net</a>.</p>
 <p>For both these cases, we can use <code>backprop_modifier='relu'</code> and <code>backprop_modifier='guided'</code> respectively. You 
-can also implement your own <code>backprop_modifier</code> to try your crazy research idea :)</p>
-<h4 id="conv-filter-saliency"><code>Conv</code> filter saliency</h4>
+can also implement your own <a href="../../vis.backprop_modifiers">backprop_modifier</a> to try your crazy research idea :)</p>
+<h4 id="conv-filter-saliency">Conv filter saliency</h4>
 <p>By pointing <code>layer_idx</code> to <code>Conv</code> layer, you can visualize parts of the image that influence the filter. This might 
 help you discover what a filter cares about. Here, <code>filter_indices</code> refers to the index of the <code>Conv</code> filter within 
 the layer.</p>
