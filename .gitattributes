@@ -1,0 +1,2 @@
+# Count notebooks as python.
+*.ipynb linguist-language=Python
