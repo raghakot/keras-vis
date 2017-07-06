@@ -11,8 +11,8 @@ from keras.models import load_model
 
 def _register_guided_gradient(name):
     if name not in ops._gradient_registry._registry:
-        @ops.RegisterGradient(name)
-        def _modified_backprop(op, grad):
+        @tf.RegisterGradient(name)
+        def _guided_backprop(op, grad):
             dtype = op.outputs[0].dtype
             gate_g = tf.cast(grad > 0., dtype)
             gate_y = tf.cast(op.outputs[0] > 0, dtype)
@@ -21,8 +21,8 @@ def _register_guided_gradient(name):
 
 def _register_rectified_gradient(name):
     if name not in ops._gradient_registry._registry:
-        @ops.RegisterGradient(name)
-        def _modified_backprop(op, grad):
+        @tf.RegisterGradient(name)
+        def _relu_backprop(op, grad):
             dtype = op.outputs[0].dtype
             gate_g = tf.cast(grad > 0., dtype)
             return gate_g * grad
@@ -32,6 +32,10 @@ _BACKPROP_MODIFIERS = {
     'guided': _register_guided_gradient,
     'rectified': _register_rectified_gradient
 }
+
+
+# Maintain a mapping of original model, backprop_modifier -> modified model as cache.
+_MODIFIED_MODEL_CACHE = dict()
 
 
 def modify_model_backprop(model, backprop_modifier):
@@ -44,6 +48,10 @@ def modify_model_backprop(model, backprop_modifier):
     Returns:
         A copy of model with modified activations for backwards pass.
     """
+    # Retrieve from cache if previously modified.
+    modified_model = _MODIFIED_MODEL_CACHE.get((model, backprop_modifier))
+    if modified_model is not None:
+        return modified_model
 
     # The general strategy is as follows:
     # - Modify all activations in the model as ReLU.
@@ -86,7 +94,11 @@ def modify_model_backprop(model, backprop_modifier):
     # Create graph under custom context manager.
     try:
         with tf.get_default_graph().gradient_override_map({'Relu': backprop_modifier}):
-            return load_model(model_path)
+            modified_model = load_model(model_path)
+
+            # Cache to impove subsequent call performance.
+            _MODIFIED_MODEL_CACHE[(model, backprop_modifier)] = modified_model
+            return modified_model
     finally:
         # Clean up temp file.
         os.remove(model_path)
