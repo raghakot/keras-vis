@@ -184,12 +184,9 @@ def visualize_cam_with_losses(input_tensor, losses,
     # The penultimate feature map size is definitely smaller than input image.
     input_dims = utils.get_img_shape(input_tensor)[2:]
 
-    # figure out the zoom factor
-    # input_dims > output_dims
-    # input_dims = input image to network
-    # output_dims = penultimate map
-    zoomFactor = [i/(j*1.0) for i,j in iter(zip(input_dims,output_dims)) ] 
-    heatmap = zoom(heatmap, zoomFactor , output=None, order=3, mode='constant', cval=0.0, prefilter=True)
+    # Figure out the zoom factor.
+    zoom_factor = [i / (j * 1.0) for i, j in iter(zip(input_dims, output_dims))]
+    heatmap = zoom(heatmap, zoom_factor)
 
     # Normalize and create heatmap.
     heatmap = utils.normalize(heatmap)
