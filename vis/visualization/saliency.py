@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import numpy as np
 import matplotlib.cm as cm
-from scipy.misc import imresize
+from scipy.ndimage.interpolation import zoom
 
 from keras.layers.convolutional import _Conv
 from keras.layers.pooling import _Pooling1D, _Pooling2D, _Pooling3D
@@ -183,7 +183,13 @@ def visualize_cam_with_losses(input_tensor, losses,
 
     # The penultimate feature map size is definitely smaller than input image.
     input_dims = utils.get_img_shape(input_tensor)[2:]
-    heatmap = imresize(heatmap, input_dims, interp='bicubic', mode='F')
+
+    # figure out the zoom factor
+    # input_dims > output_dims
+    # input_dims = input image to network
+    # output_dims = penultimate map
+    zoomFactor = [i/(j*1.0) for i,j in iter(zip(input_dims,output_dims)) ] 
+    heatmap = zoom(heatmap, zoomFactor , output=None, order=3, mode='constant', cval=0.0, prefilter=True)
 
     # Normalize and create heatmap.
     heatmap = utils.normalize(heatmap)
