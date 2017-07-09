@@ -9,7 +9,6 @@ import six
 
 import numpy as np
 import matplotlib.font_manager as fontman
-from .. import backend
 
 from skimage import io, transform
 from collections import Iterable
@@ -41,15 +40,6 @@ def _find_font_file(query):
     """Utility to find font file.
     """
     return list(filter(lambda path: query.lower() in os.path.basename(path).lower(), fontman.findSystemFonts()))
-
-
-def set_random_seed(seed_value=1337):
-    """Sets random seed value for reproducibility.
-
-    Args:
-        seed_value: The seed value to use. (Default Value = infamous 1337)
-    """
-    backend.set_random_seed(seed_value)
 
 
 def reverse_enumerate(iterable):

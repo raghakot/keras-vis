@@ -2,17 +2,17 @@ from __future__ import absolute_import
 
 import six
 import tensorflow as tf
-from keras.models import Input
 from keras import backend as K
+from . import utils
 
 
 def across_data_formats(func):
     """Function wrapper to run tests on multiple keras data_format and clean up after TensorFlow tests.
 
-    # Arguments
+    Args:
         func: test function to clean up after.
 
-    # Returns
+    Returns:
         A function wrapping the input function.
     """
     @six.wraps(func)
@@ -26,10 +26,22 @@ def across_data_formats(func):
     return wrapper
 
 
-def get_input_placeholder(image_dims, channels):
-    """Returns the input placeholder depending on the `image_data_format`
+def skip_backends(backends):
+    """Function wrapper to specify which backends should skip the test.
+
+    Args:
+        backends: The list of backends to skip.
+
+    Returns:
+        A function wrapping the input function.
     """
-    if K.image_data_format() == 'channels_first':
-        return Input(shape=tuple(list(image_dims) + [channels]))
-    else:
-        return Input(shape=tuple([channels] + list(image_dims)))
+    backends = set(utils.listify(backends))
+
+    def decorator(func):
+        @six.wraps(func)
+        def wrapper(*args, **kwargs):
+            if K.backend() in backends:
+                return
+            func(*args, **kwargs)
+        return wrapper
+    return decorator
