@@ -11,7 +11,6 @@ import numpy as np
 import matplotlib.font_manager as fontman
 
 from skimage import io, transform
-from collections import Iterable
 from keras import backend as K
 from keras.models import load_model
 
@@ -51,7 +50,7 @@ def reverse_enumerate(iterable):
 def listify(value):
     """Ensures that the value is a list. If it is not a list, it creates a new list with `value` as an item.
     """
-    if not isinstance(value, Iterable):
+    if not isinstance(value, list):
         value = [value]
     return value
 
@@ -253,12 +252,11 @@ def load_img(path, grayscale=False, target_size=None):
     return img
 
 
-def get_imagenet_label(indices, join=', '):
+def lookup_imagenet_labels(indices):
     """Utility function to return the image net label for the final `dense` layer output index.
 
     Args:
-        indices: Could be a single value or an array of indices whose labels needs looking up.
-        join: When multiple indices are passed, the output labels are joined using this value. (Default Value = ', ')
+        indices: Could be a single value or an array of indices whose labels should be looked up.
 
     Returns:
         Image net label corresponding to the image category.
@@ -269,7 +267,7 @@ def get_imagenet_label(indices, join=', '):
             _CLASS_INDEX = json.load(f)
 
     indices = listify(indices)
-    return join.join([_CLASS_INDEX[str(idx)][1] for idx in indices])
+    return [_CLASS_INDEX[str(idx)][1] for idx in indices]
 
 
 def draw_text(img, text, position=(10, 10), font='FreeSans.ttf', font_size=14, color=(0, 0, 0)):
