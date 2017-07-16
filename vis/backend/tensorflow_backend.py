@@ -78,7 +78,7 @@ def modify_model_backprop(model, backprop_modifier):
     if modified_model is not None:
         return modified_model
 
-    model_path = '/tmp/' + next(tempfile._get_candidate_names()) + '.h5'
+    model_path = os.path.join(tempfile.gettempdir(), next(tempfile._get_candidate_names()) + '.h5')
     try:
         # 1. Clone original model via save and load.
         model.save(model_path)
