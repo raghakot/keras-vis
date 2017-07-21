@@ -142,7 +142,7 @@ class Optimizer(object):
             # 0 learning phase for 'test'
             computed_values = self.compute_fn([seed_input, 0])
             losses = computed_values[:len(self.loss_names)]
-            named_losses = zip(self.loss_names, losses)
+            named_losses = list(zip(self.loss_names, losses))
             overall_loss, grads, wrt_value = computed_values[len(self.loss_names):]
 
             # TODO: theano grads shape is inconsistent for some reason. Patch for now and investigate later.
