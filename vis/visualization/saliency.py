@@ -69,18 +69,14 @@ def visualize_saliency_with_losses(input_tensor, losses, seed_input, grad_modifi
             respectively. (Default value = 'absolute')
 
     Returns:
-        The heatmap image indicating the `seed_input` regions whose change would most contribute towards minimizing
-        weighted `losses`.
+        The normalized gradients of `seed_input` with respect to weighted `losses`.
     """
     opt = Optimizer(input_tensor, losses, norm_grads=False)
     grads = opt.minimize(seed_input=seed_input, max_iter=1, grad_modifier=grad_modifier, verbose=False)[1]
 
     channel_idx = 1 if K.image_data_format() == 'channels_first' else -1
     grads = np.max(grads, axis=channel_idx)
-
-    # Normalize and create heatmap.
-    grads = utils.normalize(grads)
-    return np.uint8(cm.jet(grads)[..., :3] * 255)[0]
+    return utils.normalize(grads)[0]
 
 
 def visualize_saliency(model, layer_idx, filter_indices, seed_input,
@@ -155,8 +151,7 @@ def visualize_cam_with_losses(input_tensor, losses,
             specify anything, gradients are unchanged (Default value = None)
 
     Returns:
-        The heatmap image indicating the `seed_input` regions whose change would most contribute towards minimizing the
-        weighted `losses`.
+        The normalized gradients of `seed_input` with respect to weighted `losses`.
     """
     penultimate_output = penultimate_layer.output
     opt = Optimizer(input_tensor, losses, wrt_tensor=penultimate_output, norm_grads=False)
@@ -190,10 +185,7 @@ def visualize_cam_with_losses(input_tensor, losses,
     # Figure out the zoom factor.
     zoom_factor = [i / (j * 1.0) for i, j in iter(zip(input_dims, output_dims))]
     heatmap = zoom(heatmap, zoom_factor)
-
-    # Normalize and create heatmap.
-    heatmap = utils.normalize(heatmap)
-    return np.uint8(cm.jet(heatmap)[..., :3] * 255)
+    return utils.normalize(heatmap)
 
 
 def visualize_cam(model, layer_idx, filter_indices,
