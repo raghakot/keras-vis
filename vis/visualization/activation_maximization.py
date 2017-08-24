@@ -10,7 +10,7 @@ from ..backprop_modifiers import get
 from ..utils import utils
 
 
-def visualize_activation_with_losses(input_tensor, losses,
+def visualize_activation_with_losses(input_tensor, losses, wrt_tensor=None,
                                      seed_input=None, input_range=(0, 255),
                                      **optimizer_params):
     """Generates the `input_tensor` that minimizes the weighted `losses`. This function is intended for advanced
@@ -19,6 +19,8 @@ def visualize_activation_with_losses(input_tensor, losses,
     Args:
         input_tensor: An input tensor of shape: `(samples, channels, image_dims...)` if `image_data_format=
             channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
+        wrt_tensor: Short for, with respect to. The gradients of losses are computed with respect to this tensor.
+            When None, this is assumed to be the same as `input_tensor` (Default value: None)
         losses: List of ([Loss](vis.losses#Loss), weight) tuples.
         seed_input: Seeds the optimization with a starting image. Initialized with a random value when set to None.
             (Default value = None)
@@ -37,7 +39,7 @@ def visualize_activation_with_losses(input_tensor, losses,
         'verbose': False
     }, **optimizer_params)
 
-    opt = Optimizer(input_tensor, losses, input_range)
+    opt = Optimizer(input_tensor, losses, input_range, wrt_tensor=wrt_tensor)
     img = opt.minimize(**optimizer_params)[0]
 
     # If range has integer numbers, cast to 'uint8'
@@ -49,7 +51,7 @@ def visualize_activation_with_losses(input_tensor, losses,
     return img
 
 
-def visualize_activation(model, layer_idx, filter_indices=None,
+def visualize_activation(model, layer_idx, filter_indices=None, wrt_tensor=None,
                          seed_input=None, input_range=(0, 255),
                          backprop_modifier=None, grad_modifier=None,
                          act_max_weight=1, lp_norm_weight=10, tv_weight=10,
@@ -66,6 +68,8 @@ def visualize_activation(model, layer_idx, filter_indices=None,
             For `keras.layers.Dense` layer, `filter_idx` is interpreted as the output index.
             If you are visualizing final `keras.layers.Dense` layer, consider switching 'softmax' activation for
             'linear' using [utils.apply_modifications](vis.utils.utils#apply_modifications) for better results.
+        wrt_tensor: Short for, with respect to. The gradients of losses are computed with respect to this tensor.
+            When None, this is assumed to be the same as `input_tensor` (Default value: None)
         seed_input: Seeds the optimization with a starting input. Initialized with a random value when set to None.
             (Default value = None)
         input_range: Specifies the input range as a `(min, max)` tuple. This is used to rescale the
@@ -104,4 +108,5 @@ def visualize_activation(model, layer_idx, filter_indices=None,
         'grad_modifier': grad_modifier
     }, **optimizer_params)
 
-    return visualize_activation_with_losses(model.input, losses, seed_input, input_range, **optimizer_params)
+    return visualize_activation_with_losses(model.input, losses, wrt_tensor,
+                                            seed_input, input_range, **optimizer_params)

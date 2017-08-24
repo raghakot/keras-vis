@@ -1,7 +1,6 @@
 from __future__ import absolute_import
 
 import numpy as np
-import matplotlib.cm as cm
 from scipy.ndimage.interpolation import zoom
 
 from keras.layers.convolutional import _Conv
@@ -48,7 +47,7 @@ def _find_penultimate_layer(model, layer_idx, penultimate_layer_idx):
     return model.layers[penultimate_layer_idx]
 
 
-def visualize_saliency_with_losses(input_tensor, losses, seed_input, grad_modifier='absolute'):
+def visualize_saliency_with_losses(input_tensor, losses, seed_input, wrt_tensor=None, grad_modifier='absolute'):
     """Generates an attention heatmap over the `seed_input` by using positive gradients of `input_tensor`
     with respect to weighted `losses`.
 
@@ -64,6 +63,8 @@ def visualize_saliency_with_losses(input_tensor, losses, seed_input, grad_modifi
             channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
         losses: List of ([Loss](vis.losses#Loss), weight) tuples.
         seed_input: The model input for which activation map needs to be visualized.
+        wrt_tensor: Short for, with respect to. The gradients of losses are computed with respect to this tensor.
+            When None, this is assumed to be the same as `input_tensor` (Default value: None)
         grad_modifier: gradient modifier to use. See [grad_modifiers](vis.grad_modifiers.md). By default `absolute`
             value of gradients are used. To visualize positive or negative gradients, use `relu` and `negate`
             respectively. (Default value = 'absolute')
@@ -71,7 +72,7 @@ def visualize_saliency_with_losses(input_tensor, losses, seed_input, grad_modifi
     Returns:
         The normalized gradients of `seed_input` with respect to weighted `losses`.
     """
-    opt = Optimizer(input_tensor, losses, norm_grads=False)
+    opt = Optimizer(input_tensor, losses, wrt_tensor=wrt_tensor, norm_grads=False)
     grads = opt.minimize(seed_input=seed_input, max_iter=1, grad_modifier=grad_modifier, verbose=False)[1]
 
     channel_idx = 1 if K.image_data_format() == 'channels_first' else -1
@@ -80,7 +81,7 @@ def visualize_saliency_with_losses(input_tensor, losses, seed_input, grad_modifi
 
 
 def visualize_saliency(model, layer_idx, filter_indices, seed_input,
-                       backprop_modifier=None, grad_modifier='absolute'):
+                       wrt_tensor=None, backprop_modifier=None, grad_modifier='absolute'):
     """Generates an attention heatmap over the `seed_input` for maximizing `filter_indices`
     output in the given `layer_idx`.
 
@@ -95,6 +96,8 @@ def visualize_saliency(model, layer_idx, filter_indices, seed_input,
             If you are visualizing final `keras.layers.Dense` layer, consider switching 'softmax' activation for
             'linear' using [utils.apply_modifications](vis.utils.utils#apply_modifications) for better results.
         seed_input: The model input for which activation map needs to be visualized.
+        wrt_tensor: Short for, with respect to. The gradients of losses are computed with respect to this tensor.
+            When None, this is assumed to be the same as `input_tensor` (Default value: None)
         backprop_modifier: backprop modifier to use. See [backprop_modifiers](vis.backprop_modifiers.md). If you don't
             specify anything, no backprop modification is applied. (Default value = None)
         grad_modifier: gradient modifier to use. See [grad_modifiers](vis.grad_modifiers.md). By default `absolute`
@@ -121,12 +124,10 @@ def visualize_saliency(model, layer_idx, filter_indices, seed_input,
     losses = [
         (ActivationMaximization(model.layers[layer_idx], filter_indices), -1)
     ]
-    return visualize_saliency_with_losses(model.input, losses, seed_input, grad_modifier)
+    return visualize_saliency_with_losses(model.input, losses, seed_input, wrt_tensor, grad_modifier)
 
 
-def visualize_cam_with_losses(input_tensor, losses,
-                              seed_input, penultimate_layer,
-                              grad_modifier=None):
+def visualize_cam_with_losses(input_tensor, losses, seed_input, penultimate_layer, grad_modifier=None):
     """Generates a gradient based class activation map (CAM) by using positive gradients of `input_tensor`
     with respect to weighted `losses`.
 

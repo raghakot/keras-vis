@@ -27,8 +27,9 @@ class Optimizer(object):
             input_range: Specifies the input range as a `(min, max)` tuple. This is used to rescale the
                 final optimized input to the given range. (Default value=(0, 255))
             wrt_tensor: Short for, with respect to. This instructs the optimizer that the aggregate loss from `losses`
-                should be minimized with respect to `wrt`. `wrt` can be any tensor that is part of the model graph.
-                Default value is set to None which means that loss will simply be minimized with respect to `input_tensor`.
+                should be minimized with respect to `wrt_tensor`.
+                `wrt_tensor` can be any tensor that is part of the model graph. Default value is set to None
+                which means that loss will simply be minimized with respect to `input_tensor`.
             norm_grads: True to normalize gradients. Normalization avoids very small or large gradients and ensures
                 a smooth gradient gradient descent process. If you want the actual gradient
                 (for example, visualizing attention), set this to false.
