@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{aa5ebffc-4320-46d1-8b15-e71040bfb735}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>setup.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+    <InterpreterVersion />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+    <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="applications\self_driving\images\blank.png" />
+    <Content Include="applications\self_driving\images\left.png" />
+    <Content Include="applications\self_driving\images\straight.png" />
+    <Content Include="docs\templates\css\extras.css" />
+    <Content Include="examples\vggnet\images\ouzel1.jpg" />
+    <Content Include="examples\vggnet\images\ouzel2.jpg" />
+    <Content Include="images\attention_vis\cover.png" />
+    <Content Include="images\attention_vis\grad-cam.png" />
+    <Content Include="images\attention_vis\saliency_map.png" />
+    <Content Include="images\conv_vis\block1_conv2_filters.jpg" />
+    <Content Include="images\conv_vis\block2_conv2_filters.jpg" />
+    <Content Include="images\conv_vis\block3_conv3_filters.jpg" />
+    <Content Include="images\conv_vis\block4_conv3_filters.jpg" />
+    <Content Include="images\conv_vis\block5_conv3_filters.jpg" />
+    <Content Include="images\conv_vis\block5_conv3_filters_no_tv.jpg" />
+    <Content Include="images\conv_vis\cover.jpg" />
+    <Content Include="images\conv_vis\filter_67.png" />
+    <Content Include="images\dense_vis\cover.png" />
+    <Content Include="images\dense_vis\ouzel_vis.png" />
+    <Content Include="images\dense_vis\random_imagenet.png" />
+    <Content Include="images\dense_vis\random_imagenet_no_tv.png" />
+    <Content Include="images\opt_progress.gif" />
+    <Content Include="pytest.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="applications\self_driving\model.py" />
+    <Compile Include="docs\md_autogen.py" />
+    <Compile Include="docs\update_docs.py" />
+    <Compile Include="docs\__init__.py" />
+    <Compile Include="setup.py" />
+    <Compile Include="tests\vis\backend\test_backend.py" />
+    <Compile Include="tests\vis\utils\test_utils.py" />
+    <Compile Include="vis\backend\tensorflow_backend.py" />
+    <Compile Include="vis\backend\theano_backend.py" />
+    <Compile Include="vis\backend\__init__.py" />
+    <Compile Include="vis\backprop_modifiers.py" />
+    <Compile Include="vis\callbacks.py" />
+    <Compile Include="vis\grad_modifiers.py" />
+    <Compile Include="vis\input_modifiers.py" />
+    <Compile Include="vis\losses.py" />
+    <Compile Include="vis\optimizer.py" />
+    <Compile Include="vis\regularizers.py" />
+    <Compile Include="vis\utils\test_utils.py" />
+    <Compile Include="vis\utils\utils.py" />
+    <Compile Include="vis\utils\__init__.py" />
+    <Compile Include="vis\visualization\activation_maximization.py" />
+    <Compile Include="vis\visualization\saliency.py" />
+    <Compile Include="vis\visualization\__init__.py" />
+    <Compile Include="vis\__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="applications\" />
+    <Folder Include="applications\self_driving" />
+    <Folder Include="applications\self_driving\images" />
+    <Folder Include="docs" />
+    <Folder Include="docs\templates\" />
+    <Folder Include="docs\templates\css" />
+    <Folder Include="examples\" />
+    <Folder Include="examples\vggnet\" />
+    <Folder Include="examples\vggnet\images" />
+    <Folder Include="images" />
+    <Folder Include="images\attention_vis" />
+    <Folder Include="images\conv_vis" />
+    <Folder Include="images\dense_vis" />
+    <Folder Include="tests\" />
+    <Folder Include="tests\vis\" />
+    <Folder Include="tests\vis\backend" />
+    <Folder Include="tests\vis\utils" />
+    <Folder Include="vis" />
+    <Folder Include="vis\backend" />
+    <Folder Include="vis\utils" />
+    <Folder Include="vis\visualization" />
+  </ItemGroup>
+  <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
+</Project>
