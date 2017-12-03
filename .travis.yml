@@ -7,11 +7,11 @@ matrix:
           env: KERAS_BACKEND=tensorflow TEST_MODE=PEP8
         - python: 2.7
           env: KERAS_BACKEND=tensorflow
-        - python: 3.5
+        - python: 3.6
           env: KERAS_BACKEND=tensorflow
         - python: 2.7
           env: KERAS_BACKEND=theano
-        - python: 3.5
+        - python: 3.6
           env: KERAS_BACKEND=theano
 
 install:
@@ -33,7 +33,11 @@ install:
 
   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION numpy pytest pytest-pep8 pytest-cov matplotlib
   - source activate test-environment
+  - conda install mkl mkl-service
   - pip install theano
+
+  # set library path
+  - export LD_LIBRARY_PATH=$HOME/miniconda/envs/test-environment/lib/:$LD_LIBRARY_PATH
 
   # install TensorFlow
   - pip install tensorflow
@@ -42,6 +46,7 @@ install:
   - pip install -e .[tests]
 
 script:
+  - export MKL_THREADING_LAYER="GNU"
   # run keras backend init to initialize backend config
   - python -c "import keras.backend"
   # set up keras backend
