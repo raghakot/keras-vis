@@ -92,7 +92,7 @@ def get_identifier(identifier, module_globals, module_name):
         raise ValueError('Could not interpret identifier')
 
 
-def apply_modifications(model):
+def apply_modifications(model, custom_objects=None):
     """Applies modifications to the model layers to create a new Graph. For example, simply changing
     `model.layers[idx].activation = new activation` does not change the graph. The entire graph needs to be updated
     with modified inbound and outbound tensors because of change in layer building function.
@@ -110,7 +110,7 @@ def apply_modifications(model):
     model_path = os.path.join(tempfile.gettempdir(), next(tempfile._get_candidate_names()) + '.h5')
     try:
         model.save(model_path)
-        return load_model(model_path)
+        return load_model(model_path, custom_objects=custom_objects)
     finally:
         os.remove(model_path)
 
