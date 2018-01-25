@@ -52,7 +52,7 @@ class Optimizer(object):
         # Compute gradient of overall with respect to `wrt` tensor.
         grads = K.gradients(overall_loss, self.wrt_tensor)[0]
         if norm_grads:
-            grads = grads / (K.sqrt(K.mean(K.square(grads))) + K.epsilon())
+            grads = K.l2_normalize(grads)
 
         # The main function to compute various quantities in optimization loop.
         self.compute_fn = K.function([self.input_tensor, K.learning_phase()],
