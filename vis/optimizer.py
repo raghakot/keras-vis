@@ -93,7 +93,8 @@ class Optimizer(object):
             seed_input = np.expand_dims(seed_input, 0)
 
         # Only possible if channel idx is out of place.
-        if seed_input.shape != desired_shape:
+        if seed_input.shape[-1] != desired_shape[-1] and \
+           seed_input.shape[1] != desired_shape[1]:
             seed_input = np.moveaxis(seed_input, -1, 1)
         return seed_input.astype(K.floatx())
 
