@@ -38,7 +38,11 @@ class Optimizer(object):
         self.input_range = input_range
         self.loss_names = []
         self.loss_functions = []
-        self.wrt_tensor = self.input_tensor if wrt_tensor is None else wrt_tensor
+        if wrt_tensor is None:
+            self.wrt_tensor_is_input_tensor = True
+            self.wrt_tensor = K.identity(input_tensor)
+        else:
+            self.wrt_tensor_is_input_tensor = False
 
         overall_loss = None
         for loss, weight in losses:
@@ -50,7 +54,10 @@ class Optimizer(object):
                 self.loss_functions.append(loss_fn)
 
         # Compute gradient of overall with respect to `wrt` tensor.
-        grads = K.gradients(overall_loss, self.wrt_tensor)[0]
+        if self.wrt_tensor_is_input_tensor:
+            grads = K.gradients(overall_loss, self.input_tensor)[0]
+        else:
+            grads = K.gradients(overall_loss, self.wrt_tensor)[0]
         if norm_grads:
             grads = K.l2_normalize(grads)
 
@@ -159,7 +166,7 @@ class Optimizer(object):
 
             # Gradient descent update.
             # It only makes sense to do this if wrt_tensor is input_tensor. Otherwise shapes wont match for the update.
-            if self.wrt_tensor is self.input_tensor:
+            if self.wrt_tensor_is_input_tensor:
                 step, cache = self._rmsprop(grads, cache)
                 seed_input += step
 
