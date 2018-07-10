@@ -38,9 +38,10 @@ class Optimizer(object):
         self.input_range = input_range
         self.loss_names = []
         self.loss_functions = []
-        if wrt_tensor is None:
+        self.wrt_tensor = self.input_tensor if wrt_tensor is None else wrt_tensor
+        if self.input_tensor is self.wrt_tensor:
             self.wrt_tensor_is_input_tensor = True
-            self.wrt_tensor = K.identity(input_tensor)
+            self.wrt_tensor = K.identity(self.wrt_tensor)
         else:
             self.wrt_tensor_is_input_tensor = False
 
