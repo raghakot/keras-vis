@@ -170,7 +170,7 @@ crisper activation maximization images. As an exercise, try:
 Please cite keras-vis in your publications if it helped your research. Here is an example BibTeX entry:
 
 ```
-@misc{raghakotkerasvis
+@misc{raghakotkerasvis,
   title={keras-vis},
   author={Kotikalapudi, Raghavendra and contributors},
   year={2017},
