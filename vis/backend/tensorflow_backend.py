@@ -8,6 +8,7 @@ import tensorflow as tf
 
 from ..utils import utils
 from tensorflow.python.framework import ops
+import keras
 from keras.models import load_model
 from keras.layers import advanced_activations, Activation
 
@@ -86,7 +87,7 @@ def modify_model_backprop(model, backprop_modifier):
 
         # 2. Replace all possible activations with ReLU.
         for i, layer in utils.reverse_enumerate(modified_model.layers):
-            if hasattr(layer, 'activation'):
+            if hasattr(layer, 'activation') and layer.activation != keras.activations.linear:
                 layer.activation = tf.nn.relu
             if isinstance(layer, _ADVANCED_ACTIVATIONS):
                 # NOTE: This code is brittle as it makes use of Keras internal serialization knowledge and might
