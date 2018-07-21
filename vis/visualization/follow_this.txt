@@ -1,0 +1,12 @@
+In order for this saliency3D.py t owork properly, it is necessary to make a minor change in /site-packages/scipy/misc/pilutils.py:
+
+Inside "def toimage()", replace:
+
+    if mode not in ['RGB', 'RGBA', 'YCbCr', 'CMYK']: 
+    
+by:
+
+    if mode not in ['RGB', 'RGBA', 'YCbCr', 'CMYK', 'F']: 
+
+
+This should no hurt other uses of scipy.
