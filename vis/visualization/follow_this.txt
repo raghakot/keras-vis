@@ -1,4 +1,4 @@
-In order for this saliency3D.py t owork properly, it is necessary to make a minor change in /site-packages/scipy/misc/pilutils.py:
+In order for this saliency3D.py to work properly, it is necessary to make a minor change in /site-packages/scipy/misc/pilutils.py:
 
 Inside "def toimage()", replace:
 
