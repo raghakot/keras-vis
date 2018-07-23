@@ -1,7 +1,13 @@
-# Keras Visualization Toolkit
+# Keras Visualization Toolkit with 3D gradCAM
 [![Build Status](https://travis-ci.org/raghakot/keras-vis.svg?branch=master)](https://travis-ci.org/raghakot/keras-vis)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/raghakot/keras-vis/blob/master/LICENSE)
 [![Slack](https://img.shields.io/badge/slack-discussion-E01563.svg)](https://keras-vis.herokuapp.com/)
+
+Please refer to /vis/visualization/follow_this.txt to properly modify scipy. It's a minor change.
+
+This repository is similiar to the original from raghakot, except there is one more file: /vis/visualization/saliency3D.py
+
+There is a code snippet in /examples/3D_saliency_snippet.ipynb
 
 keras-vis is a high-level toolkit for visualizing and debugging your trained keras neural net models. Currently
 supported visualizations include:
