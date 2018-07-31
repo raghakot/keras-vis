@@ -11,7 +11,7 @@ This repository is similiar to the original from raghakot, except there is one m
 
 There is a code snippet in /examples/3D_saliency_snippet.ipynb. Use it as a guide on your on code and model.
 
-Thanks to Romane Gariau from the MGH and BWH Center for Clinical Data Science (CCDS) for reviewing the code.
+Thanks to Romane Gauriau from the MGH and BWH Center for Clinical Data Science (CCDS) for reviewing the code.
 
 ## Intro
 
