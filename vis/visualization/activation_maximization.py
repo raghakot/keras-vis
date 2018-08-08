@@ -12,7 +12,7 @@ from ..utils import utils
 
 def visualize_activation_with_losses(input_tensor, losses, wrt_tensor=None,
                                      seed_input=None, input_range=(0, 255),
-                                     **optimizer_params):
+                                     input_indices=0, **optimizer_params):
     """Generates the `input_tensor` that minimizes the weighted `losses`. This function is intended for advanced
     use cases where a custom loss is desired.
 
@@ -34,28 +34,41 @@ def visualize_activation_with_losses(input_tensor, losses, wrt_tensor=None,
     """
     # Default optimizer kwargs.
     optimizer_params = utils.add_defaults_to_kwargs({
-        'seed_input': seed_input,
+        'seed_inputs': seed_input,
         'max_iter': 200,
         'verbose': False
     }, **optimizer_params)
 
-    opt = Optimizer(input_tensor, losses, input_range, wrt_tensor=wrt_tensor)
-    img = opt.minimize(**optimizer_params)[0]
+    opt = Optimizer(input_tensor, losses, input_range, wrt_tensors=wrt_tensor)
+    opt_result = opt.minimize(**optimizer_params)
 
-    # If range has integer numbers, cast to 'uint8'
-    if isinstance(input_range[0], int) and isinstance(input_range[1], int):
-        img = np.clip(img, input_range[0], input_range[1]).astype('uint8')
+    images = []
+    for i in utils.listify(input_indices):
+        if i < len(opt_result):
+            img, _, _ = opt_result[i]
 
-    if K.image_data_format() == 'channels_first':
-        img = np.moveaxis(img, 0, -1)
-    return img
+            # If range has integer numbers, cast to 'uint8'
+            if isinstance(input_range[0], int) and isinstance(input_range[1], int):
+                img = np.clip(img, input_range[0], input_range[1]).astype('uint8')
+
+            if K.image_data_format() == 'channels_first':
+                img = np.moveaxis(img, 0, -1)
+
+            images.append(img)
+        else:
+            raise ValueError('# TODO')
+
+    if not isinstance(input_indices, list):
+        return images[0]
+    else:
+        return images
 
 
 def visualize_activation(model, layer_idx, filter_indices=None, wrt_tensor=None,
                          seed_input=None, input_range=(0, 255),
                          backprop_modifier=None, grad_modifier=None,
                          act_max_weight=1, lp_norm_weight=10, tv_weight=10,
-                         **optimizer_params):
+                         input_indices=0, **optimizer_params):
     """Generates the model input that maximizes the output of all `filter_indices` in the given `layer_idx`.
 
     Args:
@@ -109,4 +122,5 @@ def visualize_activation(model, layer_idx, filter_indices=None, wrt_tensor=None,
     }, **optimizer_params)
 
     return visualize_activation_with_losses(model.input, losses, wrt_tensor,
-                                            seed_input, input_range, **optimizer_params)
+                                            seed_input, input_range, input_indices,
+                                            **optimizer_params)

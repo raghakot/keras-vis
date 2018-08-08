@@ -8,63 +8,69 @@ from .grad_modifiers import get
 from .utils import utils
 
 
-_PRINT_CALLBACK = Print()
-
-
-def _identity(x):
-    return x
-
-
 class Optimizer(object):
-
-    def __init__(self, input_tensor, losses, input_range=(0, 255), wrt_tensor=None, norm_grads=True):
+    def __init__(self, input_tensors, losses, input_ranges=(0, 255), wrt_tensors=None, norm_grads=True):
         """Creates an optimizer that minimizes weighted loss function.
 
         Args:
-            input_tensor: An input tensor of shape: `(samples, channels, image_dims...)` if `image_data_format=
+            input_tensors: An input tensor or list of input tensor.
+                An input tensor of shape: `(samples, channels, image_dims...)` if `image_data_format=
                 channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
             losses: List of ([Loss](vis.losses#Loss), weight) tuples.
-            input_range: Specifies the input range as a `(min, max)` tuple. This is used to rescale the
+            input_range: A tuple of length 2 or list of tuple of length 2.
+                Specifies the input range as a `(min, max)` tuple. This is used to rescale the
                 final optimized input to the given range. (Default value=(0, 255))
-            wrt_tensor: Short for, with respect to. This instructs the optimizer that the aggregate loss from `losses`
-                should be minimized with respect to `wrt_tensor`.
-                `wrt_tensor` can be any tensor that is part of the model graph. Default value is set to None
-                which means that loss will simply be minimized with respect to `input_tensor`.
+            wrt_tensors: A tensor or list of tensor.
+                Short for, with respect to. This instructs the optimizer that the aggregate loss from `losses`
+                should be minimized with respect to `wrt_tensors`.
+                `wrt_tensors` can be any tensor that is part of the model graph. Default value is set to None
+                which means that loss will simply be minimized with respect to `input_tensors`.
             norm_grads: True to normalize gradients. Normalization avoids very small or large gradients and ensures
                 a smooth gradient gradient descent process. If you want the actual gradient
                 (for example, visualizing attention), set this to false.
         """
-        self.input_tensor = input_tensor
-        self.input_range = input_range
+        self.input_tensors = utils.listify(input_tensors)
+        self.input_ranges = utils.listify(input_ranges)
+        if len(self.input_tensors) != len(self.input_ranges):
+            if len(self.input_ranges) == 1:
+                for i in range(1, len(self.input_tensors)):
+                    self.input_ranges.append(self.input_ranges[0])
+            else:
+                raise ValueError(('The length of input_ranges must be '
+                                  'the same as input_tensors or just 1.'))
         self.loss_names = []
         self.loss_functions = []
-        self.wrt_tensor = self.input_tensor if wrt_tensor is None else wrt_tensor
-        if self.input_tensor is self.wrt_tensor:
-            self.wrt_tensor_is_input_tensor = True
-            self.wrt_tensor = K.identity(self.wrt_tensor)
+        if wrt_tensors is None or input_tensors is wrt_tensors:
+            self.wrt_tensors = []
+            for tensor in self.input_tensors:
+                self.wrt_tensors.append(K.identity(tensor))
+            self.wrt_tensors_is_input_tensors = True
         else:
-            self.wrt_tensor_is_input_tensor = False
+            self.wrt_tensors = utils.listify(wrt_tensors)
+            self.wrt_tensors_is_input_tensors = False
 
-        overall_loss = None
+        overall_loss = 0
         for loss, weight in losses:
             # Perf optimization. Don't build loss function with 0 weight.
             if weight != 0:
                 loss_fn = weight * loss.build_loss()
-                overall_loss = loss_fn if overall_loss is None else overall_loss + loss_fn
+                overall_loss = overall_loss + loss_fn
                 self.loss_names.append(loss.name)
                 self.loss_functions.append(loss_fn)
 
-        # Compute gradient of overall with respect to `wrt` tensor.
-        if self.wrt_tensor_is_input_tensor:
-            grads = K.gradients(overall_loss, self.input_tensor)[0]
+        # Compute gradient of overall with respect to `wrt` tensors.
+        if self.wrt_tensors_is_input_tensors:
+            grads = K.gradients(overall_loss, self.input_tensors)
         else:
-            grads = K.gradients(overall_loss, self.wrt_tensor)[0]
+            grads = K.gradients(overall_loss, self.wrt_tensors)
         if norm_grads:
-            grads = K.l2_normalize(grads)
+            for i in range(len(grads)):
+                grads[i] = K.l2_normalize(grads[i])
 
         # The main function to compute various quantities in optimization loop.
-        self.compute_fn = K.function([self.input_tensor, K.learning_phase()],
-                                     self.loss_functions + [overall_loss, grads, self.wrt_tensor])
+        self.compute_fn = K.function(
+            self.input_tensors + [K.learning_phase()],
+            self.loss_functions + [overall_loss] + grads + self.wrt_tensors)
 
     def _rmsprop(self, grads, cache=None, decay_rate=0.95):
         """Uses RMSProp to compute step from gradients.
@@ -86,15 +92,15 @@ class Optimizer(object):
         step = -grads / np.sqrt(cache + K.epsilon())
         return step, cache
 
-    def _get_seed_input(self, seed_input):
+    def _get_seed_input(self, i, seed_input):
         """Creates a random `seed_input` if None. Otherwise:
             - Ensures batch_size dim on provided `seed_input`.
             - Shuffle axis according to expected `image_data_format`.
         """
-        desired_shape = (1, ) + K.int_shape(self.input_tensor)[1:]
+        desired_shape = (1, ) + K.int_shape(self.input_tensors[i])[1:]
         if seed_input is None:
-            return utils.random_array(desired_shape, mean=np.mean(self.input_range),
-                                      std=0.05 * (self.input_range[1] - self.input_range[0]))
+            return utils.random_array(desired_shape, mean=np.mean(self.input_ranges[i]),
+                                      std=0.05 * (self.input_ranges[i][1] - self.input_ranges[i][0]))
 
         # Add batch dim if needed.
         if len(seed_input.shape) != len(desired_shape):
@@ -105,13 +111,14 @@ class Optimizer(object):
             seed_input = np.moveaxis(seed_input, -1, 1)
         return seed_input.astype(K.floatx())
 
-    def minimize(self, seed_input=None, max_iter=200,
+    def minimize(self, seed_inputs=None, max_iter=200,
                  input_modifiers=None, grad_modifier=None,
                  callbacks=None, verbose=True):
         """Performs gradient descent on the input image with respect to defined losses.
 
         Args:
-            seed_input: An N-dim numpy array of shape: `(samples, channels, image_dims...)` if `image_data_format=
+            seed_inputs: A numpy array or list of numpy array.
+                An N-dim numpy array of shape: `(samples, channels, image_dims...)` if `image_data_format=
                 channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
                 Seeded with random noise if set to None. (Default value = None)
             max_iter: The maximum number of gradient descent iterations. (Default value = 200)
@@ -128,59 +135,85 @@ class Optimizer(object):
         Returns:
             The tuple of `(optimized input, grads with respect to wrt, wrt_value)` after gradient descent iterations.
         """
-        seed_input = self._get_seed_input(seed_input)
+        seed_inputs = utils.listify(seed_inputs)
+        for i in range(len(seed_inputs), len(self.input_tensors)):
+            seed_inputs.append(None)
+        for i in range(len(seed_inputs)):
+            seed_inputs[i] = self._get_seed_input(i, seed_inputs[i])
+
         input_modifiers = input_modifiers or []
-        grad_modifier = _identity if grad_modifier is None else get(grad_modifier)
+        grad_modifier = (lambda x: x) \
+            if grad_modifier is None else get(grad_modifier)
 
         callbacks = callbacks or []
         if verbose:
-            callbacks.append(_PRINT_CALLBACK)
+            callbacks.append(Print())
 
-        cache = None
+        caches = []
+        for i in range(len(seed_inputs)):
+            caches.append(None)
         best_loss = float('inf')
-        best_input = None
+        best_inputs = []
 
         grads = None
-        wrt_value = None
+        wrt_values = []
 
         for i in range(max_iter):
             # Apply modifiers `pre` step
             for modifier in input_modifiers:
-                seed_input = modifier.pre(seed_input)
+                for i in range(len(seed_inputs)):
+                    seed_inputs[i] = modifier.pre(seed_inputs[i])
 
             # 0 learning phase for 'test'
-            computed_values = self.compute_fn([seed_input, 0])
-            losses = computed_values[:len(self.loss_names)]
+            computed_values = self.compute_fn(seed_inputs + [0])
+            cursor = len(self.loss_names)
+            losses = computed_values[:cursor]
             named_losses = list(zip(self.loss_names, losses))
-            overall_loss, grads, wrt_value = computed_values[len(self.loss_names):]
+            overall_loss = computed_values[cursor]
+            cursor += 1
+            grads = computed_values[cursor:cursor + len(self.wrt_tensors)]
+            cursor += len(self.wrt_tensors)
+            wrt_values = computed_values[cursor:]
 
-            # TODO: theano grads shape is inconsistent for some reason. Patch for now and investigate later.
-            if grads.shape != wrt_value.shape:
-                grads = np.reshape(grads, wrt_value.shape)
+            for i, (grad, wrt_value) in enumerate(zip(grads, wrt_values)):
+                # TODO: theano grads shape is inconsistent for some reason.
+                # Patch for now and investigate later.
+                if grad.shape != wrt_value.shape:
+                    grads[i] = np.reshape(grad, wrt_value.shape)
 
             # Apply grad modifier.
             grads = grad_modifier(grads)
 
             # Trigger callbacks
             for c in callbacks:
-                c.callback(i, named_losses, overall_loss, grads, wrt_value)
+                # FIXME: In case of multi-input, callbacks aren't called for the second and subsequent inputs.
+                c.callback(i, named_losses, overall_loss, grads[0], wrt_values[0])
 
             # Gradient descent update.
-            # It only makes sense to do this if wrt_tensor is input_tensor. Otherwise shapes wont match for the update.
-            if self.wrt_tensor_is_input_tensor:
-                step, cache = self._rmsprop(grads, cache)
-                seed_input += step
+            # It only makes sense to do this if wrt_tensor is input_tensor.
+            # Otherwise shapes wont match for the update.
+            if self.wrt_tensors_is_input_tensors:
+                for i in range(len(seed_inputs)):
+                    step, caches[i] = self._rmsprop(grads[i], caches[i])
+                    seed_inputs[i] = seed_inputs[i] + step
 
             # Apply modifiers `post` step
-            for modifier in reversed(input_modifiers):
-                seed_input = modifier.post(seed_input)
+            for modifier in input_modifiers:
+                for i in reversed(range(len(seed_inputs))):
+                    seed_inputs[i] = modifier.post(seed_inputs[i])
 
             if overall_loss < best_loss:
                 best_loss = overall_loss.copy()
-                best_input = seed_input.copy()
+                best_inputs = list(seed_inputs)
 
         # Trigger on_end
         for c in callbacks:
             c.on_end()
 
-        return utils.deprocess_input(best_input[0], self.input_range), grads, wrt_value
+        results = []
+        for best_input, input_range, grad, wrt_value in zip(
+                best_inputs, self.input_ranges, grads, wrt_values):
+            results.append((utils.deprocess_input(best_input[0], input_range),
+                            grad, wrt_value))
+        return results
+
