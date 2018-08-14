@@ -93,7 +93,7 @@ def visualize_saliency_with_losses(input_tensor, losses, seed_input, wrt_tensor=
             raise ValueError('# TODO')
 
     if isinstance(input_indices, list):
-        return [saliency_maps[i] for i in input_indices]
+        return saliency_maps
     else:
         return saliency_maps[input_indices]
 
@@ -223,7 +223,7 @@ def visualize_cam_with_losses(input_tensor, losses, seed_input, penultimate_laye
             raise ValueError('# TODO')
 
     if isinstance(input_indices, list):
-        return [heatmaps[i] for i in input_indices]
+        return heatmaps
     else:
         return heatmaps[input_indices]
 

@@ -65,7 +65,7 @@ def visualize_activation_with_losses(input_tensor, losses, wrt_tensor=None,
             raise ValueError('# TODO')
 
     if isinstance(input_indices, list):
-        return [images[i] for i in input_indices]
+        return images
     else:
         return images[input_indices]
 
