@@ -60,18 +60,23 @@ def visualize_saliency_with_losses(input_tensor, losses, seed_input, wrt_tensor=
     (https://arxiv.org/pdf/1312.6034v2.pdf)
 
     Args:
-        input_tensor: An input tensor of shape: `(samples, channels, image_dims...)` if `image_data_format=
-            channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
+        input_tensor: An input tensor or list of input tensor.
+            The shape of an input tensor is `(samples, channels, image_dims...)` if `image_data_format=
+            channels_first`, Or it's `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
         losses: List of ([Loss](vis.losses#Loss), weight) tuples.
-        seed_input: The model input for which activation map needs to be visualized.
-        wrt_tensor: Short for, with respect to. The gradients of losses are computed with respect to this tensor.
+        seed_input: The model inputs for which activation map needs to be visualized.
+        wrt_tensor: Short for, with respect to. The gradients of losses are computed with respect to this tensors.
             When None, this is assumed to be the same as `input_tensor` (Default value: None)
         grad_modifier: gradient modifier to use. See [grad_modifiers](vis.grad_modifiers.md). By default `absolute`
             value of gradients are used. To visualize positive or negative gradients, use `relu` and `negate`
             respectively. (Default value = 'absolute')
-
+        input_indices: A index or a list of index.
+            This is the index of visualize target within `wrt_tensor`,
+            but when `wrt_tensor` is None, it's `input_tensor`. (Default value = 0)
     Returns:
         The normalized gradients of `seed_input` with respect to weighted `losses`.
+        When `input_indices` is a number, returned a gradients.
+        But, when `input_indices` is a list of number, returned a list of gradients.
     """
     opt = Optimizer(input_tensor, losses, wrt_tensors=wrt_tensor, norm_grads=False)
     opt_result = opt.minimize(seed_inputs=seed_input, max_iter=1, grad_modifier=grad_modifier, verbose=False)
@@ -87,10 +92,10 @@ def visualize_saliency_with_losses(input_tensor, losses, seed_input, wrt_tensor=
         else:
             raise ValueError('# TODO')
 
-    if not isinstance(input_indices, list):
-        return saliency_maps[0]
+    if isinstance(input_indices, list):
+        return [saliency_maps[i] for i in input_indices]
     else:
-        return saliency_maps
+        return saliency_maps[input_indices]
 
 
 def visualize_saliency(model, layer_idx, filter_indices, seed_input, wrt_tensor=None,
@@ -108,7 +113,7 @@ def visualize_saliency(model, layer_idx, filter_indices, seed_input, wrt_tensor=
             For `keras.layers.Dense` layer, `filter_idx` is interpreted as the output index.
             If you are visualizing final `keras.layers.Dense` layer, consider switching 'softmax' activation for
             'linear' using [utils.apply_modifications](vis.utils.utils#apply_modifications) for better results.
-        seed_input: The model input for which activation map needs to be visualized.
+        seed_input: The model inputs for which activation map needs to be visualized.
         wrt_tensor: Short for, with respect to. The gradients of losses are computed with respect to this tensor.
             When None, this is assumed to be the same as `input_tensor` (Default value: None)
         backprop_modifier: backprop modifier to use. See [backprop_modifiers](vis.backprop_modifiers.md). If you don't
@@ -116,6 +121,9 @@ def visualize_saliency(model, layer_idx, filter_indices, seed_input, wrt_tensor=
         grad_modifier: gradient modifier to use. See [grad_modifiers](vis.grad_modifiers.md). By default `absolute`
             value of gradients are used. To visualize positive or negative gradients, use `relu` and `negate`
             respectively. (Default value = 'absolute')
+        input_indices: A index or a list of index.
+            This is the index of visualize target within `wrt_tensor`,
+            but when `wrt_tensor` is None, it's model.inputs. (Default value = 0)
 
     Example:
         If you wanted to visualize attention over 'bird' category, say output index 22 on the
@@ -127,6 +135,8 @@ def visualize_saliency(model, layer_idx, filter_indices, seed_input, wrt_tensor=
     Returns:
         The heatmap image indicating the `seed_input` regions whose change would most contribute towards
         maximizing the output of `filter_indices`.
+        When `input_indices` is a number, returned a gradients.
+        But, when `input_indices` is a list of number, returned a list of gradients.
     """
     if backprop_modifier is not None:
         modifier_fn = get(backprop_modifier)
@@ -154,17 +164,23 @@ def visualize_cam_with_losses(input_tensor, losses, seed_input, penultimate_laye
     cat regions and not the 'dog' region and vice-versa.
 
     Args:
-        input_tensor: An input tensor of shape: `(samples, channels, image_dims...)` if `image_data_format=
-            channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
+        input_tensor: An input tensor or list of input tensor.
+            The shape of an input tensor is `(samples, channels, image_dims...)` if `image_data_format=
+            channels_first`, Or it's `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
         losses: List of ([Loss](vis.losses#Loss), weight) tuples.
-        seed_input: The model input for which activation map needs to be visualized.
+        seed_input: The model inputs for which activation map needs to be visualized.
         penultimate_layer: The pre-layer to `layer_idx` whose feature maps should be used to compute gradients
             with respect to filter output.
         grad_modifier: gradient modifier to use. See [grad_modifiers](vis.grad_modifiers.md). If you don't
             specify anything, gradients are unchanged (Default value = None)
+        input_indices: A index or a list of index.
+            This is the index that specifies the `sheed_input` to overlay the cam's heatmap.
+            (Default value = 0)
 
     Returns:
         The normalized gradients of `seed_input` with respect to weighted `losses`.
+        When `input_indices` is a number, returned a gradients.
+        But, when `input_indices` is a list of number, returned a list of gradients.
     """
     penultimate_output = penultimate_layer.output
     opt = Optimizer(input_tensor, losses, wrt_tensors=penultimate_output, norm_grads=False)
@@ -206,10 +222,10 @@ def visualize_cam_with_losses(input_tensor, losses, seed_input, penultimate_laye
         else:
             raise ValueError('# TODO')
 
-    if not isinstance(input_indices, list):
-        return heatmaps[0]
+    if isinstance(input_indices, list):
+        return [heatmaps[i] for i in input_indices]
     else:
-        return heatmaps
+        return heatmaps[input_indices]
 
 
 def visualize_cam(model, layer_idx, filter_indices, seed_input, penultimate_layer_idx=None,
@@ -234,6 +250,9 @@ def visualize_cam(model, layer_idx, filter_indices, seed_input, penultimate_laye
             specify anything, no backprop modification is applied. (Default value = None)
         grad_modifier: gradient modifier to use. See [grad_modifiers](vis.grad_modifiers.md). If you don't
             specify anything, gradients are unchanged (Default value = None)
+        input_indices: A index or a list of index.
+            This is the index that specifies the `sheed_input` to overlay the cam's heatmap.
+            (Default value = 0)
 
      Example:
         If you wanted to visualize attention over 'bird' category, say output index 22 on the
@@ -245,6 +264,8 @@ def visualize_cam(model, layer_idx, filter_indices, seed_input, penultimate_laye
     Returns:
         The heatmap image indicating the input regions whose change would most contribute towards
         maximizing the output of `filter_indices`.
+        When `input_indices` is a number, returned a heatmap.
+        But, when `input_indices` is a list of number, returned a list of heatmap.
     """
     if backprop_modifier is not None:
         modifier_fn = get(backprop_modifier)
