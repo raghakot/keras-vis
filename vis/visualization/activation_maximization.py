@@ -12,13 +12,14 @@ from ..utils import utils
 
 def visualize_activation_with_losses(input_tensor, losses, wrt_tensor=None,
                                      seed_input=None, input_range=(0, 255),
-                                     **optimizer_params):
+                                     input_indices=0, **optimizer_params):
     """Generates the `input_tensor` that minimizes the weighted `losses`. This function is intended for advanced
     use cases where a custom loss is desired.
 
     Args:
-        input_tensor: An input tensor of shape: `(samples, channels, image_dims...)` if `image_data_format=
-            channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
+        input_tensor: An input tensor or list of input tensor.
+            The shape of an input tensor is `(samples, channels, image_dims...)` if `image_data_format=
+            channels_first`, Or it's `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
         wrt_tensor: Short for, with respect to. The gradients of losses are computed with respect to this tensor.
             When None, this is assumed to be the same as `input_tensor` (Default value: None)
         losses: List of ([Loss](vis.losses#Loss), weight) tuples.
@@ -26,36 +27,54 @@ def visualize_activation_with_losses(input_tensor, losses, wrt_tensor=None,
             (Default value = None)
         input_range: Specifies the input range as a `(min, max)` tuple. This is used to rescale the
             final optimized input to the given range. (Default value=(0, 255))
+        input_indices: A index or a list of index.
+            This is the index of visualize target within `wrt_tensor`,
+            but when `wrt_tensor` is None, it's `input_tensor`. (Default value = 0)
         optimizer_params: The **kwargs for optimizer [params](vis.optimizer#optimizerminimize). Will default to
             reasonable values when required keys are not found.
 
     Returns:
         The model input that minimizes the weighted `losses`.
+        When `input_indices` is a number, returned a model.input.
+        But, when `input_indices` is a list of number, returned a list of model.input.
     """
     # Default optimizer kwargs.
     optimizer_params = utils.add_defaults_to_kwargs({
-        'seed_input': seed_input,
+        'seed_inputs': seed_input,
         'max_iter': 200,
         'verbose': False
     }, **optimizer_params)
 
-    opt = Optimizer(input_tensor, losses, input_range, wrt_tensor=wrt_tensor)
-    img = opt.minimize(**optimizer_params)[0]
+    opt = Optimizer(input_tensor, losses, input_range, wrt_tensors=wrt_tensor)
+    opt_result = opt.minimize(**optimizer_params)
 
-    # If range has integer numbers, cast to 'uint8'
-    if isinstance(input_range[0], int) and isinstance(input_range[1], int):
-        img = np.clip(img, input_range[0], input_range[1]).astype('uint8')
+    images = []
+    for i in utils.listify(input_indices):
+        if i < len(opt_result):
+            img, _, _ = opt_result[i]
 
-    if K.image_data_format() == 'channels_first':
-        img = np.moveaxis(img, 0, -1)
-    return img
+            # If range has integer numbers, cast to 'uint8'
+            if isinstance(input_range[0], int) and isinstance(input_range[1], int):
+                img = np.clip(img, input_range[0], input_range[1]).astype('uint8')
+
+            if K.image_data_format() == 'channels_first':
+                img = np.moveaxis(img, 0, -1)
+
+            images.append(img)
+        else:
+            raise ValueError('# TODO')
+
+    if isinstance(input_indices, list):
+        return images
+    else:
+        return images[input_indices]
 
 
 def visualize_activation(model, layer_idx, filter_indices=None, wrt_tensor=None,
                          seed_input=None, input_range=(0, 255),
                          backprop_modifier=None, grad_modifier=None,
                          act_max_weight=1, lp_norm_weight=10, tv_weight=10,
-                         **optimizer_params):
+                         input_indices=0, **optimizer_params):
     """Generates the model input that maximizes the output of all `filter_indices` in the given `layer_idx`.
 
     Args:
@@ -81,6 +100,9 @@ def visualize_activation(model, layer_idx, filter_indices=None, wrt_tensor=None,
         act_max_weight: The weight param for `ActivationMaximization` loss. Not used if 0 or None. (Default value = 1)
         lp_norm_weight: The weight param for `LPNorm` regularization loss. Not used if 0 or None. (Default value = 10)
         tv_weight: The weight param for `TotalVariation` regularization loss. Not used if 0 or None. (Default value = 10)
+        input_indices: A index or a list of index.
+            This is the index of visualize target within `wrt_tensor`,
+            but when `wrt_tensor` is None, it's model.inputs. (Default value = 0)
         optimizer_params: The **kwargs for optimizer [params](vis.optimizer#optimizerminimize). Will default to
             reasonable values when required keys are not found.
 
@@ -92,6 +114,8 @@ def visualize_activation(model, layer_idx, filter_indices=None, wrt_tensor=None,
 
     Returns:
         The model input that maximizes the output of `filter_indices` in the given `layer_idx`.
+        When `input_indices` is a number, returned a model.input.
+        But, when `input_indices` is a list of number, returned a list of model.input.
     """
     if backprop_modifier is not None:
         modifier_fn = get(backprop_modifier)
@@ -109,4 +133,5 @@ def visualize_activation(model, layer_idx, filter_indices=None, wrt_tensor=None,
     }, **optimizer_params)
 
     return visualize_activation_with_losses(model.input, losses, wrt_tensor,
-                                            seed_input, input_range, **optimizer_params)
+                                            seed_input, input_range, input_indices,
+                                            **optimizer_params)
