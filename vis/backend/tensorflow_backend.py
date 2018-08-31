@@ -8,6 +8,7 @@ import tensorflow as tf
 
 from ..utils import utils
 from tensorflow.python.framework import ops
+import keras
 from keras.models import load_model
 from keras.layers import advanced_activations, Activation
 
@@ -26,7 +27,7 @@ def _register_guided_gradient(name):
         def _guided_backprop(op, grad):
             dtype = op.outputs[0].dtype
             gate_g = tf.cast(grad > 0., dtype)
-            gate_y = tf.cast(op.outputs[0] > 0, dtype)
+            gate_y = tf.cast(op.outputs[0] > 0., dtype)
             return gate_y * gate_g * grad
 
 
@@ -60,11 +61,10 @@ def modify_model_backprop(model, backprop_modifier):
         A copy of model with modified activations for backwards pass.
     """
     # The general strategy is as follows:
-    # - Clone original model via save/load so that upstream callers don't see unexpected results with their models.
-    # - Modify all activations in the model as ReLU.
-    # - Save modified model so that it can be loaded with custom context modifying backprop behavior.
+    # - Save original model so that upstream callers don't see unexpected results with their models.
     # - Call backend specific function that registers the custom op and loads the model under modified context manager.
     # - Maintain cache to save this expensive process on subsequent calls.
+    # - Load model with custom context modifying backprop behavior.
     #
     # The reason for this round about way is because the graph needs to be rebuild when any of its layer builder
     # functions are changed. This is very complicated to do in Keras and makes the implementation very tightly bound
@@ -72,6 +72,8 @@ def modify_model_backprop(model, backprop_modifier):
     #
     # The only exception to this is the way advanced activations are handled which makes use of some keras internal
     # knowledge and might break in the future.
+    # ADD on 22 Jul 2018:
+    #     In fact, it has broken. Currently, advanced activations are not supported.
 
     # 0. Retrieve from cache if previously computed.
     modified_model = _MODIFIED_MODEL_CACHE.get((model, backprop_modifier))
@@ -80,32 +82,16 @@ def modify_model_backprop(model, backprop_modifier):
 
     model_path = os.path.join(tempfile.gettempdir(), next(tempfile._get_candidate_names()) + '.h5')
     try:
-        # 1. Clone original model via save and load.
+        # 1. Save original model
         model.save(model_path)
-        modified_model = load_model(model_path)
 
-        # 2. Replace all possible activations with ReLU.
-        for i, layer in utils.reverse_enumerate(modified_model.layers):
-            if hasattr(layer, 'activation'):
-                layer.activation = tf.nn.relu
-            if isinstance(layer, _ADVANCED_ACTIVATIONS):
-                # NOTE: This code is brittle as it makes use of Keras internal serialization knowledge and might
-                # break in the future.
-                modified_layer = Activation('relu')
-                modified_layer.inbound_nodes = layer.inbound_nodes
-                modified_layer.name = layer.name
-                modified_model.layers[i] = modified_layer
-
-        # 3. Save model with modifications.
-        modified_model.save(model_path)
-
-        # 4. Register modifier and load modified model under custom context.
+        # 2. Register modifier and load modified model under custom context.
         modifier_fn = _BACKPROP_MODIFIERS.get(backprop_modifier)
         if modifier_fn is None:
             raise ValueError("'{}' modifier is not supported".format(backprop_modifier))
         modifier_fn(backprop_modifier)
 
-        # 5. Create graph under custom context manager.
+        # 3. Create graph under custom context manager.
         with tf.get_default_graph().gradient_override_map({'Relu': backprop_modifier}):
             #  This should rebuild graph with modifications.
             modified_model = load_model(model_path)
