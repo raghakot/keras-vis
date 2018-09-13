@@ -16,17 +16,21 @@ def model():
     x = Dense(1)(x)
     return Model(inputs, x)
 
+
 @pytest.fixture(scope='function', autouse=True)
 def data():
     return np.random.rand(1, 28, 28, 3)
+
 
 def test_visualize_saliency(model, data):
     grads = visualize_saliency(model, -1, None, data)
     assert grads.shape == (28, 28)
 
+
 def test_visualize_saliency_with_unkeepdims(model, data):
     grads = visualize_saliency(model, -1, None, data, keepdims=True)
     assert grads.shape == (28, 28, 3)
+
 
 def test_visualize_saliency_with_losses(model, data):
     losses = [
@@ -35,12 +39,14 @@ def test_visualize_saliency_with_losses(model, data):
     grads = visualize_saliency_with_losses(model.input, losses, data)
     assert grads.shape == (28, 28)
 
+
 def test_visualize_saliency_with_losses_with_unkeepdims(model, data):
     losses = [
         (ActivationMaximization(model.layers[-1], None), -1)
     ]
     grads = visualize_saliency_with_losses(model.input, losses, data, keepdims=True)
     assert grads.shape == (28, 28, 3)
+
 
 def test_for_issues_135():
     inputs = Input((35,))
