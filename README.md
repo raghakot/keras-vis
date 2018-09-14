@@ -19,6 +19,7 @@ data format.
 
 ## Quick links
 * Read the documentation at [https://raghakot.github.io/keras-vis](https://raghakot.github.io/keras-vis). 
+   * The Japanese edition is [https://keisen.github.io/keras-vis-docs-ja](https://keisen.github.io/keras-vis-docs-ja).
 * Join the slack [channel](https://keras-vis.herokuapp.com/) for questions/discussions.
 * We are tracking new features/tasks in [waffle.io](https://waffle.io/raghakot/keras-vis). Would love it if you lend us 
 a hand and submit PRs.
