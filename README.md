@@ -5,6 +5,8 @@
 
 ## Modifications for 3D gradCAM
 
+This is a small modification forked from raghakot/keras-vis, just to correct a minor bug. All the work was done by raghakot.
+
 Please refer to /vis/visualization/follow_this.txt to properly modify scipy. It's a minor change.
 
 This repository is similiar to the original from raghakot, except there is one more file: /vis/visualization/saliency3D.py
