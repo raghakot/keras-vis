@@ -11,9 +11,9 @@ In keras-vis, we use [grad-CAM](https://arxiv.org/pdf/1610.02391.pdf) as its con
 
 There are two APIs exposed to visualize grad-CAM and are almost identical to [saliency usage](saliency#Usage).
 
-1. [visualize_cam](../vis.visualization#visualize_cam): This is the general purpose API for visualizing
+1. [visualize_cam](../vis.visualization.md#visualize_cam): This is the general purpose API for visualizing
 grad-CAM.
-2. [visualize_cam_with_losses](../vis.visualization#visualize_cam_with_losses): This is intended for 
+2. [visualize_cam_with_losses](../vis.visualization.md#visualize_cam_with_losses): This is intended for 
 research use-cases where some custom weighted loss can be used.
 
 The only notable addition is the `penultimate_layer_idx` parameter. This can be used to specify the pre-layer

@@ -21,12 +21,12 @@ def visualize_activation_with_losses(input_tensor, losses, wrt_tensor=None,
             channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
         wrt_tensor: Short for, with respect to. The gradients of losses are computed with respect to this tensor.
             When None, this is assumed to be the same as `input_tensor` (Default value: None)
-        losses: List of ([Loss](vis.losses#Loss), weight) tuples.
+        losses: List of ([Loss](vis.losses.md#Loss), weight) tuples.
         seed_input: Seeds the optimization with a starting image. Initialized with a random value when set to None.
             (Default value = None)
         input_range: Specifies the input range as a `(min, max)` tuple. This is used to rescale the
             final optimized input to the given range. (Default value=(0, 255))
-        optimizer_params: The **kwargs for optimizer [params](vis.optimizer#optimizerminimize). Will default to
+        optimizer_params: The **kwargs for optimizer [params](vis.optimizer.md#optimizerminimize). Will default to
             reasonable values when required keys are not found.
 
     Returns:
@@ -67,7 +67,7 @@ def visualize_activation(model, layer_idx, filter_indices=None, wrt_tensor=None,
             If None, all filters are visualized. (Default value = None)
             For `keras.layers.Dense` layer, `filter_idx` is interpreted as the output index.
             If you are visualizing final `keras.layers.Dense` layer, consider switching 'softmax' activation for
-            'linear' using [utils.apply_modifications](vis.utils.utils#apply_modifications) for better results.
+            'linear' using [utils.apply_modifications](vis.utils.utils.md#apply_modifications) for better results.
         wrt_tensor: Short for, with respect to. The gradients of losses are computed with respect to this tensor.
             When None, this is assumed to be the same as `input_tensor` (Default value: None)
         seed_input: Seeds the optimization with a starting input. Initialized with a random value when set to None.
@@ -81,7 +81,7 @@ def visualize_activation(model, layer_idx, filter_indices=None, wrt_tensor=None,
         act_max_weight: The weight param for `ActivationMaximization` loss. Not used if 0 or None. (Default value = 1)
         lp_norm_weight: The weight param for `LPNorm` regularization loss. Not used if 0 or None. (Default value = 10)
         tv_weight: The weight param for `TotalVariation` regularization loss. Not used if 0 or None. (Default value = 10)
-        optimizer_params: The **kwargs for optimizer [params](vis.optimizer#optimizerminimize). Will default to
+        optimizer_params: The **kwargs for optimizer [params](vis.optimizer.md#optimizerminimize). Will default to
             reasonable values when required keys are not found.
 
     Example:

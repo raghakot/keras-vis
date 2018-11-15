@@ -26,9 +26,9 @@ regions that most contribute towards the output.
 
 There are two APIs exposed to visualize saliency.
 
-1. [visualize_saliency](../vis.visualization#visualize_saliency): This is the general purpose API for visualizing
+1. [visualize_saliency](../vis.visualization.md#visualize_saliency): This is the general purpose API for visualizing
 saliency.
-2. [visualize_saliency_with_losses](../vis.visualization#visualize_saliency_with_losses): This is intended for 
+2. [visualize_saliency_with_losses](../vis.visualization.md#visualize_saliency_with_losses): This is intended for 
 research use-cases where some custom weighted loss can be used.
 
 See [examples/](https://github.com/raghakot/keras-vis/tree/master/examples) for code examples.
@@ -68,7 +68,7 @@ gradients (which indicate the decrease) as positive and therefore visualize decr
 
 - To visualize what contributed to the predicted output, we want to consider gradients that have very low positive
 or negative values. This can be achieved by performing `grads = abs(1 / grads)` to magnifies small gradients. Equivalently, 
-you can use `grad_modifier='small_values'`, which does the same thing. [gradient_modifiers](../vis.grad_modifiers) 
+you can use `grad_modifier='small_values'`, which does the same thing. [gradient_modifiers](../vis.grad_modifiers.md) 
 are very powerful and show up in other visualization APIs as well.
 
 You can see a practical application for this in the 
@@ -84,7 +84,7 @@ In guided saliency, the backprop step is modified to only propagate positive gra
 For details see the paper: [String For Simplicity: The All Convolutional Net](https://arxiv.org/pdf/1412.6806.pdf).
 
 For both these cases, we can use `backprop_modifier='relu'` and `backprop_modifier='guided'` respectively. You 
-can also implement your own [backprop_modifier](../vis.backprop_modifiers) to try your crazy research idea :)
+can also implement your own [backprop_modifier](../vis.backprop_modifiers.md) to try your crazy research idea :)
 
 #### Conv filter saliency
 

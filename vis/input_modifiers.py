@@ -8,7 +8,7 @@ from keras import backend as K
 
 class InputModifier(object):
     """Abstract class for defining an input modifier. An input modifier can be used with the
-    [Optimizer.minimize](vis.optimizer#optimizerminimize) to make `pre` and `post` changes to the optimized input
+    [Optimizer.minimize](vis.optimizer.md#optimizerminimize) to make `pre` and `post` changes to the optimized input
     during the optimization process.
 
     ```python
