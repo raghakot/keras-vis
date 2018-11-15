@@ -13,19 +13,20 @@
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="../css/highlight.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   <link href="../css/extras.css" rel="stylesheet">
   
   <script>
     // Current page data
     var mkdocs_page_name = "Visualization";
     var mkdocs_page_input_path = "vis.visualization.md";
-    var mkdocs_page_url = "/vis.visualization/";
+    var mkdocs_page_url = null;
   </script>
   
-  <script src="../js/jquery-2.1.1.min.js"></script>
-  <script src="../js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
 
@@ -39,7 +40,7 @@
         <a href=".." class="icon icon-home"> Keras-vis Documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -199,7 +200,7 @@
     <li>Visualization</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.visualization.md"
+        <a href="https://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.visualization.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -212,8 +213,8 @@
                 <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/__init__.py#L0">vis/visualization/<strong>init</strong>.py#L0</a></p>
 <hr />
 <h3 id="visualize_activation_with_losses"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/activation_maximization.py#L13">visualize_activation_with_losses</a></h3>
-<pre><code class="python">visualize_activation_with_losses(input_tensor, losses, seed_input=None, input_range=(0, 255), \
-    **optimizer_params)
+<pre><code class="python">visualize_activation_with_losses(input_tensor, losses, wrt_tensor=None, seed_input=None, \
+    input_range=(0, 255), **optimizer_params)
 </code></pre>
 
 <p>Generates the <code>input_tensor</code> that minimizes the weighted <code>losses</code>. This function is intended for advanced
@@ -222,12 +223,14 @@ use cases where a custom loss is desired.</p>
 <ul>
 <li><strong>input_tensor</strong>:  An input tensor of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
   channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
-<li><strong>losses</strong>:  List of (<a href="../vis.losses#Loss">Loss</a>, weight) tuples.</li>
+<li><strong>wrt_tensor</strong>:  Short for, with respect to. The gradients of losses are computed with respect to this tensor.
+  When None, this is assumed to be the same as <code>input_tensor</code> (Default value: None)</li>
+<li><strong>losses</strong>:  List of (<a href="../vis.losses/#Loss">Loss</a>, weight) tuples.</li>
 <li><strong>seed_input</strong>:  Seeds the optimization with a starting image. Initialized with a random value when set to None.
   (Default value = None)</li>
 <li><strong>input_range</strong>:  Specifies the input range as a <code>(min, max)</code> tuple. This is used to rescale the
   final optimized input to the given range. (Default value=(0, 255))</li>
-<li><strong>optimizer_params</strong>:  The **kwargs for optimizer <a href="../vis.optimizer#optimizerminimize">params</a>. Will default to
+<li><strong>optimizer_params</strong>:  The **kwargs for optimizer <a href="../vis.optimizer/#optimizerminimize">params</a>. Will default to
   reasonable values when required keys are not found.</li>
 </ul>
 <p><em>Returns:</em></p>
@@ -261,8 +264,9 @@ For <code>keras.layers.Dense</code> layer, this is the total number of outputs.<
 <p><em>Returns:</em></p>
 <p>The <code>array1</code>, overlayed with <code>array2</code> using <code>alpha</code> blending.</p>
 <hr />
-<h3 id="visualize_saliency_with_losses"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L48">visualize_saliency_with_losses</a></h3>
-<pre><code class="python">visualize_saliency_with_losses(input_tensor, losses, seed_input, grad_modifier=&quot;absolute&quot;)
+<h3 id="visualize_saliency_with_losses"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L50">visualize_saliency_with_losses</a></h3>
+<pre><code class="python">visualize_saliency_with_losses(input_tensor, losses, seed_input, wrt_tensor=None, \
+    grad_modifier=&quot;absolute&quot;, keepdims=False)
 </code></pre>
 
 <p>Generates an attention heatmap over the <code>seed_input</code> by using positive gradients of <code>input_tensor</code>
@@ -276,20 +280,24 @@ refer to <code>visualize_class_saliency</code> or <code>visualize_regression_sal
 <ul>
 <li><strong>input_tensor</strong>:  An input tensor of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
   channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
-<li><strong>losses</strong>:  List of (<a href="../vis.losses#Loss">Loss</a>, weight) tuples.</li>
+<li><strong>losses</strong>:  List of (<a href="../vis.losses/#Loss">Loss</a>, weight) tuples.</li>
 <li><strong>seed_input</strong>:  The model input for which activation map needs to be visualized.</li>
+<li><strong>wrt_tensor</strong>:  Short for, with respect to. The gradients of losses are computed with respect to this tensor.
+  When None, this is assumed to be the same as <code>input_tensor</code> (Default value: None)</li>
 <li><strong>grad_modifier</strong>:  gradient modifier to use. See <a href="../vis.grad_modifiers/">grad_modifiers</a>. By default <code>absolute</code>
   value of gradients are used. To visualize positive or negative gradients, use <code>relu</code> and <code>negate</code>
   respectively. (Default value = 'absolute')</li>
+<li><strong>keepdims</strong>:  A boolean, whether to keep the dimensions or not.
+  If keepdims is False, the channels axis is deleted.
+  If keepdims is True, the grad with same shape as input_tensor is returned. (Default value: False)</li>
 </ul>
 <p><em>Returns:</em></p>
-<p>The heatmap image indicating the <code>seed_input</code> regions whose change would most contribute towards minimizing
-weighted <code>losses</code>.</p>
+<p>The normalized gradients of <code>seed_input</code> with respect to weighted <code>losses</code>.</p>
 <hr />
-<h3 id="visualize_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/activation_maximization.py#L52">visualize_activation</a></h3>
-<pre><code class="python">visualize_activation(model, layer_idx, filter_indices=None, seed_input=None, input_range=(0, 255), \
-    backprop_modifier=None, grad_modifier=None, act_max_weight=1, lp_norm_weight=10, \
-    tv_weight=10, **optimizer_params)
+<h3 id="visualize_activation"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/activation_maximization.py#L54">visualize_activation</a></h3>
+<pre><code class="python">visualize_activation(model, layer_idx, filter_indices=None, wrt_tensor=None, seed_input=None, \
+    input_range=(0, 255), backprop_modifier=None, grad_modifier=None, act_max_weight=1, \
+    lp_norm_weight=10, tv_weight=10, **optimizer_params)
 </code></pre>
 
 <p>Generates the model input that maximizes the output of all <code>filter_indices</code> in the given <code>layer_idx</code>.</p>
@@ -303,7 +311,9 @@ weighted <code>losses</code>.</p>
   If None, all filters are visualized. (Default value = None)
   For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.
   If you are visualizing final <code>keras.layers.Dense</code> layer, consider switching 'softmax' activation for
-  'linear' using <a href="../vis.utils.utils#apply_modifications">utils.apply_modifications</a> for better results.</li>
+  'linear' using <a href="../vis.utils.utils/#apply_modifications">utils.apply_modifications</a> for better results.</li>
+<li><strong>wrt_tensor</strong>:  Short for, with respect to. The gradients of losses are computed with respect to this tensor.
+  When None, this is assumed to be the same as <code>input_tensor</code> (Default value: None)</li>
 <li><strong>seed_input</strong>:  Seeds the optimization with a starting input. Initialized with a random value when set to None.
   (Default value = None)</li>
 <li><strong>input_range</strong>:  Specifies the input range as a <code>(min, max)</code> tuple. This is used to rescale the
@@ -315,7 +325,7 @@ weighted <code>losses</code>.</p>
 <li><strong>act_max_weight</strong>:  The weight param for <code>ActivationMaximization</code> loss. Not used if 0 or None. (Default value = 1)</li>
 <li><strong>lp_norm_weight</strong>:  The weight param for <code>LPNorm</code> regularization loss. Not used if 0 or None. (Default value = 10)</li>
 <li><strong>tv_weight</strong>:  The weight param for <code>TotalVariation</code> regularization loss. Not used if 0 or None. (Default value = 10)</li>
-<li><strong>optimizer_params</strong>:  The **kwargs for optimizer <a href="../vis.optimizer#optimizerminimize">params</a>. Will default to
+<li><strong>optimizer_params</strong>:  The **kwargs for optimizer <a href="../vis.optimizer/#optimizerminimize">params</a>. Will default to
   reasonable values when required keys are not found.</li>
 </ul>
 <p><em>Example:</em></p>
@@ -325,9 +335,9 @@ final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</
 <p><em>Returns:</em></p>
 <p>The model input that maximizes the output of <code>filter_indices</code> in the given <code>layer_idx</code>.</p>
 <hr />
-<h3 id="visualize_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L83">visualize_saliency</a></h3>
-<pre><code class="python">visualize_saliency(model, layer_idx, filter_indices, seed_input, backprop_modifier=None, \
-    grad_modifier=&quot;absolute&quot;)
+<h3 id="visualize_saliency"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L87">visualize_saliency</a></h3>
+<pre><code class="python">visualize_saliency(model, layer_idx, filter_indices, seed_input, wrt_tensor=None, \
+    backprop_modifier=None, grad_modifier=&quot;absolute&quot;, keepdims=False)
 </code></pre>
 
 <p>Generates an attention heatmap over the <code>seed_input</code> for maximizing <code>filter_indices</code>
@@ -342,13 +352,18 @@ output in the given <code>layer_idx</code>.</p>
   If None, all filters are visualized. (Default value = None)
   For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.
   If you are visualizing final <code>keras.layers.Dense</code> layer, consider switching 'softmax' activation for
-  'linear' using <a href="../vis.utils.utils#apply_modifications">utils.apply_modifications</a> for better results.</li>
+  'linear' using <a href="../vis.utils.utils/#apply_modifications">utils.apply_modifications</a> for better results.</li>
 <li><strong>seed_input</strong>:  The model input for which activation map needs to be visualized.</li>
+<li><strong>wrt_tensor</strong>:  Short for, with respect to. The gradients of losses are computed with respect to this tensor.
+  When None, this is assumed to be the same as <code>input_tensor</code> (Default value: None)</li>
 <li><strong>backprop_modifier</strong>:  backprop modifier to use. See <a href="../vis.backprop_modifiers/">backprop_modifiers</a>. If you don't
   specify anything, no backprop modification is applied. (Default value = None)</li>
 <li><strong>grad_modifier</strong>:  gradient modifier to use. See <a href="../vis.grad_modifiers/">grad_modifiers</a>. By default <code>absolute</code>
   value of gradients are used. To visualize positive or negative gradients, use <code>relu</code> and <code>negate</code>
   respectively. (Default value = 'absolute')</li>
+<li><strong>keepdims</strong>:  A boolean, whether to keep the dimensions or not.
+  If keepdims is False, the channels axis is deleted.
+  If keepdims is True, the grad with same shape as input_tensor is returned. (Default value: False)</li>
 </ul>
 <p><em>Example:</em></p>
 <p>If you wanted to visualize attention over 'bird' category, say output index 22 on the
@@ -359,7 +374,7 @@ final <code>keras.layers.Dense</code> layer, then, <code>filter_indices = [22]</
 <p>The heatmap image indicating the <code>seed_input</code> regions whose change would most contribute towards
 maximizing the output of <code>filter_indices</code>.</p>
 <hr />
-<h3 id="visualize_cam_with_losses"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L128">visualize_cam_with_losses</a></h3>
+<h3 id="visualize_cam_with_losses"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L137">visualize_cam_with_losses</a></h3>
 <pre><code class="python">visualize_cam_with_losses(input_tensor, losses, seed_input, penultimate_layer, grad_modifier=None)
 </code></pre>
 
@@ -376,7 +391,7 @@ cat regions and not the 'dog' region and vice-versa.</p>
 <ul>
 <li><strong>input_tensor</strong>:  An input tensor of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
   channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
-<li><strong>losses</strong>:  List of (<a href="../vis.losses#Loss">Loss</a>, weight) tuples.</li>
+<li><strong>losses</strong>:  List of (<a href="../vis.losses/#Loss">Loss</a>, weight) tuples.</li>
 <li><strong>seed_input</strong>:  The model input for which activation map needs to be visualized.</li>
 <li><strong>penultimate_layer</strong>:  The pre-layer to <code>layer_idx</code> whose feature maps should be used to compute gradients
   with respect to filter output.</li>
@@ -384,10 +399,9 @@ cat regions and not the 'dog' region and vice-versa.</p>
   specify anything, gradients are unchanged (Default value = None)</li>
 </ul>
 <p><em>Returns:</em></p>
-<p>The heatmap image indicating the <code>seed_input</code> regions whose change would most contribute towards minimizing the
-weighted <code>losses</code>.</p>
+<p>The normalized gradients of <code>seed_input</code> with respect to weighted <code>losses</code>.</p>
 <hr />
-<h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L193">visualize_cam</a></h3>
+<h3 id="visualize_cam"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/visualization/saliency.py#L199">visualize_cam</a></h3>
 <pre><code class="python">visualize_cam(model, layer_idx, filter_indices, seed_input, penultimate_layer_idx=None, \
     backprop_modifier=None, grad_modifier=None)
 </code></pre>
@@ -404,7 +418,7 @@ weighted <code>losses</code>.</p>
   If None, all filters are visualized. (Default value = None)
   For <code>keras.layers.Dense</code> layer, <code>filter_idx</code> is interpreted as the output index.
   If you are visualizing final <code>keras.layers.Dense</code> layer, consider switching 'softmax' activation for
-  'linear' using <a href="../vis.utils.utils#apply_modifications">utils.apply_modifications</a> for better results.</li>
+  'linear' using <a href="../vis.utils.utils/#apply_modifications">utils.apply_modifications</a> for better results.</li>
 <li><strong>seed_input</strong>:  The input image for which activation map needs to be visualized.</li>
 <li><strong>penultimate_layer_idx</strong>:  The pre-layer to <code>layer_idx</code> whose feature maps should be used to compute gradients
   wrt filter output. If not provided, it is set to the nearest penultimate <code>Conv</code> or <code>Pooling</code> layer.</li>
@@ -445,18 +459,18 @@ maximizing the output of <code>filter_indices</code>.</p>
 
   Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-	  
+      
         </div>
       </div>
 
     </section>
-    
+
   </div>
 
   <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
-          <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+          <a href="https://github.com/raghakot/keras-vis/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
         <span><a href="../visualizations/class_activation_maps/" style="color: #fcfcfc;">&laquo; Previous</a></span>
@@ -466,8 +480,10 @@ maximizing the output of <code>filter_indices</code>.</p>
       
     </span>
 </div>
-    <script src="../js/theme.js"></script>
-      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+      <script src="../search/main.js" defer></script>
 
 </body>
 </html>

@@ -13,19 +13,20 @@
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="../css/highlight.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   <link href="../css/extras.css" rel="stylesheet">
   
   <script>
     // Current page data
     var mkdocs_page_name = "backend";
     var mkdocs_page_input_path = "vis.backend.md";
-    var mkdocs_page_url = "/vis.backend/";
+    var mkdocs_page_url = null;
   </script>
   
-  <script src="../js/jquery-2.1.1.min.js"></script>
-  <script src="../js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
 
@@ -39,7 +40,7 @@
         <a href=".." class="icon icon-home"> Keras-vis Documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -139,10 +140,15 @@
     <a class="current" href="./">backend</a>
     <ul class="subnav">
             
-    <li class="toctree-l4"><a href="#modify_model_backprop">modify_model_backprop</a></li>
+    <li class="toctree-l4"><a href="#global-variables">Global Variables</a></li>
     
-
-    <li class="toctree-l4"><a href="#set_random_seed">set_random_seed</a></li>
+        <ul>
+        
+            <li><a class="toctree-l5" href="#modify_model_backprop">modify_model_backprop</a></li>
+        
+            <li><a class="toctree-l5" href="#set_random_seed">set_random_seed</a></li>
+        
+        </ul>
     
 
     </ul>
@@ -174,18 +180,18 @@
     
       
         
-          <li>API Docs &raquo;</li>
+          <li>Backend Specific &raquo;</li>
         
       
         
-          <li>Backend Specific &raquo;</li>
+          <li>API Docs &raquo;</li>
         
       
     
     <li>backend</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.backend.md"
+        <a href="https://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.backend.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -196,8 +202,12 @@
             <div class="section">
               
                 <p><strong>Source:</strong> <a href="https://github.com/raghakot/keras-vis/tree/master/vis/backend/__init__.py#L0">vis/backend/<strong>init</strong>.py#L0</a></p>
+<h2 id="global-variables"><strong>Global Variables</strong></h2>
+<ul>
+<li><strong>name</strong></li>
+</ul>
 <hr />
-<h3 id="modify_model_backprop"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/backend/tensorflow_backend.py#L41">modify_model_backprop</a></h3>
+<h3 id="modify_model_backprop"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/backend/tensorflow_backend.py#L53">modify_model_backprop</a></h3>
 <pre><code class="python">modify_model_backprop(model, backprop_modifier)
 </code></pre>
 
@@ -210,7 +220,7 @@
 <p><em>Returns:</em></p>
 <p>A copy of model with modified activations for backwards pass.</p>
 <hr />
-<h3 id="set_random_seed"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/backend/tensorflow_backend.py#L107">set_random_seed</a></h3>
+<h3 id="set_random_seed"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/backend/tensorflow_backend.py#L106">set_random_seed</a></h3>
 <pre><code class="python">set_random_seed(seed_value=1337)
 </code></pre>
 
@@ -241,18 +251,18 @@
 
   Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-	  
+      
         </div>
       </div>
 
     </section>
-    
+
   </div>
 
   <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
-          <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+          <a href="https://github.com/raghakot/keras-vis/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
         <span><a href="../vis.utils.utils/" style="color: #fcfcfc;">&laquo; Previous</a></span>
@@ -260,8 +270,10 @@
       
     </span>
 </div>
-    <script src="../js/theme.js"></script>
-      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+      <script src="../search/main.js" defer></script>
 
 </body>
 </html>

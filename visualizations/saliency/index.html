@@ -13,19 +13,20 @@
 
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="../../css/highlight.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   <link href="../../css/extras.css" rel="stylesheet">
   
   <script>
     // Current page data
     var mkdocs_page_name = "Saliency Maps";
     var mkdocs_page_input_path = "visualizations/saliency.md";
-    var mkdocs_page_url = "/visualizations/saliency/";
+    var mkdocs_page_url = null;
   </script>
   
-  <script src="../../js/jquery-2.1.1.min.js"></script>
-  <script src="../../js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="../../js/highlight.pack.js"></script> 
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
 
@@ -39,7 +40,7 @@
         <a href="../.." class="icon icon-home"> Keras-vis Documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -187,7 +188,7 @@
     <li>Saliency Maps</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/visualizations/saliency.md"
+        <a href="https://github.com/raghakot/keras-vis/blob/master/docs/templates/visualizations/saliency.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -218,9 +219,9 @@ regions that most contribute towards the output.</p>
 <h2 id="usage">Usage</h2>
 <p>There are two APIs exposed to visualize saliency.</p>
 <ol>
-<li><a href="../../vis.visualization#visualize_saliency">visualize_saliency</a>: This is the general purpose API for visualizing
+<li><a href="../../vis.visualization/#visualize_saliency">visualize_saliency</a>: This is the general purpose API for visualizing
 saliency.</li>
-<li><a href="../../vis.visualization#visualize_saliency_with_losses">visualize_saliency_with_losses</a>: This is intended for 
+<li><a href="../../vis.visualization/#visualize_saliency_with_losses">visualize_saliency_with_losses</a>: This is intended for 
 research use-cases where some custom weighted loss can be used.</li>
 </ol>
 <p>See <a href="https://github.com/raghakot/keras-vis/tree/master/examples">examples/</a> for code examples.</p>
@@ -256,7 +257,7 @@ gradients (which indicate the decrease) as positive and therefore visualize decr
 <li>
 <p>To visualize what contributed to the predicted output, we want to consider gradients that have very low positive
 or negative values. This can be achieved by performing <code>grads = abs(1 / grads)</code> to magnifies small gradients. Equivalently, 
-you can use <code>grad_modifier='small_values'</code>, which does the same thing. <a href="../../vis.grad_modifiers">gradient_modifiers</a> 
+you can use <code>grad_modifier='small_values'</code>, which does the same thing. <a href="../../vis.grad_modifiers/">gradient_modifiers</a> 
 are very powerful and show up in other visualization APIs as well.</p>
 </li>
 </ul>
@@ -269,7 +270,7 @@ in the paper: <a href="https://arxiv.org/pdf/1311.2901.pdf">Visualizing and Unde
 <p>In guided saliency, the backprop step is modified to only propagate positive gradients for positive activations.
 For details see the paper: <a href="https://arxiv.org/pdf/1412.6806.pdf">String For Simplicity: The All Convolutional Net</a>.</p>
 <p>For both these cases, we can use <code>backprop_modifier='relu'</code> and <code>backprop_modifier='guided'</code> respectively. You 
-can also implement your own <a href="../../vis.backprop_modifiers">backprop_modifier</a> to try your crazy research idea :)</p>
+can also implement your own <a href="../../vis.backprop_modifiers/">backprop_modifier</a> to try your crazy research idea :)</p>
 <h4 id="conv-filter-saliency">Conv filter saliency</h4>
 <p>By pointing <code>layer_idx</code> to <code>Conv</code> layer, you can visualize parts of the image that influence the filter. This might 
 help you discover what a filter cares about. Here, <code>filter_indices</code> refers to the index of the <code>Conv</code> filter within 
@@ -298,18 +299,18 @@ the layer.</p>
 
   Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-	  
+      
         </div>
       </div>
 
     </section>
-    
+
   </div>
 
   <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
-          <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+          <a href="https://github.com/raghakot/keras-vis/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
         <span><a href="../activation_maximization/" style="color: #fcfcfc;">&laquo; Previous</a></span>
@@ -319,8 +320,10 @@ the layer.</p>
       
     </span>
 </div>
-    <script src="../../js/theme.js"></script>
-      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+      <script src="../../search/main.js" defer></script>
 
 </body>
 </html>
