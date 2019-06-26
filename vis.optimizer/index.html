@@ -13,19 +13,20 @@
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="../css/highlight.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   <link href="../css/extras.css" rel="stylesheet">
   
   <script>
     // Current page data
     var mkdocs_page_name = "optimizer";
     var mkdocs_page_input_path = "vis.optimizer.md";
-    var mkdocs_page_url = "/vis.optimizer/";
+    var mkdocs_page_url = null;
   </script>
   
-  <script src="../js/jquery-2.1.1.min.js"></script>
-  <script src="../js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
 
@@ -39,7 +40,7 @@
         <a href=".." class="icon icon-home"> Keras-vis Documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -179,18 +180,18 @@
     
       
         
-          <li>API Docs &raquo;</li>
+          <li>Optimization &raquo;</li>
         
       
         
-          <li>Optimization &raquo;</li>
+          <li>API Docs &raquo;</li>
         
       
     
     <li>optimizer</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.optimizer.md"
+        <a href="https://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.optimizer.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -213,18 +214,19 @@
 <ul>
 <li><strong>input_tensor</strong>:  An input tensor of shape: <code>(samples, channels, image_dims...)</code> if <code>image_data_format=
   channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.</li>
-<li><strong>losses</strong>:  List of (<a href="../vis.losses#Loss">Loss</a>, weight) tuples.</li>
+<li><strong>losses</strong>:  List of (<a href="../vis.losses/#Loss">Loss</a>, weight) tuples.</li>
 <li><strong>input_range</strong>:  Specifies the input range as a <code>(min, max)</code> tuple. This is used to rescale the
   final optimized input to the given range. (Default value=(0, 255))</li>
 <li><strong>wrt_tensor</strong>:  Short for, with respect to. This instructs the optimizer that the aggregate loss from <code>losses</code>
-  should be minimized with respect to <code>wrt</code>. <code>wrt</code> can be any tensor that is part of the model graph.
-  Default value is set to None which means that loss will simply be minimized with respect to <code>input_tensor</code>.</li>
+  should be minimized with respect to <code>wrt_tensor</code>.
+  <code>wrt_tensor</code> can be any tensor that is part of the model graph. Default value is set to None
+  which means that loss will simply be minimized with respect to <code>input_tensor</code>.</li>
 <li><strong>norm_grads</strong>:  True to normalize gradients. Normalization avoids very small or large gradients and ensures
   a smooth gradient gradient descent process. If you want the actual gradient
   (for example, visualizing attention), set this to false.</li>
 </ul>
 <hr />
-<h3 id="optimizerminimize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L99">Optimizer.minimize</a></h3>
+<h3 id="optimizerminimize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/optimizer.py#L109">Optimizer.minimize</a></h3>
 <pre><code class="python">minimize(self, seed_input=None, max_iter=200, input_modifiers=None, grad_modifier=None, \
     callbacks=None, verbose=True)
 </code></pre>
@@ -236,13 +238,13 @@
   channels_first</code> or <code>(samples, image_dims..., channels)</code> if <code>image_data_format=channels_last</code>.
   Seeded with random noise if set to None. (Default value = None)</li>
 <li><strong>max_iter</strong>:  The maximum number of gradient descent iterations. (Default value = 200)</li>
-<li><strong>input_modifiers</strong>:  A list of <a href="../vis.input_modifiers#inputmodifier">InputModifier</a> instances specifying
+<li><strong>input_modifiers</strong>:  A list of <a href="../vis.input_modifiers/#inputmodifier">InputModifier</a> instances specifying
   how to make <code>pre</code> and <code>post</code> changes to the optimized input during the optimization process.
   <code>pre</code> is applied in list order while <code>post</code> is applied in reverse order. For example,
   <code>input_modifiers = [f, g]</code> means that <code>pre_input = g(f(inp))</code> and <code>post_input = f(g(inp))</code></li>
 <li><strong>grad_modifier</strong>:  gradient modifier to use. See <a href="../vis.grad_modifiers/">grad_modifiers</a>. If you don't
   specify anything, gradients are unchanged. (Default value = None)</li>
-<li><strong>callbacks</strong>:  A list of <a href="../vis.callbacks#optimizercallback">OptimizerCallback</a> instances to trigger.</li>
+<li><strong>callbacks</strong>:  A list of <a href="../vis.callbacks/#optimizercallback">OptimizerCallback</a> instances to trigger.</li>
 <li><strong>verbose</strong>:  Logs individual losses at the end of every gradient descent iteration.
   Very useful to estimate loss weight factor(s). (Default value = True)</li>
 </ul>
@@ -272,18 +274,18 @@
 
   Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-	  
+      
         </div>
       </div>
 
     </section>
-    
+
   </div>
 
   <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
-          <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+          <a href="https://github.com/raghakot/keras-vis/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
         <span><a href="../vis.regularizers/" style="color: #fcfcfc;">&laquo; Previous</a></span>
@@ -293,8 +295,10 @@
       
     </span>
 </div>
-    <script src="../js/theme.js"></script>
-      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+      <script src="../search/main.js" defer></script>
 
 </body>
 </html>

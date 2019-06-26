@@ -13,19 +13,20 @@
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="../css/highlight.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   <link href="../css/extras.css" rel="stylesheet">
   
   <script>
     // Current page data
     var mkdocs_page_name = "utils";
     var mkdocs_page_input_path = "vis.utils.utils.md";
-    var mkdocs_page_url = "/vis.utils.utils/";
+    var mkdocs_page_url = null;
   </script>
   
-  <script src="../js/jquery-2.1.1.min.js"></script>
-  <script src="../js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
 
@@ -39,7 +40,7 @@
         <a href=".." class="icon icon-home"> Keras-vis Documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -133,8 +134,6 @@
     
         <ul>
         
-            <li><a class="toctree-l5" href="#set_random_seed">set_random_seed</a></li>
-        
             <li><a class="toctree-l5" href="#reverse_enumerate">reverse_enumerate</a></li>
         
             <li><a class="toctree-l5" href="#listify">listify</a></li>
@@ -157,7 +156,7 @@
         
             <li><a class="toctree-l5" href="#load_img">load_img</a></li>
         
-            <li><a class="toctree-l5" href="#get_imagenet_label">get_imagenet_label</a></li>
+            <li><a class="toctree-l5" href="#lookup_imagenet_labels">lookup_imagenet_labels</a></li>
         
             <li><a class="toctree-l5" href="#draw_text">draw_text</a></li>
         
@@ -207,18 +206,18 @@
     
       
         
-          <li>API Docs &raquo;</li>
+          <li>Utils &raquo;</li>
         
       
         
-          <li>Utils &raquo;</li>
+          <li>API Docs &raquo;</li>
         
       
     
     <li>utils</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.utils.utils.md"
+        <a href="https://github.com/raghakot/keras-vis/blob/master/docs/templates/vis.utils.utils.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -234,29 +233,19 @@
 <li><strong>slicer</strong></li>
 </ul>
 <hr />
-<h3 id="set_random_seed"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L46">set_random_seed</a></h3>
-<pre><code class="python">set_random_seed(seed_value=1337)
-</code></pre>
-
-<p>Sets random seed value for reproducibility.</p>
-<p><em>Args:</em></p>
-<ul>
-<li><strong>seed_value</strong>:  The seed value to use. (Default Value = infamous 1337)</li>
-</ul>
-<hr />
-<h3 id="reverse_enumerate"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L55">reverse_enumerate</a></h3>
+<h3 id="reverse_enumerate"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L44">reverse_enumerate</a></h3>
 <pre><code class="python">reverse_enumerate(iterable)
 </code></pre>
 
 <p>Enumerate over an iterable in reverse order while retaining proper indexes, without creating any copies.</p>
 <hr />
-<h3 id="listify"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L61">listify</a></h3>
+<h3 id="listify"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L50">listify</a></h3>
 <pre><code class="python">listify(value)
 </code></pre>
 
 <p>Ensures that the value is a list. If it is not a list, it creates a new list with <code>value</code> as an item.</p>
 <hr />
-<h3 id="add_defaults_to_kwargs"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L69">add_defaults_to_kwargs</a></h3>
+<h3 id="add_defaults_to_kwargs"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L58">add_defaults_to_kwargs</a></h3>
 <pre><code class="python">add_defaults_to_kwargs(defaults, **kwargs)
 </code></pre>
 
@@ -269,7 +258,7 @@
 <p><em>Returns:</em></p>
 <p>The updated kwargs.</p>
 <hr />
-<h3 id="get_identifier"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L84">get_identifier</a></h3>
+<h3 id="get_identifier"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L73">get_identifier</a></h3>
 <pre><code class="python">get_identifier(identifier, module_globals, module_name)
 </code></pre>
 
@@ -283,8 +272,8 @@
 <p><em>Returns:</em></p>
 <p>The callable associated with the identifier.</p>
 <hr />
-<h3 id="apply_modifications"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L106">apply_modifications</a></h3>
-<pre><code class="python">apply_modifications(model)
+<h3 id="apply_modifications"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L95">apply_modifications</a></h3>
+<pre><code class="python">apply_modifications(model, custom_objects=None)
 </code></pre>
 
 <p>Applies modifications to the model layers to create a new Graph. For example, simply changing
@@ -297,7 +286,7 @@ with modified inbound and outbound tensors because of change in layer building f
 <p><em>Returns:</em></p>
 <p>The modified model with changes applied. Does not mutate the original <code>model</code>.</p>
 <hr />
-<h3 id="random_array"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L129">random_array</a></h3>
+<h3 id="random_array"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L118">random_array</a></h3>
 <pre><code class="python">random_array(shape, mean=128.0, std=20.0)
 </code></pre>
 
@@ -310,7 +299,7 @@ with modified inbound and outbound tensors because of change in layer building f
 </ul>
 <p><em>Returns: Random numpy array of given <code>shape</code> uniformly distributed with desired <code>mean</code> and <code>std</code>.</em></p>
 <hr />
-<h3 id="find_layer_idx"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L147">find_layer_idx</a></h3>
+<h3 id="find_layer_idx"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L136">find_layer_idx</a></h3>
 <pre><code class="python">find_layer_idx(model, layer_name)
 </code></pre>
 
@@ -323,7 +312,7 @@ with modified inbound and outbound tensors because of change in layer building f
 <p><em>Returns:</em></p>
 <p>The layer index if found. Raises an exception otherwise.</p>
 <hr />
-<h3 id="deprocess_input"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L168">deprocess_input</a></h3>
+<h3 id="deprocess_input"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L157">deprocess_input</a></h3>
 <pre><code class="python">deprocess_input(input_array, input_range=(0, 255))
 </code></pre>
 
@@ -336,7 +325,7 @@ with modified inbound and outbound tensors because of change in layer building f
 <p><em>Returns:</em></p>
 <p>The rescaled <code>input_array</code>.</p>
 <hr />
-<h3 id="stitch_images"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L192">stitch_images</a></h3>
+<h3 id="stitch_images"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L181">stitch_images</a></h3>
 <pre><code class="python">stitch_images(images, margin=5, cols=5)
 </code></pre>
 
@@ -351,7 +340,7 @@ with modified inbound and outbound tensors because of change in layer building f
 <p><em>Returns:</em></p>
 <p>A single numpy image array comprising of input images.</p>
 <hr />
-<h3 id="get_img_shape"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L227">get_img_shape</a></h3>
+<h3 id="get_img_shape"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L216">get_img_shape</a></h3>
 <pre><code class="python">get_img_shape(img)
 </code></pre>
 
@@ -364,7 +353,7 @@ with modified inbound and outbound tensors because of change in layer building f
 <p><em>Returns:</em></p>
 <p>Tuple containing image shape information in <code>(samples, channels, image_dims...)</code> order.</p>
 <hr />
-<h3 id="load_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L249">load_img</a></h3>
+<h3 id="load_img"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L238">load_img</a></h3>
 <pre><code class="python">load_img(path, grayscale=False, target_size=None)
 </code></pre>
 
@@ -378,20 +367,19 @@ with modified inbound and outbound tensors because of change in layer building f
 <p><em>Returns:</em></p>
 <p>The loaded numpy image.</p>
 <hr />
-<h3 id="get_imagenet_label"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L266">get_imagenet_label</a></h3>
-<pre><code class="python">get_imagenet_label(indices, join=&quot;, &quot;)
+<h3 id="lookup_imagenet_labels"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L255">lookup_imagenet_labels</a></h3>
+<pre><code class="python">lookup_imagenet_labels(indices)
 </code></pre>
 
 <p>Utility function to return the image net label for the final <code>dense</code> layer output index.</p>
 <p><em>Args:</em></p>
 <ul>
-<li><strong>indices</strong>:  Could be a single value or an array of indices whose labels needs looking up.</li>
-<li><strong>join</strong>:  When multiple indices are passed, the output labels are joined using this value. (Default Value = ', ')</li>
+<li><strong>indices</strong>:  Could be a single value or an array of indices whose labels should be looked up.</li>
 </ul>
 <p><em>Returns:</em></p>
 <p>Image net label corresponding to the image category.</p>
 <hr />
-<h3 id="draw_text"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L285">draw_text</a></h3>
+<h3 id="draw_text"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L273">draw_text</a></h3>
 <pre><code class="python">draw_text(img, text, position=(10, 10), font=&quot;FreeSans.ttf&quot;, font_size=14, color=(0, 0, 0))
 </code></pre>
 
@@ -407,7 +395,7 @@ with modified inbound and outbound tensors because of change in layer building f
 </ul>
 <p><em>Returns: Image overlayed with text.</em></p>
 <hr />
-<h3 id="bgr2rgb"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L314">bgr2rgb</a></h3>
+<h3 id="bgr2rgb"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L302">bgr2rgb</a></h3>
 <pre><code class="python">bgr2rgb(img)
 </code></pre>
 
@@ -418,7 +406,7 @@ with modified inbound and outbound tensors because of change in layer building f
 </ul>
 <p><em>Returns: The converted image format</em></p>
 <hr />
-<h3 id="normalize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L325">normalize</a></h3>
+<h3 id="normalize"><a href="https://github.com/raghakot/keras-vis/tree/master/vis/utils/utils.py#L313">normalize</a></h3>
 <pre><code class="python">normalize(array, min_value=0.0, max_value=1.0)
 </code></pre>
 
@@ -455,18 +443,18 @@ with modified inbound and outbound tensors because of change in layer building f
 
   Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-	  
+      
         </div>
       </div>
 
     </section>
-    
+
   </div>
 
   <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
-          <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+          <a href="https://github.com/raghakot/keras-vis/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
         <span><a href="../vis.backprop_modifiers/" style="color: #fcfcfc;">&laquo; Previous</a></span>
@@ -476,8 +464,10 @@ with modified inbound and outbound tensors because of change in layer building f
       
     </span>
 </div>
-    <script src="../js/theme.js"></script>
-      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+      <script src="../search/main.js" defer></script>
 
 </body>
 </html>

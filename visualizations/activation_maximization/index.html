@@ -13,19 +13,20 @@
 
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="../../css/highlight.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   <link href="../../css/extras.css" rel="stylesheet">
   
   <script>
     // Current page data
     var mkdocs_page_name = "Activation Maximization";
     var mkdocs_page_input_path = "visualizations/activation_maximization.md";
-    var mkdocs_page_url = "/visualizations/activation_maximization/";
+    var mkdocs_page_url = null;
   </script>
   
-  <script src="../../js/jquery-2.1.1.min.js"></script>
-  <script src="../../js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="../../js/highlight.pack.js"></script> 
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
 
@@ -39,7 +40,7 @@
         <a href="../.." class="icon icon-home"> Keras-vis Documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -192,7 +193,7 @@
     <li>Activation Maximization</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="http://github.com/raghakot/keras-vis/blob/master/docs/templates/visualizations/activation_maximization.md"
+        <a href="https://github.com/raghakot/keras-vis/blob/master/docs/templates/visualizations/activation_maximization.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -213,16 +214,16 @@ output activations. i.e., we compute </p>
 <p>
 <script type="math/tex; mode=display">\frac{\partial ActivationMaximizationLoss}{\partial input}</script>
 </p>
-<p>and use that estimate to update the input. <a href="../../vis.losses#activationmaximization">ActivationMaximization</a> loss simply 
+<p>and use that estimate to update the input. <a href="../../vis.losses/#activationmaximization">ActivationMaximization</a> loss simply 
 outputs small values for large filter activations (we are minimizing losses during gradient descent iterations). 
 This allows us to understand what sort of input patterns activate a particular filter. For example, there could be 
 an eye filter that activates for the presence of eye within the input image.</p>
 <h2 id="usage">Usage</h2>
 <p>There are two APIs exposed to perform activation maximization.</p>
 <ol>
-<li><a href="../../vis.visualization#visualize_activation">visualize_activation</a>: This is the general purpose API for visualizing
+<li><a href="../../vis.visualization/#visualize_activation">visualize_activation</a>: This is the general purpose API for visualizing
 activations.</li>
-<li><a href="../../vis.visualization#visualize_activation_with_losses">visualize_activation_with_losses</a>: This is intended for 
+<li><a href="../../vis.visualization/#visualize_activation_with_losses">visualize_activation_with_losses</a>: This is intended for 
 research use-cases where some custom weighted losses can be minimized.</li>
 </ol>
 <p>See <a href="https://github.com/raghakot/keras-vis/tree/master/examples">examples/</a> for code examples.</p>
@@ -255,12 +256,12 @@ output should correspond to more apples showing up in the input image. Similarly
 This can be achieved by using <code>grad_modifier</code> option. As the name suggests, it is used to modify the gradient of losses
 with respect to inputs. By default, <code>ActivationMaximization</code> loss is used to increase the output. By setting 
 <code>grad_modifier='negate'</code> you can negate the gradients, thus causing output values to decrease. 
-<a href="../../vis.grad_modifiers">gradient_modifiers</a> are very powerful and show up in other visualization APIs as well. </p>
+<a href="../../vis.grad_modifiers/">gradient_modifiers</a> are very powerful and show up in other visualization APIs as well. </p>
 <h4 id="conv-filter-visualization">Conv filter visualization</h4>
 <p>By pointing <code>layer_idx</code> to <code>Conv</code> layer, you can visualize what pattern activates a filter. This might help you discover
 what a filter might be computing. Here, <code>filter_indices</code> refers to the index of the <code>Conv</code> filter within the layer.</p>
 <h3 id="advanced-usage">Advanced usage</h3>
-<p><a href="../../vis.backprop_modifiers">backprop_modifiers</a> allow you to modify the backpropagation behavior. For examples, 
+<p><a href="../../vis.backprop_modifiers/">backprop_modifiers</a> allow you to modify the backpropagation behavior. For examples, 
 you could tweak backprop to only propagate positive gradients by using <code>backprop_modifier='relu'</code>. This parameter also 
 accepts a function and can be used to implement your crazy research idea :)</p>
 <h2 id="tips-and-tricks">Tips and tricks</h2>
@@ -272,7 +273,7 @@ is very likely that you would see <code>ActivationMaximization Loss</code> bounc
 loss weights. Try setting all weights to zero and gradually try increasing values of total variation weight.</p>
 </li>
 <li>
-<p>To get sharper looking images, use <a href="../../vis.input_modifiers#jitter">Jitter</a> input modifier.</p>
+<p>To get sharper looking images, use <a href="../../vis.input_modifiers/#jitter">Jitter</a> input modifier.</p>
 </li>
 <li>
 <p>Regression models usually do not provide enough gradient information to generate meaningful input images. Try seeding
@@ -306,18 +307,18 @@ the input using <code>seed_input</code> and see if the modifications to the inpu
 
   Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-	  
+      
         </div>
       </div>
 
     </section>
-    
+
   </div>
 
   <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
-          <a href="http://github.com/raghakot/keras-vis" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+          <a href="https://github.com/raghakot/keras-vis/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
         <span><a href="../.." style="color: #fcfcfc;">&laquo; Previous</a></span>
@@ -327,8 +328,10 @@ the input using <code>seed_input</code> and see if the modifications to the inpu
       
     </span>
 </div>
-    <script src="../../js/theme.js"></script>
-      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+      <script src="../../search/main.js" defer></script>
 
 </body>
 </html>
