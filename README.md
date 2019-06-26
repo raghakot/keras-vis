@@ -127,13 +127,13 @@ It is possible to generate an animated gif of optimization progress by leveragin
 activation maximization for 'ouzel' class (output_index: 20).
 
 ```python
+from keras.applications import VGG16
+
 from vis.losses import ActivationMaximization
 from vis.regularizers import TotalVariation, LPNorm
-from vis.modifiers import Jitter
+from vis.input_modifiers import Jitter
 from vis.optimizer import Optimizer
-
 from vis.callbacks import GifGenerator
-from vis.utils.vggnet import VGG16
 
 # Build the VGG16 network with ImageNet weights
 model = VGG16(weights='imagenet', include_top=True)
@@ -151,7 +151,7 @@ losses = [
     (TotalVariation(model.input), 10)
 ]
 opt = Optimizer(model.input, losses)
-opt.minimize(max_iter=500, verbose=True, image_modifiers=[Jitter()], callbacks=[GifGenerator('opt_progress')])
+opt.minimize(max_iter=500, verbose=True, input_modifiers=[Jitter()], callbacks=[GifGenerator('opt_progress')])
 
 ```
 
