@@ -176,7 +176,7 @@ def visualize_cam_with_losses(input_tensor, losses, seed_input, penultimate_laye
     weights = np.mean(grads, axis=tuple(other_axis))
 
     # Generate heatmap by computing weight * output over feature maps
-    output_dims = utils.get_img_shape(penultimate_output)[2:]
+    output_dims = utils.get_img_shape(penultimate_output_value)[2:]
     heatmap = np.zeros(shape=output_dims, dtype=K.floatx())
     for i, w in enumerate(weights):
         if channel_idx == -1:
@@ -188,7 +188,7 @@ def visualize_cam_with_losses(input_tensor, losses, seed_input, penultimate_laye
     heatmap = np.maximum(heatmap, 0)
 
     # The penultimate feature map size is definitely smaller than input image.
-    input_dims = utils.get_img_shape(input_tensor)[2:]
+    input_dims = utils.get_img_shape(seed_input)[2:]
 
     # Figure out the zoom factor.
     zoom_factor = [i / (j * 1.0) for i, j in iter(zip(input_dims, output_dims))]
