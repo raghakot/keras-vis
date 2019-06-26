@@ -61,7 +61,7 @@ def visualize_saliency_with_losses(input_tensor, losses, seed_input, wrt_tensor=
     Args:
         input_tensor: An input tensor of shape: `(samples, channels, image_dims...)` if `image_data_format=
             channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
-        losses: List of ([Loss](vis.losses#Loss), weight) tuples.
+        losses: List of ([Loss](vis.losses.md#Loss), weight) tuples.
         seed_input: The model input for which activation map needs to be visualized.
         wrt_tensor: Short for, with respect to. The gradients of losses are computed with respect to this tensor.
             When None, this is assumed to be the same as `input_tensor` (Default value: None)
@@ -98,7 +98,7 @@ def visualize_saliency(model, layer_idx, filter_indices, seed_input, wrt_tensor=
             If None, all filters are visualized. (Default value = None)
             For `keras.layers.Dense` layer, `filter_idx` is interpreted as the output index.
             If you are visualizing final `keras.layers.Dense` layer, consider switching 'softmax' activation for
-            'linear' using [utils.apply_modifications](vis.utils.utils#apply_modifications) for better results.
+            'linear' using [utils.apply_modifications](vis.utils.utils.md#apply_modifications) for better results.
         seed_input: The model input for which activation map needs to be visualized.
         wrt_tensor: Short for, with respect to. The gradients of losses are computed with respect to this tensor.
             When None, this is assumed to be the same as `input_tensor` (Default value: None)
@@ -151,7 +151,7 @@ def visualize_cam_with_losses(input_tensor, losses, seed_input, penultimate_laye
     Args:
         input_tensor: An input tensor of shape: `(samples, channels, image_dims...)` if `image_data_format=
             channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
-        losses: List of ([Loss](vis.losses#Loss), weight) tuples.
+        losses: List of ([Loss](vis.losses.md#Loss), weight) tuples.
         seed_input: The model input for which activation map needs to be visualized.
         penultimate_layer: The pre-layer to `layer_idx` whose feature maps should be used to compute gradients
             with respect to filter output.
@@ -211,7 +211,7 @@ def visualize_cam(model, layer_idx, filter_indices,
             If None, all filters are visualized. (Default value = None)
             For `keras.layers.Dense` layer, `filter_idx` is interpreted as the output index.
             If you are visualizing final `keras.layers.Dense` layer, consider switching 'softmax' activation for
-            'linear' using [utils.apply_modifications](vis.utils.utils#apply_modifications) for better results.
+            'linear' using [utils.apply_modifications](vis.utils.utils.md#apply_modifications) for better results.
         seed_input: The input image for which activation map needs to be visualized.
         penultimate_layer_idx: The pre-layer to `layer_idx` whose feature maps should be used to compute gradients
             wrt filter output. If not provided, it is set to the nearest penultimate `Conv` or `Pooling` layer.

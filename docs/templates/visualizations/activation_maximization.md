@@ -11,7 +11,7 @@ output activations. i.e., we compute
 
 $$\frac{\partial ActivationMaximizationLoss}{\partial input}$$
 
-and use that estimate to update the input. [ActivationMaximization](../vis.losses#activationmaximization) loss simply 
+and use that estimate to update the input. [ActivationMaximization](../vis.losses.md#activationmaximization) loss simply 
 outputs small values for large filter activations (we are minimizing losses during gradient descent iterations). 
 This allows us to understand what sort of input patterns activate a particular filter. For example, there could be 
 an eye filter that activates for the presence of eye within the input image.
@@ -20,9 +20,9 @@ an eye filter that activates for the presence of eye within the input image.
 
 There are two APIs exposed to perform activation maximization.
 
-1. [visualize_activation](../vis.visualization#visualize_activation): This is the general purpose API for visualizing
+1. [visualize_activation](../vis.visualization.md#visualize_activation): This is the general purpose API for visualizing
 activations.
-2. [visualize_activation_with_losses](../vis.visualization#visualize_activation_with_losses): This is intended for 
+2. [visualize_activation_with_losses](../vis.visualization.md#visualize_activation_with_losses): This is intended for 
 research use-cases where some custom weighted losses can be minimized.
 
 See [examples/](https://github.com/raghakot/keras-vis/tree/master/examples) for code examples.
@@ -60,7 +60,7 @@ output should correspond to more apples showing up in the input image. Similarly
 This can be achieved by using `grad_modifier` option. As the name suggests, it is used to modify the gradient of losses
 with respect to inputs. By default, `ActivationMaximization` loss is used to increase the output. By setting 
 `grad_modifier='negate'` you can negate the gradients, thus causing output values to decrease. 
-[gradient_modifiers](../vis.grad_modifiers) are very powerful and show up in other visualization APIs as well. 
+[gradient_modifiers](../vis.grad_modifiers.md) are very powerful and show up in other visualization APIs as well. 
 
 
 #### Conv filter visualization
@@ -70,7 +70,7 @@ what a filter might be computing. Here, `filter_indices` refers to the index of 
 
 ### Advanced usage
 
-[backprop_modifiers](../vis.backprop_modifiers) allow you to modify the backpropagation behavior. For examples, 
+[backprop_modifiers](../vis.backprop_modifiers.md) allow you to modify the backpropagation behavior. For examples, 
 you could tweak backprop to only propagate positive gradients by using `backprop_modifier='relu'`. This parameter also 
 accepts a function and can be used to implement your crazy research idea :)
 
@@ -81,7 +81,7 @@ By default, `visualize_activation` uses `TotalVariation` and `LpNorm` regulariza
 is very likely that you would see `ActivationMaximization Loss` bounce back and forth as they are dominated by regularization 
 loss weights. Try setting all weights to zero and gradually try increasing values of total variation weight.
 
-- To get sharper looking images, use [Jitter](../vis.input_modifiers#jitter) input modifier.
+- To get sharper looking images, use [Jitter](../vis.input_modifiers.md#jitter) input modifier.
 
 - Regression models usually do not provide enough gradient information to generate meaningful input images. Try seeding
 the input using `seed_input` and see if the modifications to the input make sense.

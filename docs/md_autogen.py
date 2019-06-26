@@ -153,7 +153,10 @@ class MarkdownAPIGenerator(object):
             freeform text
 
         """
-        doc = getdoc(func) or ""
+        # The specfication of Inspect#getdoc() was changed since version 3.5,
+        # the documentation strings are now inherited if not overridden.
+        # For details see: https://docs.python.org/3.6/library/inspect.html#inspect.getdoc
+        doc = "" if func.__doc__ is None else getdoc(func) or ""
         blockindent = 0
         argindent = 1
         out = []
@@ -309,7 +312,7 @@ class MarkdownAPIGenerator(object):
                 handlers.append("\n%s %s.%s\n *Handler*" % (subsection, clsname, name))
 
         methods = []
-        for name, obj in getmembers(cls, inspect.ismethod):
+        for name, obj in getmembers(cls, lambda a: inspect.ismethod(a) or inspect.isfunction(a)):
             if not name.startswith("_") and hasattr(obj,
                                                     "__module__") and obj.__module__ == modname and name not in handlers:
                 methods.append(self.func2md(obj, clsname=clsname, depth=depth + 1))

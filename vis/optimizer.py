@@ -23,7 +23,7 @@ class Optimizer(object):
         Args:
             input_tensor: An input tensor of shape: `(samples, channels, image_dims...)` if `image_data_format=
                 channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
-            losses: List of ([Loss](vis.losses#Loss), weight) tuples.
+            losses: List of ([Loss](vis.losses.md#Loss), weight) tuples.
             input_range: Specifies the input range as a `(min, max)` tuple. This is used to rescale the
                 final optimized input to the given range. (Default value=(0, 255))
             wrt_tensor: Short for, with respect to. This instructs the optimizer that the aggregate loss from `losses`
@@ -116,13 +116,13 @@ class Optimizer(object):
                 channels_first` or `(samples, image_dims..., channels)` if `image_data_format=channels_last`.
                 Seeded with random noise if set to None. (Default value = None)
             max_iter: The maximum number of gradient descent iterations. (Default value = 200)
-            input_modifiers: A list of [InputModifier](vis.input_modifiers#inputmodifier) instances specifying
+            input_modifiers: A list of [InputModifier](vis.input_modifiers.md#inputmodifier) instances specifying
                 how to make `pre` and `post` changes to the optimized input during the optimization process.
                 `pre` is applied in list order while `post` is applied in reverse order. For example,
                 `input_modifiers = [f, g]` means that `pre_input = g(f(inp))` and `post_input = f(g(inp))`
             grad_modifier: gradient modifier to use. See [grad_modifiers](vis.grad_modifiers.md). If you don't
                 specify anything, gradients are unchanged. (Default value = None)
-            callbacks: A list of [OptimizerCallback](vis.callbacks#optimizercallback) instances to trigger.
+            callbacks: A list of [OptimizerCallback](vis.callbacks.md#optimizercallback) instances to trigger.
             verbose: Logs individual losses at the end of every gradient descent iteration.
                 Very useful to estimate loss weight factor(s). (Default value = True)
 
