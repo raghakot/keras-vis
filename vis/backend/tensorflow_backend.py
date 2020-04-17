@@ -5,13 +5,13 @@ import tempfile
 import inspect
 import numpy as np
 import tensorflow as tf
+tf.compat.v1.disable_eager_execution()
 
 from ..utils import utils
 from tensorflow.python.framework import ops
-import keras
-from keras.models import load_model
-from keras.layers import advanced_activations, Activation
 
+from tensorflow.keras.models import load_model
+from tensorflow.python.keras.layers import advanced_activations, Activation
 
 # Register all classes with `advanced_activations` module
 _ADVANCED_ACTIVATIONS = set()
@@ -92,7 +92,9 @@ def modify_model_backprop(model, backprop_modifier):
         modifier_fn(backprop_modifier)
 
         # 3. Create graph under custom context manager.
-        with tf.get_default_graph().gradient_override_map({'Relu': backprop_modifier}):
+        #with tf.get_default_graph().gradient_override_map({'Relu': backprop_modifier}):
+        with tf.compat.v1.get_default_graph().gradient_override_map({'Relu': backprop_modifier}):
+            
             #  This should rebuild graph with modifications.
             modified_model = load_model(model_path)
 
