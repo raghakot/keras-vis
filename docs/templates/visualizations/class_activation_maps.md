@@ -26,4 +26,4 @@ See [saliency scenarios](saliency#scenarios). Everything is identical expect the
 ## Gotchas
 
 grad-CAM only works well if the penultimate layer is close to the layer being visualized. This also applies to `Conv` 
-filter visualizations. You are better off using saliency of this is not the case with your model.
+filter visualizations. You are better off using saliency if this is not the case with your model.
