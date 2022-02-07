@@ -3,8 +3,10 @@ from __future__ import absolute_import
 import numpy as np
 from scipy.ndimage.interpolation import zoom
 
-from keras.layers.convolutional import _Conv
-from keras.layers.pooling import _Pooling1D, _Pooling2D, _Pooling3D
+from tensorflow.keras.layers import Conv2D
+
+from tensorflow.keras.layers import MaxPooling1D, MaxPooling2D, MaxPooling3D
+
 from keras.layers.wrappers import Wrapper
 from keras import backend as K
 
